@@ -157,3 +157,33 @@ def training_figure(curve_prefix: Path, out: Path | None = None) -> Path | None:
     _style(a2, "Training step", "Test AUROC", "Test AUROC during training (plot only)")
     fig.suptitle(f"{model} - {category} - training", color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / f"{curve_prefix.name}__training.png")
+
+
+def tag_figure(report: pd.DataFrame, category: str, miss_budget: float = 0.0, out: Path | None = None) -> Path:
+    """Per-condition AUROC, miss/overkill under a regular-calibrated threshold, and good-score drift."""
+    tags = list(dict.fromkeys(report.tag))
+    x = np.arange(len(tags))
+    fig, axes = _figure(3, 16.5, 4.6)
+    panels = [
+        ("auroc", "AUROC", "AUROC per condition", (0.0, 1.02)),
+        ("overkill", "Overkill rate", f"Overkill, threshold set on regular ({miss_budget:.0%} miss)", (0.0, 1.05)),
+        ("good_score_vs_regular", "Median good score / regular", "Normal parts' score vs regular", None),
+    ]
+    for ax, (col, ylabel, title, ylim) in zip(axes, panels):
+        for model, rep in report.groupby("model", sort=False):
+            rep = rep.set_index("tag").reindex(tags)
+            ax.plot(x, rep[col], color=model_color(model), linewidth=2, marker="o", markersize=8,
+                    markeredgecolor=SURFACE, markeredgewidth=1.5, label=model)
+        if col == "good_score_vs_regular":
+            ax.axhline(1.0, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+        if ylim:
+            ax.set_ylim(*ylim)
+        ax.set_xticks(x, tags, rotation=30, ha="right")
+        _style(ax, "", ylabel, title)
+    axes[0].legend(frameon=False, fontsize=9, loc="lower left", labelcolor=INK2)
+    first = report.iloc[0]
+    fig.suptitle(
+        f"{category} - by capture condition  (per condition: {int(first.n_good)} good, {int(first.n_defective)} defective)",
+        color=INK, fontsize=12, x=0.01, ha="left",
+    )
+    return _save(fig, out or Path("results/figures") / f"tags__{category}.png")

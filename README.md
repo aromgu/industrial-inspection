@@ -83,6 +83,25 @@ uv run python scripts/evaluate.py results/scores/*.csv
 - 학습 중 test AUROC 곡선은 그래프용이며 모델이나 임계값 선택에 쓰지 않았습니다.
 - 표본이 작습니다(good 24장). 모델 간 작은 차이는 우연일 수 있습니다.
 
+## 촬영 조건별 분석 (sheet_metal)
+
+`test_public` 파일명의 조건 태그(`regular`, `overexposed`, `underexposed`, `shift_1~3`; 이 카테고리에는 `shift_4`가 없음)별로 나눠 봅니다. 조건마다 정상 4장, 불량 15장이라 **표본이 매우 작습니다**: 과검률의 해상도가 25%이고 AUROC도 대략적인 경향만 보여줍니다.
+
+임계값은 **`regular` 이미지에서만** 미검 0%로 정하고, 나머지 조건에 그대로 적용합니다(`scripts/tag_analysis.py`). 현장에서 정상 조명에서 한 번 보정한 뒤 조건이 바뀌는 상황입니다. 평가한 조건은 보정 이미지와 겹치지 않습니다.
+
+| 모델 | 조건별 AUROC 범위 | 정상 점수 변동 (regular 대비) | 과검률: regular → shift_1~3 |
+|---|---|---|---|
+| Dinomaly (ViT-L) | 0.82 ~ 0.88 | 0.99 ~ 1.23배 | 0.75 → 1.00 |
+| PatchCore (기본) | 0.80 ~ 0.85 | 1.01 ~ 1.13배 | 0.50 → 1.00 |
+| MH-PatchCore | 0.57 ~ 0.73 | 0.97 ~ 1.14배 | 1.00 → 1.00 |
+| EfficientAD | 0.35 ~ 0.85 | 0.56 ~ 4.52배 | 1.00 → 1.00 |
+
+![by condition](docs/figures/tags__sheet_metal.png)
+
+- **`shift_*` 조건에서 임계값이 깨집니다.** Dinomaly-L과 PatchCore는 정상 점수가 10~23%만 올라도 정상 4장이 모두 불량 판정(과검률 100%)이 됩니다. 정상과 불량 점수의 간격이 얇기 때문입니다. 미검은 거의 늘지 않아서, 깨지는 쪽은 놓침이 아니라 과검입니다.
+- **EfficientAD는 점수 자체가 조건에 따라 크게 움직입니다.** 정상 점수가 overexposed에서 2.6배, underexposed에서 0.56배, shift_2에서 4.5배가 됩니다. 한 조건에서 정한 임계값을 다른 조건에 쓸 수 없는 수준입니다. 한 조건 안에서 보더라도 AUROC가 0.35(`regular`, 우연보다 낮음)에서 0.85까지 흔들립니다. 전체 AUROC 0.573의 낮은 값이 이 불안정성과 관련이 있어 보이지만, 인과는 확인하지 않았습니다.
+- 한계: 한 카테고리, 단일 실행, 조건당 정상 4장입니다. `shift_1~3`이 정확히 어떤 변화인지는 확인하지 않았으며, 위 "shift"는 파일명 그대로의 이름입니다. 8개 카테고리 전체에서 같은 경향인지 봐야 합니다.
+
 ## 알려진 함정
 
 - **경로에 비ASCII 문자가 있으면 anomalib이 거부합니다.** 경로 검증이 절대 경로로 바꾸기 전 문자열에 대해 이뤄지므로, 데이터 경로는 레포 기준 상대 경로로 넘기세요.
@@ -94,6 +113,6 @@ uv run python scripts/evaluate.py results/scores/*.csv
 1. [x] 평가 모듈 (운영점, held-out 분할, 층화 부트스트랩)
 2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (sheet_metal 4종 검증 완료, 위 "베이스라인 실험" 참고. 이 카테고리 최고는 Dinomaly-L AUROC 0.84 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
 3. [ ] 소수 불량 보정에서 임계값이 과적합되는 문제 (마진, conformal 보정 비교)
-4. [ ] 조명 시프트 강건성 (`test_public` 내 `shift_*`/`overexposed`/`underexposed` 조건별 분리 평가)
+4. [~] 조명 시프트 강건성: sheet_metal 4개 모델 조건별 분석 완료(`scripts/tag_analysis.py`, 위 "촬영 조건별 분석"). 8개 카테고리로 확장 예정
 5. [ ] ONNX/TensorRT 변환, 지연시간과 정확도 트레이드오프
 6. [ ] (선택) VLM 기반 불량 유형 설명
