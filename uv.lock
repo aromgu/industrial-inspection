@@ -467,6 +467,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anomalib" },
+    { name = "huggingface-hub" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
@@ -486,6 +487,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anomalib", specifier = ">=2.0" },
+    { name = "huggingface-hub" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas", specifier = "<3" },

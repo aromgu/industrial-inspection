@@ -13,6 +13,7 @@ dependencies = [
     "matplotlib",
     "pyyaml",
     "tqdm",
+    "huggingface-hub",
 ]
 
 [dependency-groups]
