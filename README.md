@@ -111,7 +111,7 @@ uv run python scripts/evaluate.py results/scores/*.csv
 ## 로드맵
 
 1. [x] 평가 모듈 (운영점, held-out 분할, 층화 부트스트랩)
-2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (sheet_metal 4종 검증 완료, 위 "베이스라인 실험" 참고. 이 카테고리 최고는 Dinomaly-L AUROC 0.84 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
+2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (**보류**: 시간이 너무 오래 걸려 중단. `scripts/sweep.sh`로 재개 가능하고, 모델 3종(EfficientAD 제외) 기준 약 6시간, EfficientAD까지 넣으면 약 14시간 예상. sheet_metal 4종 검증 완료, 위 "베이스라인 실험" 참고. 이 카테고리 최고는 Dinomaly-L AUROC 0.84 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
 3. [ ] 소수 불량 보정에서 임계값이 과적합되는 문제 (마진, conformal 보정 비교)
 4. [~] 조명 시프트 강건성: sheet_metal 4개 모델 조건별 분석 완료(`scripts/tag_analysis.py`, 위 "촬영 조건별 분석"). 8개 카테고리로 확장 예정
 5. [ ] ONNX/TensorRT 변환, 지연시간과 정확도 트레이드오프
