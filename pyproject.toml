@@ -1,0 +1,33 @@
+[project]
+name = "industrial-inspection"
+version = "0.1.0"
+description = "Production-oriented visual anomaly inspection on MVTec AD 2: fixed-miss-rate evaluation, robustness, and edge latency."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch>=2.8",
+    "torchvision>=0.23",
+    "anomalib>=2.0",
+    "numpy",
+    "pandas<3",  # anomalib 2.7 breaks on pandas 3 string dtype (None mask_path -> NaN)
+    "scikit-learn",
+    "matplotlib",
+    "pyyaml",
+    "tqdm",
+]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+
+# RTX 5060 Ti (Blackwell, sm_120) needs CUDA 12.8+ builds.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[build-system]
+requires = ["uv_build>=0.13.4,<0.14.0"]
+build-backend = "uv_build"
