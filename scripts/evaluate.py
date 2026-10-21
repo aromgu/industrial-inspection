@@ -11,6 +11,7 @@ the held-out ones so the optimism of tuning on the report set is visible.
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +19,7 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from industrial_inspection.metrics import held_out_operating_point
+from industrial_inspection.plots import comparison_figure, test_figure, training_figure
 
 
 def main() -> None:
@@ -50,6 +52,18 @@ def main() -> None:
                 "heldout_overkill": held[:, 1].mean(),
                 "heldout_overkill_p95": np.quantile(held[:, 1], 0.95),
             })
+
+    # Test-time figures are mandatory: one per score file, plus a per-category model comparison.
+    by_category: dict[str, list[Path]] = defaultdict(list)
+    for csv in args.csvs:
+        by_category[csv.stem.split("__")[1]].append(csv)
+        print("figure:", test_figure(csv))
+        fig = training_figure(Path("results/curves") / csv.stem)
+        if fig:
+            print("figure:", fig)
+    for category, csvs in by_category.items():
+        if len(csvs) > 1:
+            print("figure:", comparison_figure(csvs, category))
 
     report = pd.DataFrame(rows)
     args.out.parent.mkdir(parents=True, exist_ok=True)

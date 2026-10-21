@@ -58,16 +58,30 @@ uv run python scripts/evaluate.py results/scores/*.csv
 
 **평가 프로토콜**: 점수는 후처리 없이 저장하고(`score.py`), 임계값은 `test_public`을 층화 분할해 한쪽에서 정하고 다른 쪽에서 보고합니다(`evaluate.py`, 20회 반복). 미검 예산 0%, 1%, 5%일 때의 과검률과 AUROC를 비교합니다. 모든 실험은 seed 0, 단일 실행이므로 모델 간 작은 차이는 유의하지 않을 수 있습니다.
 
-**결과** (sheet_metal): 실행 중이며, 끝나면 이 표를 채웁니다.
+**결과** (sheet_metal, `test_public` 114장 = good 24 + defective 90, seed 0, 단일 실행)
+
+과검률은 held-out 값입니다(`test_public`을 층화 분할해 한쪽에서 임계값을 정하고 다른 쪽에서 측정, 20회 평균). 미검 예산 0%와 1%가 같은 것은 보정 쪽 불량이 약 45장이라 1%로는 한 장도 놓칠 수 없기 때문입니다.
 
 | 모델 | AUROC | 과검률 @ 미검 0% | 과검률 @ 미검 1% | 과검률 @ 미검 5% | 학습 시간 |
 |---|---|---|---|---|---|
-| PatchCore (기본) | 0.739 | 0.82 (보정셋) | - | - | - |
-| MH-PatchCore | 진행 중 | | | | |
-| EfficientAD | 진행 중 | | | | |
-| Dinomaly (ViT-L) | 진행 중 | | | | |
+| Dinomaly (ViT-L) | **0.840** | 0.88 | 0.88 | 0.77 | 3,911 s * |
+| PatchCore (기본) | 0.739 | 0.86 | 0.86 | 0.75 | 약 90 s |
+| MH-PatchCore | 0.629 | 0.96 | 0.96 | 0.88 | 91 s |
+| EfficientAD | 0.573 | 1.00 | 1.00 | 0.97 | 5,621 s * |
 
-진행 상황은 `uv run python scripts/watch_progress.py`로 볼 수 있습니다(학습은 `results/logs/`에 tqdm으로 기록됩니다).
+\* EfficientAD와 Dinomaly-L은 같은 GPU에서 동시에 학습했습니다. 서로 속도를 늦췄으므로 학습 시간끼리 비교할 수 없습니다(단독 실행 시 EfficientAD는 약 19 it/s, Dinomaly-L은 약 2.15 it/s).
+
+![model comparison](docs/figures/compare__sheet_metal.png)
+
+모델별 학습 곡선과 test 그래프는 [docs/figures/](docs/figures/)에 있습니다.
+
+**읽는 법과 한계**
+
+- **라인 투입 기준으로는 어느 모델도 부족합니다.** 가장 좋은 Dinomaly-L도 불량을 놓치지 않으려면 정상의 약 88%를 불량으로 판정해야 합니다. AUROC 순위와 과검률 순위는 거의 같지만, 격차의 크기는 AUROC만으로는 드러나지 않습니다.
+- **EfficientAD는 학습할수록 test AUROC가 떨어졌습니다**(7,000 스텝 0.687 → 70,000 스텝 0.574, loss는 계속 감소). 원인은 확인하지 못했습니다. 가능한 가설은 AD 2의 조명 시프트가 섞인 test에 비해 정상 학습 분포가 좁아서 과적합되는 것이지만, 이 실험으로는 검증하지 않았습니다. 논문 설정(70,000 스텝)을 그대로 따른 결과입니다.
+- **MH-PatchCore는 기본 PatchCore보다 낮았습니다.** 이 카테고리 한 곳의 단일 실행 결과이므로 일반화하지 마세요. 8개 카테고리 전체 스윕에서 다시 봐야 합니다.
+- 학습 중 test AUROC 곡선은 그래프용이며 모델이나 임계값 선택에 쓰지 않았습니다.
+- 표본이 작습니다(good 24장). 모델 간 작은 차이는 우연일 수 있습니다.
 
 ## 알려진 함정
 
@@ -78,7 +92,7 @@ uv run python scripts/evaluate.py results/scores/*.csv
 ## 로드맵
 
 1. [x] 평가 모듈 (운영점, held-out 분할, 층화 부트스트랩)
-2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (sheet_metal 3종 검증 진행 중, 위 "베이스라인 실험" 참고. sheet_metal/PatchCore 기본값: AUROC 0.74 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
+2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (sheet_metal 4종 검증 완료, 위 "베이스라인 실험" 참고. 이 카테고리 최고는 Dinomaly-L AUROC 0.84 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
 3. [ ] 소수 불량 보정에서 임계값이 과적합되는 문제 (마진, conformal 보정 비교)
 4. [ ] 조명 시프트 강건성 (`test_public` 내 `shift_*`/`overexposed`/`underexposed` 조건별 분리 평가)
 5. [ ] ONNX/TensorRT 변환, 지연시간과 정확도 트레이드오프
