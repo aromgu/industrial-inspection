@@ -11,6 +11,7 @@ evaluate.py, on a held-out split.
 from __future__ import annotations
 
 import argparse
+import sys
 import time
 from pathlib import Path
 
@@ -18,15 +19,86 @@ import pandas as pd
 import torch
 from anomalib.data import MVTecAD2
 from anomalib.engine import Engine
-from anomalib.models import Dinomaly, EfficientAd, Patchcore
+from anomalib.models import Dinomaly, EfficientAd, MHPatchcore, Patchcore
+from lightning.pytorch.callbacks import Callback
+from torch.utils.data import DataLoader, RandomSampler
+from tqdm import tqdm
 
+OFF = {"post_processor": False, "evaluator": False, "visualizer": False}
 MODELS = {
-    "patchcore": lambda: Patchcore(post_processor=False, evaluator=False, visualizer=False),
-    "efficientad": lambda: EfficientAd(post_processor=False, evaluator=False, visualizer=False),
-    "dinomaly": lambda: Dinomaly(post_processor=False, evaluator=False, visualizer=False),
+    "patchcore": lambda: Patchcore(**OFF),
+    "mhpatchcore": lambda: MHPatchcore(**OFF),
+    "efficientad": lambda: EfficientAd(**OFF),
+    "dinomaly": lambda: Dinomaly(**OFF),
+    # ViT-L is the strongest encoder in the Dinomaly paper.
+    "dinomaly_l": lambda: Dinomaly(encoder_name="vit_large_patch14_reg4_dinov2", **OFF),
 }
 # EfficientAD's student-teacher training assumes one image per step.
-TRAIN_BATCH = {"patchcore": 16, "efficientad": 1, "dinomaly": 8}
+TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly": 8, "dinomaly_l": 4}
+# Gradient-trained models need an explicit length, otherwise Lightning runs 1000 epochs.
+# Values are the papers' defaults; the memory-bank models fit in a single pass.
+MAX_STEPS = {"efficientad": 70_000, "dinomaly": 5_000, "dinomaly_l": 5_000}
+
+
+def persist_workers(datamodule, num_workers: int) -> None:
+    """Rebuild the train/val loaders with persistent workers (anomalib's don't set it)."""
+    if num_workers == 0:
+        return
+
+    def wrap(make):
+        def build():
+            dl = make()
+            return DataLoader(
+                dl.dataset,
+                batch_size=dl.batch_size,
+                shuffle=isinstance(dl.sampler, RandomSampler),
+                num_workers=dl.num_workers,
+                collate_fn=dl.collate_fn,
+                persistent_workers=True,
+            )
+
+        return build
+
+    datamodule.train_dataloader = wrap(datamodule.train_dataloader)
+    datamodule.val_dataloader = wrap(datamodule.val_dataloader)
+
+
+class StepProgress(Callback):
+    """tqdm bar that stays readable when stdout is redirected to a log file."""
+
+    def __init__(self, label: str) -> None:
+        self.label = label
+        self.bar: tqdm | None = None
+
+    def _open(self, total: int | None, desc: str) -> None:
+        self.close()
+        self.bar = tqdm(total=total, desc=f"{self.label} {desc}", mininterval=15, file=sys.stdout, ascii=True)
+
+    def close(self, *_) -> None:
+        if self.bar is not None:
+            self.bar.close()
+            self.bar = None
+
+    def on_train_start(self, trainer, pl_module) -> None:
+        steps = trainer.max_steps if trainer.max_steps > 0 else trainer.max_epochs * trainer.num_training_batches
+        self._open(steps, "train")
+
+    def on_train_batch_end(self, trainer, pl_module, *args) -> None:
+        if self.bar is not None:
+            self.bar.update(1)
+
+    def on_train_end(self, trainer, pl_module) -> None:
+        self.close()
+
+    def on_predict_start(self, trainer, pl_module) -> None:
+        self._open(sum(trainer.num_predict_batches), "predict")
+
+    def on_predict_batch_end(self, trainer, pl_module, *args) -> None:
+        if self.bar is not None:
+            self.bar.update(1)
+
+    def on_predict_end(self, trainer, pl_module) -> None:
+        self.close()
 
 
 def main() -> None:
@@ -50,10 +122,25 @@ def main() -> None:
         seed=args.seed,
     )
     model = MODELS[args.model]()
-    trainer_kwargs = {"max_epochs": args.max_epochs} if args.max_epochs else {}
+    if args.max_epochs:
+        trainer_kwargs = {"max_epochs": args.max_epochs}
+    elif args.model in MAX_STEPS:
+        # Epochs are ~100 steps on these small train sets. On Windows every epoch would respawn
+        # the workers (a full torch/anomalib re-import) and re-run validation, so keep workers
+        # alive and validate once, at the last step (EfficientAD needs it for its map quantiles).
+        persist_workers(datamodule, args.num_workers)
+        trainer_kwargs = {
+            "max_epochs": -1,
+            "max_steps": MAX_STEPS[args.model],
+            "check_val_every_n_epoch": None,
+            "val_check_interval": MAX_STEPS[args.model],
+        }
+    else:
+        trainer_kwargs = {}
     engine = Engine(
         default_root_dir=Path("results/runs") / args.model / args.category,
         logger=False,
+        callbacks=[StepProgress(args.model)],
         **trainer_kwargs,
     )
 
