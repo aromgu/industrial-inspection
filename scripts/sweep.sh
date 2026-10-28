@@ -9,6 +9,7 @@
 
 models="$1"
 categories="$2"
+root="${3:-datasets/MVTec_AD_2}"
 mkdir -p results/logs
 
 for category in $categories; do
@@ -19,7 +20,7 @@ for category in $categories; do
       continue
     fi
     echo "$(date +%H:%M:%S) $model $category start" >> results/logs/sweep_status.txt
-    python -m uv run python scripts/score.py --model "$model" --category "$category" \
+    uv run python scripts/score.py --model "$model" --category "$category" --root "$root" \
       > "results/logs/${model}.${category}.log" 2>&1
     echo "$(date +%H:%M:%S) $model $category exit $?" >> results/logs/sweep_status.txt
   done

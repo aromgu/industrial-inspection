@@ -178,6 +178,12 @@ def main() -> None:
     p.add_argument("--num-workers", type=int, default=4)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument(
+        "--train-batch-size", type=int, default=None, help="override TRAIN_BATCH (e.g. for a smaller GPU)"
+    )
+    p.add_argument(
+        "--precision", default=None, help="lightning precision, e.g. 16-mixed (lower VRAM, faster on Ampere+)"
+    )
+    p.add_argument(
         "--smoke",
         action="store_true",
         help="end-to-end check on 4 test images and ~20 steps; writes only under results/smoke/",
@@ -189,10 +195,11 @@ def main() -> None:
     steps = SMOKE_STEPS if args.smoke else MAX_STEPS.get(args.model)
 
     torch.manual_seed(args.seed)
+    torch.set_float32_matmul_precision("high")  # use tensor cores (Ampere+) for fp32 matmuls
     datamodule = MVTecAD2(
         root=args.root,
         category=args.category,
-        train_batch_size=TRAIN_BATCH[args.model],
+        train_batch_size=args.train_batch_size or TRAIN_BATCH[args.model],
         eval_batch_size=8,
         num_workers=args.num_workers,
         seed=args.seed,
@@ -241,10 +248,16 @@ def main() -> None:
                 n_evals=2 if args.smoke else 10,
             )
         )
+    if args.precision:
+        trainer_kwargs["precision"] = args.precision
     engine = Engine(
         default_root_dir=root / "runs" / args.model / args.category,
         logger=False,
         callbacks=callbacks,
+        # Lightning's default RichProgressBar writes unicode (e.g. the bullet in its
+        # metric separator) straight to the legacy Windows console API, which crashes
+        # under a non-UTF-8 codepage (e.g. cp949). StepProgress above already covers this.
+        enable_progress_bar=False,
         **trainer_kwargs,
     )
 

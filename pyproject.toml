@@ -20,13 +20,13 @@ dependencies = [
 dev = ["pytest", "ruff"]
 
 [tool.uv.sources]
-torch = { index = "pytorch-cu128" }
-torchvision = { index = "pytorch-cu128" }
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
 
-# RTX 5060 Ti (Blackwell, sm_120) needs CUDA 12.8+ builds.
+# RTX 3050 (Ampere, sm_86), driver 560.94 -> max CUDA 12.6. cu128 requires a newer driver.
 [[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
 explicit = true
 
 [build-system]
