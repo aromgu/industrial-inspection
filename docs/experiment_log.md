@@ -57,4 +57,21 @@
 
 전체적으로 `can`/`fabric`/`rice`/`wallplugs`는 두 모델 다 AUROC 0.5 근처(=거의 우연 수준)라 라인 투입 기준에 한참 못 미침. `vial`/`fruit_jelly`/`walnuts`는 AUROC 0.85~0.91로 상대적으로 양호. 8개 카테고리 간 난이도 차이가 sheet_metal 한 곳만 보던 README 원 실험보다 훨씬 크게 드러남.
 
-(Dinomaly / Dinomaly-L / EfficientAD 나머지 카테고리는 계속 추가)
+### Dinomaly (ViT-B, 기본) — 진행 중 중단 시점 (4/8)
+
+| 카테고리 | AUROC | 과검률 |
+|---|---|---|
+| can | 0.515 | 0.996 |
+| fabric | 0.682 | 0.750 |
+| fruit_jelly | 0.817 | 0.745 |
+| rice | 0.683 | 0.933 |
+
+카테고리당 학습 시간 **~55~65분** (1.3~1.4 it/s, 5,000 step) — README가 암시한 속도보다 훨씬 느림. 8개 전체면 ~8시간 예상.
+
+### EfficientAD
+
+sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 범위. "학습할수록 test AUROC가 떨어진다"는 README의 관찰과 일치하는 방향.
+
+## 2026-10-28 작업 중단 시점 요약
+
+사용자 지시로 학습을 중단하고 지금까지 결과를 정리함. 상세 현황과 재개 방법은 [docs/handover.md](handover.md) 참고.
