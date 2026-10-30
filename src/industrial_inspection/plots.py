@@ -187,3 +187,43 @@ def tag_figure(report: pd.DataFrame, category: str, miss_budget: float = 0.0, ou
         color=INK, fontsize=12, x=0.01, ha="left",
     )
     return _save(fig, out or Path("results/figures") / f"tags__{category}.png")
+
+
+def data_profile_figure(table: pd.DataFrame, defects: pd.DataFrame, out: Path | None = None) -> Path:
+    """Defect size per category (at model resolution) and brightness per capture condition."""
+    order = table.sort_values("defect_side_px_median").category.tolist()
+    fig, (a1, a2) = _figure(2, 15, 4.8)
+
+    rng = np.random.default_rng(0)
+    for i, cat in enumerate(order):
+        v = defects.loc[defects.category == cat, "side_px_at_256"].clip(lower=0.1)
+        a1.scatter(v, i + rng.uniform(-0.18, 0.18, len(v)), s=12, color=SERIES[0], alpha=0.45, linewidths=0)
+        a1.plot([v.median()] * 2, [i - 0.32, i + 0.32], color=INK, linewidth=2)
+    a1.axvline(8, color=SERIES[7], linewidth=1.2, linestyle=(0, (4, 3)))
+    a1.annotate("8 px = one PatchCore feature cell", (8, len(order) - 0.4), xytext=(5, 0), textcoords="offset points",
+                color=INK2, fontsize=9, va="center")
+    a1.set_xscale("log")
+    a1.set_yticks(range(len(order)), order)
+    a1.set_ylim(-0.6, len(order) - 0.2)
+    _style(a1, "Defect size: side of an equal-area square on a 256 px input (log)", "",
+           "Defect size per test image (bar = median)")
+
+    cond_cols = [c for c in table.columns if c.startswith("bright_")]
+    conds = ["regular", "overexposed", "underexposed", "shift_1", "shift_2", "shift_3", "shift_4"]
+    conds = [c for c in conds if f"bright_{c}" in cond_cols]
+    x = np.arange(len(conds))
+    for cat in table.category:
+        r = table.set_index("category").loc[cat]
+        a2.plot(x, [r.get(f"bright_{c}", np.nan) for c in conds], color=SERIES[CATEGORY_SLOT[cat]], linewidth=2,
+                marker="o", markersize=7, markeredgecolor=SURFACE, markeredgewidth=1.2, label=cat)
+    a2.axhline(1.0, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+    a2.set_xticks(x, conds, rotation=30, ha="right")
+    _style(a2, "", "Mean brightness / regular", "Brightness of good test images per condition")
+    a2.legend(frameon=False, fontsize=8.5, ncol=2, loc="lower left", labelcolor=INK2)
+    fig.suptitle("MVTec AD 2 - data profile (test_public)", color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "data_profile.png")
+
+
+# Fixed category -> slot, so a category keeps its colour across figures.
+CATEGORY_SLOT = {c: i for i, c in enumerate(
+    ["can", "fabric", "fruit_jelly", "rice", "sheet_metal", "vial", "wallplugs", "walnuts"])}
