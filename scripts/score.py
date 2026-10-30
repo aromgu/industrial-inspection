@@ -11,6 +11,7 @@ evaluate.py, on a held-out split.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import sys
 import time
 from pathlib import Path
@@ -65,6 +66,32 @@ def persist_workers(datamodule, num_workers: int) -> None:
 
     datamodule.train_dataloader = wrap(datamodule.train_dataloader)
     datamodule.val_dataloader = wrap(datamodule.val_dataloader)
+
+
+class GpuThrottle(Callback):
+    """Cap the GPU duty cycle by sleeping after each training step.
+
+    With duty 0.6 a step that took 100 ms of GPU work is followed by ~67 ms of sleep, so the GPU is
+    busy about 60 % of the time and the gaps are free for another program (e.g. a game).
+    """
+
+    def __init__(self, duty: float) -> None:
+        self.duty = duty
+        self.start = 0.0
+
+    def on_train_batch_start(self, trainer, pl_module, *args) -> None:
+        self.start = time.perf_counter()
+
+    def on_train_batch_end(self, trainer, pl_module, *args) -> None:
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()  # count the queued GPU work, not just the launch time
+        time.sleep((time.perf_counter() - self.start) * (1 / self.duty - 1))
+
+
+def lower_cpu_priority() -> None:
+    """BELOW_NORMAL priority class, so the training and its workers yield CPU to foreground programs."""
+    if sys.platform == "win32":
+        ctypes.windll.kernel32.SetPriorityClass(ctypes.windll.kernel32.GetCurrentProcess(), 0x00004000)
 
 
 class StepProgress(Callback):
@@ -188,7 +215,21 @@ def main() -> None:
         action="store_true",
         help="end-to-end check on 4 test images and ~20 steps; writes only under results/smoke/",
     )
+    p.add_argument(
+        "--game-mode",
+        action="store_true",
+        help="leave the machine usable while a game runs: ~60%% GPU duty, 60%% of VRAM, 2 workers, low CPU priority",
+    )
+    p.add_argument("--gpu-duty", type=float, default=None, help="GPU duty cycle in (0, 1]; default 1 (no cap)")
+    p.add_argument("--gpu-mem-fraction", type=float, default=None, help="cap this process's CUDA memory, e.g. 0.6")
     args = p.parse_args()
+    if args.game_mode:
+        args.gpu_duty = args.gpu_duty or 0.6
+        args.gpu_mem_fraction = args.gpu_mem_fraction or 0.6
+        args.num_workers = min(args.num_workers, 2)
+        lower_cpu_priority()
+    if args.gpu_mem_fraction and torch.cuda.is_available():
+        torch.cuda.set_per_process_memory_fraction(args.gpu_mem_fraction, 0)
     root = Path("results/smoke") if args.smoke else Path("results")
     if args.smoke:
         args.out = root / "scores"
@@ -225,6 +266,8 @@ def main() -> None:
         if args.model not in MAX_STEPS:
             trainer_kwargs |= {"limit_train_batches": 2}
     callbacks = [StepProgress(args.model)]
+    if args.gpu_duty and args.gpu_duty < 1:
+        callbacks.append(GpuThrottle(args.gpu_duty))
     datamodule.setup()  # test split is needed for the periodic AUROC points and the smoke subset
     # NOT datamodule.test_data: that is only the 90 defective images. The evaluated set (good + defective)
     # is what test_dataloader() serves.
