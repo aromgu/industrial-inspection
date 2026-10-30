@@ -19,7 +19,7 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from industrial_inspection.metrics import held_out_operating_point
-from industrial_inspection.plots import comparison_figure, test_figure, training_figure
+from industrial_inspection.plots import comparison_figure, summary_figure, test_figure, training_figure
 
 
 def main() -> None:
@@ -68,6 +68,8 @@ def main() -> None:
     report = pd.DataFrame(rows)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     report.to_csv(args.out, index=False)
+    if report.category.nunique() > 1:
+        print("figure:", summary_figure(report))
     with pd.option_context("display.width", 200, "display.float_format", "{:.3f}".format):
         print(report.to_string(index=False))
 

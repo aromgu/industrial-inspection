@@ -227,3 +227,32 @@ def data_profile_figure(table: pd.DataFrame, defects: pd.DataFrame, out: Path | 
 # Fixed category -> slot, so a category keeps its colour across figures.
 CATEGORY_SLOT = {c: i for i, c in enumerate(
     ["can", "fabric", "fruit_jelly", "rice", "sheet_metal", "vial", "wallplugs", "walnuts"])}
+
+
+def summary_figure(report: pd.DataFrame, out: Path | None = None) -> Path:
+    """AUROC and overkill at a 0 % miss budget for every (category, model), one row per category."""
+    r0 = report[report.miss_budget == 0.0]
+    order = r0.groupby("category").auroc.mean().sort_values().index.tolist()
+    models = [m for m in MODEL_SLOT if m in set(r0.model)]
+    fig, (a1, a2) = _figure(2, 14, 0.55 * len(order) + 2.2)
+    offsets = np.linspace(-0.22, 0.22, len(models)) if len(models) > 1 else [0.0]
+    for ax, col, xlabel, title, ref in (
+        (a1, "auroc", "AUROC", "AUROC per category", 0.5),
+        (a2, "heldout_overkill", "Overkill rate at 0 % miss (held-out)", "Overkill per category", None),
+    ):
+        for off, model in zip(offsets, models):
+            rep = r0[r0.model == model].set_index("category").reindex(order)
+            ax.scatter(rep[col], np.arange(len(order)) + off, s=60, color=model_color(model), edgecolors=SURFACE,
+                       linewidths=1.2, label=model, zorder=3)
+        if ref is not None:
+            ax.axvline(ref, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+            ax.annotate("chance", (ref, len(order) - 0.5), xytext=(4, 0), textcoords="offset points", color=MUTED,
+                        fontsize=9, va="center")
+        ax.set_yticks(range(len(order)), order)
+        ax.set_ylim(-0.6, len(order) - 0.4)
+        _style(ax, xlabel, "", title)
+    a1.set_xlim(0.35, 1.0)
+    a2.set_xlim(0.0, 1.05)
+    a1.legend(frameon=False, fontsize=9, loc="lower right", labelcolor=INK2)
+    fig.suptitle("MVTec AD 2 test_public - all categories", color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "summary__all_categories.png")

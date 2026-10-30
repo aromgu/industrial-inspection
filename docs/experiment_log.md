@@ -75,3 +75,24 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 ## 2026-10-28 작업 중단 시점 요약
 
 사용자 지시로 학습을 중단하고 지금까지 결과를 정리함. 상세 현황과 재개 방법은 [docs/handover.md](handover.md) 참고.
+
+## 2026-10-30 RTX 5060 Ti 머신에서 이어서 진행
+
+- 환경: RTX 5060 Ti 16GB(Blackwell). 이 GPU는 cu128 빌드가 필요해서, 레포가 cu126으로 고정된 상태에서는 `uv sync`를 하지 않고 venv의 Python을 직접 호출함(`PY=.venv/Scripts/python.exe`). `sweep.sh`의 `uv run`은 이 머신 PATH에 uv가 없어 모든 조합이 exit 127로 즉시 실패했었음 → `PY` 변수로 우회.
+- 사용자가 같은 PC에서 게임을 해서 `--game-mode`(GPU 듀티 약 60%, VRAM 60% 상한, 워커 2개, 낮은 CPU 우선순위)로 실행. Dinomaly-L 실측 평균 GPU 사용률 약 60%, 카테고리당 약 49~53분.
+- 다른 머신의 점수 CSV는 git에 없어서 PatchCore/MH-PatchCore 8개 카테고리를 이 머신에서 다시 돌림. sheet_metal 기준 머신 간 AUROC 차이는 최대 약 0.03(PatchCore 0.712 vs 0.739, MH-PatchCore 0.650 vs 0.629).
+
+### Dinomaly-L (ViT-L) 8개 카테고리
+
+| 카테고리 | AUROC | 과검률 @ 미검 0% | 학습 시간 |
+|---|---|---|---|
+| can | 0.503 | 0.99 | 2,999s |
+| fabric | 0.698 | 0.86 | 3,180s |
+| fruit_jelly | 0.870 | 0.91 | 2,940s |
+| rice | 0.769 | 0.83 | 3,175s |
+| sheet_metal | 0.840 | 0.88 | 3,911s (EfficientAD와 동시 학습) |
+| vial | 0.810 | 0.64 | 2,962s |
+| wallplugs | 0.457 | 0.92 | 3,030s |
+| walnuts | 0.715 | 0.71 | 3,181s |
+
+세 모델 비교, 조건별 분석, 해석상 주의점은 README의 "8개 카테고리 결과" 참고. 데이터 특성(결함 크기, 조건별 밝기, 부품 수)은 `scripts/data_profile.py`와 `docs/figures/data_profile.png`.

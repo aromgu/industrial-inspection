@@ -102,6 +102,46 @@ uv run python scripts/evaluate.py results/scores/*.csv
 - **EfficientAD는 점수 자체가 조건에 따라 크게 움직입니다.** 정상 점수가 overexposed에서 2.6배, underexposed에서 0.56배, shift_2에서 4.5배가 됩니다. 한 조건에서 정한 임계값을 다른 조건에 쓸 수 없는 수준입니다. 한 조건 안에서 보더라도 AUROC가 0.35(`regular`, 우연보다 낮음)에서 0.85까지 흔들립니다. 전체 AUROC 0.573의 낮은 값이 이 불안정성과 관련이 있어 보이지만, 인과는 확인하지 않았습니다.
 - 한계: 한 카테고리, 단일 실행, 조건당 정상 4장입니다. `shift_1~3`이 정확히 어떤 변화인지는 확인하지 않았으며, 위 "shift"는 파일명 그대로의 이름입니다. 8개 카테고리 전체에서 같은 경향인지 봐야 합니다.
 
+## 8개 카테고리 결과 (2026-10-30, RTX 5060 Ti)
+
+PatchCore, MH-PatchCore, Dinomaly-L을 8개 카테고리 전부에서 돌렸습니다(seed 0, 단일 실행). Dinomaly-L은 `--game-mode`(GPU 약 60%)로 학습해서 학습 시간은 카테고리당 약 49~53분이었습니다. EfficientAD는 sheet_metal만 있습니다.
+
+| 카테고리 | 결함 크기 (256px 기준) | PatchCore | MH-PatchCore | Dinomaly-L |
+|---|---|---|---|---|
+| can | 1.9px | 0.460 | 0.502 | 0.503 |
+| fabric | 2.8px | **0.716** | 0.440 | 0.698 |
+| wallplugs | 5.0px | 0.532 | **0.537** | 0.457 |
+| rice | 8.6px | 0.526 | 0.560 | **0.769** |
+| sheet_metal | 12.7px | 0.739 | 0.629 | **0.840** |
+| fruit_jelly | 16.1px | 0.759 | **0.912** | 0.870 |
+| vial | 26.5px | 0.859 | **0.897** | 0.810 |
+| walnuts | 28.3px | 0.840 | **0.852** | 0.715 |
+| **평균 AUROC** | | 0.679 | 0.666 | **0.708** |
+| 평균 과검률 @ 미검 0% | | 0.88 | **0.82** | 0.84 |
+| 평균 과검률 @ 미검 5% | | 0.84 | 0.76 | **0.75** |
+
+![all categories](docs/figures/summary__all_categories.png)
+
+- **어느 모델도 라인 투입 기준에 못 미칩니다.** 미검 0%에서 평균 과검률이 0.82~0.88입니다. 가장 좋은 조합(vial + MH-PatchCore)도 정상의 17%를 불량으로 판정합니다.
+- **모든 카테고리에서 이기는 모델은 없습니다.** 평균 AUROC는 Dinomaly-L이 가장 높지만(0.708), 카테고리별 1위는 MH-PatchCore 3개(fruit_jelly, vial, walnuts), Dinomaly-L 2개(rice, sheet_metal), PatchCore 1개(fabric)이고, can과 wallplugs는 셋 다 우연 수준이라 1위를 가릴 수 없습니다.
+- **결함이 작은 카테고리는 모델과 상관없이 우연 수준입니다.** can(1.9px)과 wallplugs(5.0px)는 세 모델 모두 AUROC 0.46~0.54입니다. 결함 크기와 AUROC의 순위 상관은 PatchCore 계열에서 ρ=0.88(p=0.004)입니다(`scripts/data_profile.py`).
+- **Dinomaly-L은 rice에서 PatchCore 계열보다 0.2 이상 높습니다**(0.769 vs 0.53~0.56). 입력 해상도(392 vs 224)가 커서 같은 결함이 더 크게 보이는 것이 이유일 수 있지만 검증하지 않았습니다.
+- **Dinomaly-L은 학습할수록 test AUROC가 떨어지는 카테고리가 있습니다.** vial은 500 스텝 0.877에서 최종 0.810, walnuts는 0.783에서 0.715입니다. EfficientAD가 sheet_metal에서 보인 양상과 비슷합니다.
+
+### 촬영 조건별로 보면
+
+임계값을 `regular` 이미지로만 정하고 다른 조건에 그대로 적용했습니다(`scripts/tag_analysis.py`, 그래프는 `docs/figures/tags__<카테고리>.png`).
+
+- **조건이 바뀌면 깨지는 쪽은 과검입니다.** 24개 (모델, 카테고리) 조합 중 11개에서 `shift_*` 조건의 과검률이 `regular`보다 올라갔고, 9개는 `regular`에서 이미 0.95 이상입니다. 반면 `shift_*`에서 미검률은 평균 1.6%로 거의 늘지 않습니다.
+- **Dinomaly-L은 보통 조명에서 가장 강하지만 `shift` 조건에 가장 민감합니다.** walnuts는 `regular`에서 AUROC 0.95인데 `shift_1`, `shift_3`에서 0.46, 0.50이고 정상 점수가 최대 2.8배로 뜁니다. wallplugs도 정상 점수가 최대 2.4배까지 움직입니다. PatchCore 계열은 정상 점수 변동이 대부분 30% 이내입니다.
+- 평균 AUROC는 `regular` 0.72에서 `shift_*` 0.70으로 크게 떨어지지 않지만, 고정 임계값으로 보면 과검이 크게 늘어납니다. 순위는 유지돼도 점수의 절대 위치가 움직이기 때문입니다.
+
+### 해석할 때 주의할 점
+
+- **과검률은 낙관적일 수 있습니다.** test의 불량 이미지는 실제로는 카테고리당 불량 부품 15개를 조건만 바꿔 찍은 것이고, 정상도 부품 4~12개입니다. `evaluate.py`는 이미지 단위로 반을 나누므로 같은 부품이 임계값을 정하는 쪽과 평가하는 쪽에 함께 들어갑니다. 부품 단위 분할로 고쳐야 합니다.
+- seed 0 단일 실행이고 독립 표본이 적어서, 모델 간 0.05 정도의 차이는 우연일 수 있습니다.
+- sheet_metal을 다른 머신(RTX 3050, cu126)에서 다시 돌리면 AUROC가 최대 약 0.03 달라졌습니다(PatchCore 0.712 vs 0.739). 머신 간 차이도 이 정도는 있습니다.
+
 ## 알려진 함정
 
 - **경로에 비ASCII 문자가 있으면 anomalib이 거부합니다.** 경로 검증이 절대 경로로 바꾸기 전 문자열에 대해 이뤄지므로, 데이터 경로는 레포 기준 상대 경로로 넘기세요.
@@ -111,8 +151,8 @@ uv run python scripts/evaluate.py results/scores/*.csv
 ## 로드맵
 
 1. [x] 평가 모듈 (운영점, held-out 분할, 층화 부트스트랩)
-2. [ ] 8개 카테고리 × EfficientAD / MH-PatchCore / Dinomaly 베이스라인 (**보류**: 시간이 너무 오래 걸려 중단. `scripts/sweep.sh`로 재개 가능하고, 모델 3종(EfficientAD 제외) 기준 약 6시간, EfficientAD까지 넣으면 약 14시간 예상. sheet_metal 4종 검증 완료, 위 "베이스라인 실험" 참고. 이 카테고리 최고는 Dinomaly-L AUROC 0.84 — AD 2는 원래 SOTA도 AU-PRO 60% 미만인 어려운 벤치마크)
+2. [~] 8개 카테고리 베이스라인: PatchCore, MH-PatchCore, Dinomaly-L은 8/8 완료(위 "8개 카테고리 결과"). EfficientAD는 sheet_metal만 있음(카테고리당 약 1~2시간)
 3. [ ] 소수 불량 보정에서 임계값이 과적합되는 문제 (마진, conformal 보정 비교)
-4. [~] 조명 시프트 강건성: sheet_metal 4개 모델 조건별 분석 완료(`scripts/tag_analysis.py`, 위 "촬영 조건별 분석"). 8개 카테고리로 확장 예정
+4. [~] 조명 시프트 강건성: 8개 카테고리 × 3개 모델 조건별 분석 완료(`scripts/tag_analysis.py`). 학습 데이터에 조명 변화를 넣거나 조건별 임계값을 쓰는 대응은 아직
 5. [ ] ONNX/TensorRT 변환, 지연시간과 정확도 트레이드오프
 6. [ ] (선택) VLM 기반 불량 유형 설명
