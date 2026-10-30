@@ -24,7 +24,8 @@ from industrial_inspection.metrics import calibrate_threshold, evaluate_at_thres
 from industrial_inspection.plots import tag_figure
 
 TAG_ORDER = ["regular", "overexposed", "underexposed", "shift_1", "shift_2", "shift_3", "shift_4"]
-TAG_RE = r"^\d+_(.+)-\d+\.png$"
+# The "-<n>" suffix is optional: can uses both 011_overexposed.png and 006_underexposed-2.png.
+TAG_RE = r"^\d+_(.+?)(?:-\d+)?\.png$"
 
 
 def analyse(csv: Path, miss_budget: float) -> list[dict]:
