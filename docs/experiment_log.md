@@ -96,3 +96,12 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 | walnuts | 0.715 | 0.71 | 3,181s |
 
 세 모델 비교, 조건별 분석, 해석상 주의점은 README의 "8개 카테고리 결과" 참고. 데이터 특성(결함 크기, 조건별 밝기, 부품 수)은 `scripts/data_profile.py`와 `docs/figures/data_profile.png`.
+
+## 2026-11-02 추가 실험
+
+- `evaluate.py`를 부품 단위 분할로 변경. 미검 0% 임계값의 처음 보는 부품 미검률 평균 5.3%(p95 17%), 이미지 단위일 때는 2.1%(p95 7%).
+- 소수 불량 임계값 보정, 조건별 임계값: 결과는 README "추가 실험" 참고.
+- 타일 MH-PatchCore: can 0.502→0.504, wallplugs 0.537→0.538. 결함 크기 가설은 직접 실험에서 확인되지 않음.
+- 조명 증강 PatchCore(밝기·대비 ±35%): 8개 카테고리 평균 AUROC 0.679→0.673.
+- 지연시간(배치 1): EfficientAD 7.4/6.0ms, MH-PatchCore 14.7/9.8ms(ONNX 점수 불일치), PatchCore 14.1/13.7ms, Dinomaly-L 90.5/52.4ms (PyTorch/ONNX Runtime).
+- EfficientAD 8개 카테고리 스윕을 게임 모드로 시작(can 완료: AUROC 0.494, 5,880s). 나머지 6개는 진행 중이며 카테고리당 약 100분.
