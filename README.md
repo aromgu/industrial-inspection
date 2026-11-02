@@ -217,7 +217,7 @@ PatchCore, MH-PatchCore, Dinomaly-L을 8개 카테고리 전부에서 돌렸습�
 ## 로드맵
 
 1. [x] 평가 모듈 (운영점, held-out 분할, 층화 부트스트랩)
-2. [~] 8개 카테고리 베이스라인: PatchCore, MH-PatchCore, Dinomaly-L은 8/8 완료(위 "8개 카테고리 결과"). EfficientAD는 sheet_metal만 있음(카테고리당 약 1~2시간)
+2. [~] 8개 카테고리 베이스라인: PatchCore, MH-PatchCore, Dinomaly-L은 8/8 완료(위 "8개 카테고리 결과"). EfficientAD는 sheet_metal(0.573)과 can(0.494)만 있고 나머지 6개는 미실행(카테고리당 약 100분, 게임 모드)
 3. [x] 소수 불량 보정: 규칙 3가지 비교 완료(위 "추가 실험"). 어떤 규칙도 미검과 과검을 동시에 낮추지 못함
 4. [~] 조명 시프트 강건성: 8개 카테고리 × 3개 모델 조건별 분석 완료(`scripts/tag_analysis.py`). 학습 데이터에 조명 변화를 넣거나 조건별 임계값을 쓰는 대응은 아직
 5. [~] ONNX/TensorRT: ONNX Runtime 지연시간 측정 완료(MH-PatchCore 변환 검증 필요), TensorRT는 아직

@@ -104,4 +104,4 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 타일 MH-PatchCore: can 0.502→0.504, wallplugs 0.537→0.538. 결함 크기 가설은 직접 실험에서 확인되지 않음.
 - 조명 증강 PatchCore(밝기·대비 ±35%): 8개 카테고리 평균 AUROC 0.679→0.673.
 - 지연시간(배치 1): EfficientAD 7.4/6.0ms, MH-PatchCore 14.7/9.8ms(ONNX 점수 불일치), PatchCore 14.1/13.7ms, Dinomaly-L 90.5/52.4ms (PyTorch/ONNX Runtime).
-- EfficientAD 8개 카테고리 스윕을 게임 모드로 시작(can 완료: AUROC 0.494, 5,880s). 나머지 6개는 진행 중이며 카테고리당 약 100분.
+- EfficientAD 8개 카테고리 스윕을 게임 모드로 시작(can 완료: AUROC 0.494, 5,880s). fabric이 67%(47075/70000)일 때 2026-11-02 18:17에 사용자 요청으로 중단. 체크포인트가 없어 fabric은 처음부터 다시 돌려야 함. 남은 6개(fabric, fruit_jelly, rice, vial, wallplugs, walnuts)는 미실행. 카테고리당 약 100분(게임 모드), 재개 명령은 `scripts/sweep.sh` 주석 참고.
