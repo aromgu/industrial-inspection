@@ -77,3 +77,13 @@ def test_rejects_bad_inputs():
         calibrate_threshold([0.1, 0.2], [0, 0], 0.1)
     with pytest.raises(ValueError):
         evaluate_at_threshold([0.1], [2], 0.5)
+
+
+def test_grouped_split_keeps_each_part_on_one_side():
+    y = np.array([0] * 12 + [1] * 18)
+    groups = np.array([f"g{i // 3}" for i in range(12)] + [f"b{i // 6}" for i in range(18)])
+    for seed in range(5):
+        calib, evals = stratified_split(y, 0.5, seed=seed, groups=groups)
+        assert set(groups[calib]).isdisjoint(groups[evals])
+        assert len(calib) + len(evals) == y.size
+        assert {0, 1} <= set(y[calib]) and {0, 1} <= set(y[evals])

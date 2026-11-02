@@ -256,3 +256,103 @@ def summary_figure(report: pd.DataFrame, out: Path | None = None) -> Path:
     a1.legend(frameon=False, fontsize=9, loc="lower right", labelcolor=INK2)
     fig.suptitle("MVTec AD 2 test_public - all categories", color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / "summary__all_categories.png")
+
+
+RULE_STYLE = {  # fixed colour per threshold rule
+    "min_defect": (SERIES[0], "min defect score"),
+    "margin": (SERIES[1], "min defect - 0.5 IQR(good)"),
+    "normal_only": (SERIES[2], "normal only (conformal, 10%)"),
+}
+
+
+def fewshot_figure(overall: pd.DataFrame, out: Path | None = None) -> Path:
+    """Held-out miss and overkill against the number of known defective parts, per threshold rule."""
+    fig, (a1, a2) = _figure(2, 13, 4.4)
+    ks = sorted(overall.k.unique())
+    for ax, col, p95, ylabel, title in (
+        (a1, "miss", "miss_p95", "Miss rate on unseen parts", "Miss (line = mean, band = p95)"),
+        (a2, "overkill", "overkill_p95", "Overkill rate on unseen parts", "Overkill (line = mean, band = p95)"),
+    ):
+        for rule, (color, label) in RULE_STYLE.items():
+            d = overall[overall.rule == rule].sort_values("k")
+            if d.empty:
+                continue
+            if rule == "normal_only":  # no defects used: same at every k
+                d = pd.concat([d.assign(k=k) for k in ks])
+            ax.plot(d.k, d[col], color=color, linewidth=2, marker="o", markersize=7, markeredgecolor=SURFACE,
+                    markeredgewidth=1.2, label=label)
+            ax.fill_between(d.k, d[col], d[p95], color=color, alpha=0.12, linewidth=0)
+        ax.set_xticks(ks)
+        ax.set_ylim(0, 1.02)
+        _style(ax, "Known defective parts used for calibration (k)", ylabel, title)
+    a1.legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
+    fig.suptitle("Few-shot threshold calibration - mean over 3 models x 8 categories, 200 part-level draws each",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "fewshot_calibration.png")
+
+
+def condition_threshold_figure(summary: pd.DataFrame, out: Path | None = None) -> Path:
+    """Held-out miss and overkill (0 % miss budget) per threshold rule, per model."""
+    rules = ["global", "regular_only", "per_condition", "normalized"]
+    models = [m for m in MODEL_SLOT if m in set(summary.model)]
+    fig, axes = _figure(2, 13, 4.2)
+    x = np.arange(len(rules))
+    width = 0.8 / len(models)
+    for ax, col, ylabel in ((axes[0], "miss", "Miss rate on unseen parts"), (axes[1], "overkill", "Overkill rate on unseen parts")):
+        for i, model in enumerate(models):
+            v = summary[summary.model == model].groupby("rule")[col].mean().reindex(rules)
+            ax.bar(x + (i - (len(models) - 1) / 2) * width, v, width=width - 0.02, color=model_color(model),
+                   label=model, edgecolor=SURFACE, linewidth=1)
+        ax.set_xticks(x, rules)
+        _style(ax, "", ylabel, f"{col.capitalize()} at a 0 % miss budget (mean of 8 categories)")
+    axes[0].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    axes[1].set_ylim(0, 1.05)
+    fig.suptitle("Threshold rules with and without knowing the capture condition (part-level split)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "condition_thresholds.png")
+
+
+def split_comparison_figure(part: pd.DataFrame, image: pd.DataFrame, out: Path | None = None) -> Path:
+    """Held-out miss and overkill at a 0 % miss budget: image-level split vs part-level split."""
+    k = ["model", "category"]
+    m = part[part.miss_budget == 0.0].merge(image[image.miss_budget == 0.0], on=k, suffixes=("_part", "_image"))
+    m = m[m.model.isin(["patchcore", "mhpatchcore", "dinomaly_l"])].sort_values(["heldout_miss_part"])
+    labels = (m.model + " / " + m.category).tolist()
+    y = np.arange(len(m))
+    fig, axes = _figure(2, 14, 0.28 * len(m) + 2.0)
+    for ax, col, title in ((axes[0], "heldout_miss", "Miss at a 0 % miss budget"),
+                           (axes[1], "heldout_overkill", "Overkill at a 0 % miss budget")):
+        ax.hlines(y, m[f"{col}_image"], m[f"{col}_part"], color=AXIS, linewidth=1.5)
+        ax.scatter(m[f"{col}_image"], y, s=36, color=SERIES[0], label="split by image (old)", zorder=3,
+                   edgecolors=SURFACE, linewidths=1)
+        ax.scatter(m[f"{col}_part"], y, s=36, color=SERIES[1], label="split by part", zorder=3,
+                   edgecolors=SURFACE, linewidths=1)
+        ax.set_yticks(y, labels, fontsize=8)
+        _style(ax, "Held-out rate (mean of 20 splits)", "", title)
+    axes[0].legend(frameon=False, fontsize=9, loc="lower right", labelcolor=INK2)
+    fig.suptitle("Splitting test_public by image puts the same part on both sides and hides misses",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "split_comparison.png")
+
+
+def latency_figure(df: pd.DataFrame, out: Path | None = None) -> Path:
+    """Median per-image latency (bar) and p95 (whisker) per model and runtime."""
+    models = [m for m in MODEL_SLOT if m in set(df.model)]
+    runtimes = list(dict.fromkeys(df.runtime))
+    fig, (ax,) = _figure(1, 9, 4.2)
+    x = np.arange(len(models))
+    width = 0.8 / len(runtimes)
+    for i, rt in enumerate(runtimes):
+        d = df[df.runtime == rt].set_index("model").reindex(models)
+        pos = x + (i - (len(runtimes) - 1) / 2) * width
+        ax.bar(pos, d.median_ms, width=width - 0.03, color=SERIES[i], label=rt, edgecolor=SURFACE, linewidth=1)
+        ax.errorbar(pos, d.median_ms, yerr=[np.zeros(len(d)), d.p95_ms - d.median_ms], fmt="none",
+                    ecolor=INK2, elinewidth=1, capsize=3)
+        for px, v in zip(pos, d.median_ms):
+            if np.isfinite(v):
+                ax.annotate(f"{v:.1f}", (px, v), xytext=(0, 3), textcoords="offset points", ha="center",
+                            color=INK2, fontsize=8)
+    ax.set_xticks(x, models)
+    _style(ax, "", "Latency per image (ms, batch 1)", "Median latency (whisker = p95), pre-processing included")
+    ax.legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    return _save(fig, out or Path("results/figures") / "latency.png")

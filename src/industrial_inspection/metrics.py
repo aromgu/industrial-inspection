@@ -60,21 +60,28 @@ def evaluate_at_threshold(scores, labels, threshold: float) -> OperatingPoint:
     return OperatingPoint(threshold=float(threshold), miss_rate=miss, overkill_rate=overkill)
 
 
-def stratified_split(labels, calib_fraction: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
-    """Index arrays (calib, eval) with the defect ratio preserved in both."""
+def stratified_split(labels, calib_fraction: float, seed: int, groups=None) -> tuple[np.ndarray, np.ndarray]:
+    """Index arrays (calib, eval) with the defect ratio preserved in both.
+
+    With ``groups`` (one id per sample, e.g. the physical part an image shows), whole groups are
+    assigned to one side, so the same part never appears in both calibration and evaluation.
+    """
     y = np.asarray(labels)
+    g = np.arange(y.size) if groups is None else np.asarray(groups)
     rng = np.random.default_rng(seed)
     calib, evals = [], []
     for cls in (0, 1):
-        idx = rng.permutation(np.flatnonzero(y == cls))
-        n_calib = round(calib_fraction * idx.size)
-        calib.append(idx[:n_calib])
-        evals.append(idx[n_calib:])
+        members = np.flatnonzero(y == cls)
+        units = rng.permutation(np.unique(g[members]))
+        n_calib = round(calib_fraction * units.size)
+        in_calib = np.isin(g[members], units[:n_calib])
+        calib.append(members[in_calib])
+        evals.append(members[~in_calib])
     return np.sort(np.concatenate(calib)), np.sort(np.concatenate(evals))
 
 
 def held_out_operating_point(
-    scores, labels, target_miss_rate: float, calib_fraction: float = 0.5, seed: int = 0
+    scores, labels, target_miss_rate: float, calib_fraction: float = 0.5, seed: int = 0, groups=None
 ) -> tuple[OperatingPoint, OperatingPoint]:
     """(calibration-set point, held-out point) for one stratified split.
 
@@ -82,7 +89,7 @@ def held_out_operating_point(
     on the same data you report on.
     """
     s, y = _as_arrays(scores, labels)
-    calib, evals = stratified_split(y, calib_fraction, seed)
+    calib, evals = stratified_split(y, calib_fraction, seed, groups)
     thr = calibrate_threshold(s[calib], y[calib], target_miss_rate)
     return evaluate_at_threshold(s[calib], y[calib], thr), evaluate_at_threshold(s[evals], y[evals], thr)
 

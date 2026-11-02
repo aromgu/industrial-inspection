@@ -24,6 +24,7 @@ from anomalib.models import Dinomaly, EfficientAd, MHPatchcore, Patchcore
 from lightning.pytorch.callbacks import Callback
 from sklearn.metrics import roc_auc_score
 from torch.utils.data import DataLoader, RandomSampler, Subset
+from torchvision.transforms.v2 import ColorJitter
 from tqdm import tqdm
 
 from industrial_inspection.plots import test_figure, training_figure
@@ -36,9 +37,17 @@ MODELS = {
     "dinomaly": lambda: Dinomaly(**OFF),
     # ViT-L is the strongest encoder in the Dinomaly paper.
     "dinomaly_l": lambda: Dinomaly(encoder_name="vit_large_patch14_reg4_dinov2", **OFF),
+    # Same model, run on a tiled copy of a category (scripts/make_tiles.py); a separate name keeps
+    # its outputs apart from the untiled run.
+    "mhpatchcore_tile": lambda: MHPatchcore(**OFF),
+    # PatchCore whose memory bank is built from brightness/contrast-jittered training images.
+    "patchcore_aug": lambda: Patchcore(**OFF),
 }
+# Training-set augmentation per model (train holds only "regular" lighting; test has more).
+TRAIN_AUG = {"patchcore_aug": lambda: ColorJitter(brightness=0.35, contrast=0.35)}
 # EfficientAD's student-teacher training assumes one image per step.
-TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly": 8, "dinomaly_l": 4}
+TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly": 8, "dinomaly_l": 4,
+               "mhpatchcore_tile": 16, "patchcore_aug": 16}
 # Gradient-trained models need an explicit length, otherwise Lightning runs 1000 epochs.
 # Values are the papers' defaults; the memory-bank models fit in a single pass.
 MAX_STEPS = {"efficientad": 70_000, "dinomaly": 5_000, "dinomaly_l": 5_000}
@@ -86,6 +95,10 @@ class GpuThrottle(Callback):
         if torch.cuda.is_available():
             torch.cuda.synchronize()  # count the queued GPU work, not just the launch time
         time.sleep((time.perf_counter() - self.start) * (1 / self.duty - 1))
+
+    # Inference gets the same cap, so predicting a large test set does not saturate the GPU either.
+    on_predict_batch_start = on_train_batch_start
+    on_predict_batch_end = on_train_batch_end
 
 
 def lower_cpu_priority() -> None:
@@ -241,6 +254,7 @@ def main() -> None:
         root=args.root,
         category=args.category,
         train_batch_size=args.train_batch_size or TRAIN_BATCH[args.model],
+        train_augmentations=TRAIN_AUG[args.model]() if args.model in TRAIN_AUG else None,
         eval_batch_size=8,
         num_workers=args.num_workers,
         seed=args.seed,
