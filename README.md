@@ -317,6 +317,16 @@ PatchCore를 Dinomaly-L과 같은 392px로 다시 학습했습니다(coreset 선
 
 **가설은 기각됐습니다.** 중앙값을 빼도 Dinomaly-L의 변동은 오히려 커집니다. 조명 효과는 맵 전체를 올리는 것이 아니라 그림자와 반사처럼 **국소적**입니다. 다음은 입력 이미지 정규화(CLAHE 등)와 국소 조명 증강입니다.
 
+### Q2 다음 단계 코드 (준비 완료, 아직 실행 전)
+
+![q2 preview](docs/figures/q2_preview__walnuts.png)
+
+- `src/industrial_inspection/lighting.py`: 입력 정규화 `LightNorm`(clahe, histeq, standardize, gray, retinex)과 국소 조명 증강 `LocalLight`(방향성 밝기 기울기, 부드러운 그림자, 반사광, 감마).
+- `score.py` 모델 이름: `<base>_<norm>`(정규화), `<base>_light`(증강), `<base>_light_<norm>`(둘 다). base는 `patchcore` 또는 `dinomaly_l`이고, 나머지 설정은 base와 같습니다. 정규화는 크기 조정 뒤, ImageNet 정규화 앞에서 학습과 test 모두에 적용됩니다.
+- `scripts/q2_preview.py`: 학습 전에 같은 정상 부품이 조건별로 어떻게 바뀌는지 보는 그림(위). walnuts의 `shift` 조건은 조명 방향이 바뀌어 그림자 방향이 달라집니다.
+- `scripts/q2_compare.py`: 개발용 절반에서 변형들을 비교하고, 부품 단위 부트스트랩 95% 구간과 base 모델 대비 짝지은 차이를 냅니다.
+- `scripts/q2_run.sh`: 모든 변형을 먼저 스모크 테스트하고, 하나라도 실패하면 본 실행을 시작하지 않습니다.
+
 ## 알려진 함정
 
 - **경로에 비ASCII 문자가 있으면 anomalib이 거부합니다.** 경로 검증이 절대 경로로 바꾸기 전 문자열에 대해 이뤄지므로, 데이터 경로는 레포 기준 상대 경로로 넘기세요.

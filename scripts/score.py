@@ -21,12 +21,14 @@ import torch
 from anomalib.data import MVTecAD, MVTecAD2
 from anomalib.engine import Engine
 from anomalib.models import Dinomaly, EfficientAd, MHPatchcore, Patchcore
+from anomalib.pre_processing import PreProcessor
 from lightning.pytorch.callbacks import Callback
 from sklearn.metrics import roc_auc_score
 from torch.utils.data import DataLoader, RandomSampler, Subset
-from torchvision.transforms.v2 import ColorJitter
+from torchvision.transforms.v2 import CenterCrop, ColorJitter, Compose, Normalize, Resize
 from tqdm import tqdm
 
+from industrial_inspection.lighting import NORMS, LightNorm, LocalLight
 from industrial_inspection.plots import test_figure, training_figure
 
 OFF = {"post_processor": False, "evaluator": False, "visualizer": False}
@@ -57,6 +59,35 @@ TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly":
 # Values are the papers' defaults; the memory-bank models fit in a single pass.
 MAX_STEPS = {"efficientad": 70_000, "dinomaly": 5_000, "dinomaly_l": 5_000}
 SMOKE_STEPS = 20
+
+# Q2 (lighting) variants of the two research models, same settings as their base otherwise:
+#   <base>_<norm>   input normalisation inside the pre-processor, after the resize/crop and before the
+#                   ImageNet normalisation, on train and test alike (H2-b; norms in lighting.NORMS)
+#   <base>_light    training images relit with local lighting augmentation, p = 0.5 (H2-c)
+#   <base>_light_<norm>  both
+IMAGENET = {"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}
+
+
+def _pre(base: str, norm: str | None) -> PreProcessor:
+    """The base model's default pre-processing (see its configure_pre_processor) with LightNorm inserted."""
+    geometry = [Resize((256, 256), antialias=True)] if base == "patchcore" else [Resize((448, 448)), CenterCrop(392)]
+    return PreProcessor(transform=Compose([*geometry, *([LightNorm(norm)] if norm else []), Normalize(**IMAGENET)]))
+
+
+_BUILD = {"patchcore": lambda pre: Patchcore(pre_processor=pre, **OFF),
+          "dinomaly_l": lambda pre: Dinomaly(encoder_name="vit_large_patch14_reg4_dinov2", pre_processor=pre, **OFF)}
+for _base, _build in _BUILD.items():
+    for _aug in ("", "_light"):
+        for _norm in ("", *NORMS):
+            _name = f"{_base}{_aug}" + (f"_{_norm}" if _norm else "")
+            if _name == _base:
+                continue
+            MODELS[_name] = (lambda b=_build, base=_base, n=_norm or None: lambda: b(_pre(base, n)))()
+            TRAIN_BATCH[_name] = TRAIN_BATCH[_base]
+            if _base in MAX_STEPS:
+                MAX_STEPS[_name] = MAX_STEPS[_base]
+            if _aug:
+                TRAIN_AUG[_name] = lambda: LocalLight(p=0.5)
 
 
 def persist_workers(datamodule, num_workers: int) -> None:

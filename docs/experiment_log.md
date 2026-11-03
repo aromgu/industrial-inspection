@@ -120,3 +120,4 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 타일 재실험(뱅크 9000)은 MH-PatchCore 제외로 취소. seed 반복도 하지 않음.
 - 연구 단계 시작: 모델 PatchCore, Dinomaly-L. Q2(조명 과검, walnuts → vial, sheet_metal), Q1(작은 결함, can → wallplugs). 부품 단위 개발/평가 절반 분할(seed 2026).
 - Q2-1 맵 자기 정규화(walnuts 개발용 절반): 기각. PatchCore shift 과검 1.00 → 최선 0.87, Dinomaly-L 변동 2.36 → (중앙값 빼면) 3.29. 조명 효과는 국소적.
+- Q2 H2-b/H2-c/H2-d 코드 작성(실행은 2026-11-04 예정): `lighting.py`(LightNorm 5종, LocalLight), `score.py` 변형 이름(`<base>_<norm>`, `<base>_light`, `<base>_light_<norm>`), `q2_compare.py`, `q2_preview.py`, `q2_run.sh`. 스모크 테스트 통과(patchcore_light_clahe, dinomaly_l_light_retinex, walnuts). 테스트 16개 통과.

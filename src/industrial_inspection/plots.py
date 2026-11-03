@@ -486,3 +486,58 @@ def q2_selfnorm_figure(df: pd.DataFrame, category: str, half: str, out: Path | N
     fig.suptitle(f"Q2 step 1 - self-normalised image scores, {category} ({half} parts, threshold set on regular at 0 % miss)",
                  color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / f"q2_selfnorm__{category}__{half}.png")
+
+
+def q2_compare_figure(df: pd.DataFrame, category: str, half: str, out: Path | None = None) -> Path:
+    """Q2: lighting variants of the research models under shift, with part-bootstrap 95 % intervals.
+
+    df: one row per variant with base, overkill_shift(_lo/_hi), miss_shift, auroc_shift(_lo/_hi), drift.
+    """
+    d = df.iloc[::-1].reset_index(drop=True)  # first variant on top
+    y = np.arange(len(d))
+    colors = [model_color(b) for b in d.base]
+    fig, axes = _figure(3, 17, 1.6 + 0.42 * len(d))
+    panels = (("overkill_shift", "Overkill under shift (lower is better)", (0, 1.05)),
+              ("auroc_shift", "AUROC under shift", (0.3, 1.0)),
+              ("drift", "Median good score, shift / regular (1 = no drift)", None))
+    for ax, (col, title, xlim) in zip(axes, panels):
+        ax.barh(y, d[col], color=colors, edgecolor=SURFACE, linewidth=1, height=0.7)
+        if f"{col}_lo" in d:
+            ax.errorbar(d[col], y, xerr=[d[col] - d[f"{col}_lo"], d[f"{col}_hi"] - d[col]], fmt="none",
+                        ecolor=INK2, elinewidth=1, capsize=3)
+        for b in d.base.unique():  # dashed line at each base model's own value
+            ax.axvline(d.loc[d.variant == b, col].iloc[0] if (d.variant == b).any() else np.nan,
+                       color=model_color(b), linewidth=1, linestyle=(0, (4, 3)))
+        if col == "overkill_shift":
+            for yi, v, ms in zip(y, d[col], d.miss_shift):
+                ax.annotate(f"miss {ms:.0%}", (v, yi), xytext=(4, 0), textcoords="offset points", va="center",
+                            color=INK2, fontsize=8)
+        if col == "drift":
+            ax.axvline(1.0, color=AXIS, linewidth=1)
+        if xlim:
+            ax.set_xlim(*xlim)
+        ax.set_yticks(y, d.variant if ax is axes[0] else [""] * len(d))
+        _style(ax, "", "", title)
+    fig.suptitle(f"Q2 lighting variants - {category} ({half} parts; threshold set on regular at 0 % miss; bars = 95 % part bootstrap)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q2_compare__{category}__{half}.png")
+
+
+def q2_preview_figure(rows: list[tuple[str, list[np.ndarray]]], columns: list[str], title: str, out: Path) -> Path:
+    """Grid of example images: one row per transform, one column per capture condition."""
+    fig, axes = plt.subplots(len(rows), len(columns), figsize=(2.1 * len(columns), 2.1 * len(rows)),
+                             facecolor=SURFACE, squeeze=False)
+    for r, (name, images) in enumerate(rows):
+        for c, img in enumerate(images):
+            ax = axes[r, c]
+            ax.imshow(img, cmap="gray", vmin=0, vmax=1)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            for s in ax.spines.values():
+                s.set_visible(False)
+            if r == 0:
+                ax.set_title(columns[c], color=INK2, fontsize=9)
+            if c == 0:
+                ax.set_ylabel(name, color=INK2, fontsize=9)
+    fig.suptitle(title, color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out)
