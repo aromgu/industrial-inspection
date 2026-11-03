@@ -286,7 +286,7 @@ def fewshot_figure(overall: pd.DataFrame, out: Path | None = None) -> Path:
         ax.set_ylim(0, 1.02)
         _style(ax, "Known defective parts used for calibration (k)", ylabel, title)
     a1.legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
-    fig.suptitle("Few-shot threshold calibration - mean over 3 models x 8 categories, 200 part-level draws each",
+    fig.suptitle("Few-shot threshold calibration - mean over all models x 8 categories, 200 part-level draws each",
                  color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / "fewshot_calibration.png")
 
@@ -356,3 +356,52 @@ def latency_figure(df: pd.DataFrame, out: Path | None = None) -> Path:
     _style(ax, "", "Latency per image (ms, batch 1)", "Median latency (whisker = p95), pre-processing included")
     ax.legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
     return _save(fig, out or Path("results/figures") / "latency.png")
+
+
+def ad1_check_figure(per_cat: pd.DataFrame, published_mean: float, out: Path | None = None) -> Path:
+    """Image AUROC of PatchCore per original MVTec AD category, against the published average."""
+    d = per_cat.sort_values("auroc")
+    fig, (ax,) = _figure(1, 10, 4.4)
+    y = np.arange(len(d))
+    ax.hlines(y, 0.85, d.auroc, color=AXIS, linewidth=1.5)
+    ax.scatter(d.auroc, y, s=60, color=model_color("patchcore"), edgecolors=SURFACE, linewidths=1.2, zorder=3)
+    ax.axvline(d.auroc.mean(), color=model_color("patchcore"), linewidth=1.2, linestyle=(0, (4, 3)))
+    ax.axvline(published_mean, color=INK2, linewidth=1.2, linestyle=(0, (1, 2)))
+    ax.annotate(f"ours mean {d.auroc.mean():.3f}", (d.auroc.mean(), len(d) - 0.6), xytext=(-4, 0),
+                textcoords="offset points", ha="right", color=INK2, fontsize=9)
+    ax.annotate(f"published ~{published_mean:.2f}", (published_mean, 0.4), xytext=(4, 0),
+                textcoords="offset points", color=INK2, fontsize=9)
+    ax.set_yticks(y, d.category)
+    ax.set_xlim(0.85, 1.005)
+    _style(ax, "Image AUROC", "", "PatchCore on the original MVTec AD (pipeline sanity check)")
+    return _save(fig, out or Path("results/figures") / "ad1_check.png")
+
+
+def map_study_figure(agg: pd.DataFrame, aupro: pd.DataFrame, overkill: pd.DataFrame, out: Path | None = None) -> Path:
+    """Image-score aggregations (mean AUROC and held-out overkill) and AU-PRO@0.05 per model."""
+    models = [m for m in MODEL_SLOT if m in set(agg.model)]
+    names = ["model score", "max", "top1", "top5", "mean"]
+    fig, axes = _figure(3, 17, 4.6)
+    x = np.arange(len(names))
+    width = 0.8 / len(models)
+    for ax, df, ylabel, title in ((axes[0], agg, "Mean AUROC over 8 categories", "Image score from the anomaly map"),
+                                  (axes[1], overkill, "Overkill at 0 % miss (part split)", "Overkill on unseen parts")):
+        for i, m in enumerate(models):
+            v = df[df.model == m].set_index("aggregation").reindex(names).value
+            ax.bar(x + (i - (len(models) - 1) / 2) * width, v, width=width - 0.02, color=model_color(m), label=m,
+                   edgecolor=SURFACE, linewidth=1)
+        ax.set_xticks(x, names)
+        _style(ax, "", ylabel, title)
+    axes[0].set_ylim(0.4, 0.8)
+    axes[1].set_ylim(0.5, 1.0)
+    axes[0].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2, ncol=2)
+    cats = sorted(aupro.category.unique())
+    yy = np.arange(len(cats))
+    offs = np.linspace(-0.25, 0.25, len(models))
+    for off, m in zip(offs, models):
+        v = aupro[aupro.model == m].set_index("category").reindex(cats).aupro_005
+        axes[2].scatter(v, yy + off, s=40, color=model_color(m), edgecolors=SURFACE, linewidths=1, zorder=3)
+    axes[2].set_yticks(yy, cats)
+    _style(axes[2], "AU-PRO up to 5 % FPR (model input resolution)", "", "Defect localisation")
+    fig.suptitle("Anomaly-map study on MVTec AD 2 test_public", color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "map_study.png")

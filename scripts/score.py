@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
-from anomalib.data import MVTecAD2
+from anomalib.data import MVTecAD, MVTecAD2
 from anomalib.engine import Engine
 from anomalib.models import Dinomaly, EfficientAd, MHPatchcore, Patchcore
 from lightning.pytorch.callbacks import Callback
@@ -213,6 +213,8 @@ def main() -> None:
     p.add_argument("--model", choices=MODELS, required=True)
     p.add_argument("--category", required=True)
     p.add_argument("--root", type=Path, default=Path("datasets/MVTec_AD_2"))
+    p.add_argument("--dataset", choices=["mvtecad2", "mvtecad"], default="mvtecad2",
+                   help="mvtecad = the original MVTec AD, used to check the pipeline against published numbers")
     p.add_argument("--out", type=Path, default=Path("results/scores"))
     p.add_argument("--max-epochs", type=int, default=None)
     p.add_argument("--num-workers", type=int, default=4)
@@ -250,7 +252,7 @@ def main() -> None:
 
     torch.manual_seed(args.seed)
     torch.set_float32_matmul_precision("high")  # use tensor cores (Ampere+) for fp32 matmuls
-    datamodule = MVTecAD2(
+    datamodule = {"mvtecad2": MVTecAD2, "mvtecad": MVTecAD}[args.dataset](
         root=args.root,
         category=args.category,
         train_batch_size=args.train_batch_size or TRAIN_BATCH[args.model],

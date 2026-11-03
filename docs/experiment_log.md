@@ -105,3 +105,10 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 조명 증강 PatchCore(밝기·대비 ±35%): 8개 카테고리 평균 AUROC 0.679→0.673.
 - 지연시간(배치 1): EfficientAD 7.4/6.0ms, MH-PatchCore 14.7/9.8ms(ONNX 점수 불일치), PatchCore 14.1/13.7ms, Dinomaly-L 90.5/52.4ms (PyTorch/ONNX Runtime).
 - EfficientAD 8개 카테고리 스윕을 게임 모드로 시작(can 완료: AUROC 0.494, 5,880s). fabric이 67%(47075/70000)일 때 2026-11-02 18:17에 사용자 요청으로 중단. 체크포인트가 없어 fabric은 처음부터 다시 돌려야 함. 남은 6개(fabric, fruit_jelly, rice, vial, wallplugs, walnuts)는 미실행. 카테고리당 약 100분(게임 모드), 재개 명령은 `scripts/sweep.sh` 주석 참고.
+
+## 2026-11-03
+
+- EfficientAD 나머지 6개 카테고리를 게임 모드 없이 두 줄 병렬로 완료(합계 23.7 it/s, 한 줄 약 19 it/s). 8개 결과: can 0.494, fabric 0.547, wallplugs 0.534, rice 0.504, sheet_metal 0.573, fruit_jelly 0.873, vial 0.804, walnuts 0.760. 평균 0.636.
+- 조명 증강 PatchCore의 shift 조건 과검률 0.909 → 0.908(효과 없음).
+- 원본 MVTec AD(공식 아카이브와 SHA-256 일치)로 PatchCore 15개 카테고리: 평균 이미지 AUROC 0.982. 파이프라인 정상.
+- 이상 맵 분석(4×8): 재현 26/32 동일, 나머지 차이 ≤0.0006. 집계 방식에 일관된 개선 없음. AU-PRO@0.05(모델 입력 해상도) 평균 Dinomaly-L 0.317, MH-PatchCore 0.211, PatchCore 0.176, EfficientAD 0.141.
