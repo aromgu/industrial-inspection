@@ -112,3 +112,11 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 조명 증강 PatchCore의 shift 조건 과검률 0.909 → 0.908(효과 없음).
 - 원본 MVTec AD(공식 아카이브와 SHA-256 일치)로 PatchCore 15개 카테고리: 평균 이미지 AUROC 0.982. 파이프라인 정상.
 - 이상 맵 분석(4×8): 재현 26/32 동일, 나머지 차이 ≤0.0006. 집계 방식에 일관된 개선 없음. AU-PRO@0.05(모델 입력 해상도) 평균 Dinomaly-L 0.317, MH-PatchCore 0.211, PatchCore 0.176, EfficientAD 0.141.
+- MH-PatchCore 원본 MVTec AD 15개: 평균 0.986(PatchCore 0.982). 구현 정상.
+- PatchCore 392px(can, fabric, rice, sheet_metal): AUROC 평균 0.610 → 0.627, AU-PRO 0.059 → 0.150. rice·sheet_metal에서 Dinomaly-L 우위는 392px와 비교해도 남음 → 우위는 주로 모델에서 옴.
+- validation 정상 이미지로 정한 conformal 임계값(과검 10% 목표): PatchCore 과검 20%/미검 53%, Dinomaly-L 44%/28%. regular 조명만 보면 7%, 11%로 목표 근처, shift 조명에서 31%, 66%.
+- 부품 단위 부트스트랩(300회): 모델 평균 AUROC 구간이 겹침. Dinomaly-L 0.71 [0.67, 0.74], EfficientAD 0.64 [0.61, 0.66].
+- 이미지 읽기+리사이즈(CPU): 이미지당 43~194ms.
+- 타일 재실험(뱅크 9000)은 MH-PatchCore 제외로 취소. seed 반복도 하지 않음.
+- 연구 단계 시작: 모델 PatchCore, Dinomaly-L. Q2(조명 과검, walnuts → vial, sheet_metal), Q1(작은 결함, can → wallplugs). 부품 단위 개발/평가 절반 분할(seed 2026).
+- Q2-1 맵 자기 정규화(walnuts 개발용 절반): 기각. PatchCore shift 과검 1.00 → 최선 0.87, Dinomaly-L 변동 2.36 → (중앙값 빼면) 3.29. 조명 효과는 국소적.

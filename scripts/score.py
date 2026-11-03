@@ -42,12 +42,17 @@ MODELS = {
     "mhpatchcore_tile": lambda: MHPatchcore(**OFF),
     # PatchCore whose memory bank is built from brightness/contrast-jittered training images.
     "patchcore_aug": lambda: Patchcore(**OFF),
+    # PatchCore at Dinomaly's input size (392, no crop), to separate model from resolution.
+    "patchcore_392": lambda: Patchcore(pre_processor=Patchcore.configure_pre_processor(image_size=(392, 392)), **OFF),
+    # Tiled MH-PatchCore with a memory bank 9x the default 1000, so tiling (8-9x more patches)
+    # does not also shrink how much of the normal data the bank can hold.
+    "mhpatchcore_tilebig": lambda: MHPatchcore(memory_bank_size=9000, **OFF),
 }
 # Training-set augmentation per model (train holds only "regular" lighting; test has more).
 TRAIN_AUG = {"patchcore_aug": lambda: ColorJitter(brightness=0.35, contrast=0.35)}
 # EfficientAD's student-teacher training assumes one image per step.
 TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly": 8, "dinomaly_l": 4,
-               "mhpatchcore_tile": 16, "patchcore_aug": 16}
+               "mhpatchcore_tile": 16, "patchcore_aug": 16, "patchcore_392": 16, "mhpatchcore_tilebig": 16}
 # Gradient-trained models need an explicit length, otherwise Lightning runs 1000 epochs.
 # Values are the papers' defaults; the memory-bank models fit in a single pass.
 MAX_STEPS = {"efficientad": 70_000, "dinomaly": 5_000, "dinomaly_l": 5_000}

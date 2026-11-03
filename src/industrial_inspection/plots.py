@@ -405,3 +405,84 @@ def map_study_figure(agg: pd.DataFrame, aupro: pd.DataFrame, overkill: pd.DataFr
     _style(axes[2], "AU-PRO up to 5 % FPR (model input resolution)", "", "Defect localisation")
     fig.suptitle("Anomaly-map study on MVTec AD 2 test_public", color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / "map_study.png")
+
+
+def bootstrap_figure(per_cat: pd.DataFrame, per_model: pd.DataFrame, out: Path | None = None) -> Path:
+    """95 % part-level bootstrap intervals: per category AUROC, and per model means of AUROC and overkill."""
+    models = [m for m in MODEL_SLOT if m in set(per_cat.model)]
+    cats = sorted(per_cat.category.unique())
+    fig, (a1, a2, a3) = _figure(3, 17, 4.8)
+    offs = np.linspace(-0.27, 0.27, len(models))
+    for off, m in zip(offs, models):
+        d = per_cat[per_cat.model == m].set_index("category").reindex(cats)
+        y = np.arange(len(cats)) + off
+        a1.hlines(y, d.auroc_lo, d.auroc_hi, color=model_color(m), linewidth=2, alpha=0.7)
+        a1.scatter(d.auroc, y, s=22, color=model_color(m), edgecolors=SURFACE, linewidths=0.8, zorder=3, label=m)
+    a1.axvline(0.5, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+    a1.set_yticks(range(len(cats)), cats)
+    _style(a1, "AUROC (dot) with 95 % interval", "", "Per category")
+    a1.legend(frameon=False, fontsize=8.5, loc="lower right", labelcolor=INK2)
+    for ax, col, label in ((a2, "auroc", "Mean AUROC over 8 categories"), (a3, "overkill", "Mean overkill at 0 % miss (part split)")):
+        d = per_model.set_index("model").reindex(models)
+        x = np.arange(len(models))
+        ax.errorbar(x, d[col], yerr=[d[col] - d[f"{col}_lo"], d[f"{col}_hi"] - d[col]], fmt="none", ecolor=INK2,
+                    elinewidth=1.2, capsize=4, zorder=2)
+        ax.scatter(x, d[col], s=70, c=[model_color(m) for m in models], edgecolors=SURFACE, linewidths=1.2, zorder=3)
+        for xi, v, lo_, hi_ in zip(x, d[col], d[f"{col}_lo"], d[f"{col}_hi"]):
+            ax.annotate(f"{v:.2f}\n[{lo_:.2f}, {hi_:.2f}]", (xi, hi_), xytext=(0, 4), textcoords="offset points",
+                        ha="center", color=INK2, fontsize=8)
+        ax.set_xticks(x, models)
+        ax.set_xlim(-0.6, len(models) - 0.4)
+        lo_all, hi_all = d[f"{col}_lo"].min(), d[f"{col}_hi"].max()
+        ax.set_ylim(lo_all - 0.05 * (hi_all - lo_all), hi_all + 0.22 * (hi_all - lo_all))  # room for the labels
+        _style(ax, "", label, "Per model (95 % interval)")
+    fig.suptitle("Part-level bootstrap: how much the numbers move with a different set of physical parts",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "bootstrap_ci.png")
+
+
+def io_latency_figure(summary: pd.DataFrame, out: Path | None = None) -> Path:
+    """CPU time to read a camera-resolution image and resize it to 256 px, per category (median)."""
+    d = summary[summary["size"] == 256].sort_values("megapixels")
+    fig, (ax,) = _figure(1, 10, 4.2)
+    y = np.arange(len(d))
+    ax.barh(y, d.decode_ms, color=SERIES[0], label="read + decode PNG", edgecolor=SURFACE, linewidth=1)
+    ax.barh(y, d.resize_ms, left=d.decode_ms, color=SERIES[1], label="resize to 256", edgecolor=SURFACE, linewidth=1)
+    for yi, total, mp in zip(y, d.decode_ms + d.resize_ms, d.megapixels):
+        ax.annotate(f"{total:.0f} ms ({mp:.1f} MP)", (total, yi), xytext=(4, 0), textcoords="offset points",
+                    va="center", color=INK2, fontsize=9)
+    ax.set_yticks(y, d.category)
+    ax.set_xlim(0, (d.decode_ms + d.resize_ms).max() * 1.3)
+    _style(ax, "Milliseconds per image (CPU, median)", "", "Image I/O before the model (not in latency.png)")
+    ax.legend(frameon=False, fontsize=9, loc="lower right", labelcolor=INK2)
+    return _save(fig, out or Path("results/figures") / "io_latency.png")
+
+
+def q2_selfnorm_figure(df: pd.DataFrame, category: str, half: str, out: Path | None = None) -> Path:
+    """Q2: each score variant's overkill and miss under shift (threshold from regular), drift, AUROC."""
+    models = [m for m in MODEL_SLOT if m in set(df.model)]
+    names = list(dict.fromkeys(df.score))
+    fig, axes = _figure(3, 17, 4.6)
+    x = np.arange(len(names))
+    width = 0.8 / len(models)
+    panels = (("overkill_shift", "Overkill under shift", (0, 1.05)), ("drift", "Median good score, shift / regular", None),
+              ("auroc_shift", "AUROC under shift", (0.3, 1.0)))
+    for ax, (col, title, ylim) in zip(axes, panels):
+        for i, m in enumerate(models):
+            d = df[df.model == m].set_index("score").reindex(names)
+            ax.bar(x + (i - (len(models) - 1) / 2) * width, d[col], width=width - 0.03, color=model_color(m),
+                   label=m, edgecolor=SURFACE, linewidth=1)
+            if col == "overkill_shift":
+                for xi, ok, ms in zip(x + (i - (len(models) - 1) / 2) * width, d[col], d.miss_shift):
+                    ax.annotate(f"miss\n{ms:.0%}", (xi, ok), xytext=(0, 3), textcoords="offset points", ha="center",
+                                color=INK2, fontsize=7)
+        if col == "drift":
+            ax.axhline(1.0, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+        if ylim:
+            ax.set_ylim(*ylim)
+        ax.set_xticks(x, names, rotation=25, ha="right")
+        _style(ax, "", "", title)
+    axes[0].legend(frameon=False, fontsize=9, loc="lower left", labelcolor=INK2)
+    fig.suptitle(f"Q2 step 1 - self-normalised image scores, {category} ({half} parts, threshold set on regular at 0 % miss)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q2_selfnorm__{category}__{half}.png")
