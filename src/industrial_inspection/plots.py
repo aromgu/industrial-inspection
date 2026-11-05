@@ -653,7 +653,7 @@ def q2_finetune_figure(raw: pd.DataFrame, category: str, out: Path | None = None
         ax.set_xticks(range(len(conds)), conds)
         ax.set_ylim(-0.03, 1.03)
         _style(ax, "New light", "", title)
-    axes[0].legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
+    axes[0].legend(frameon=False, fontsize=9, loc="lower left", labelcolor=INK2)
     fig.suptitle(f"Q2 H2-f - Dinomaly-L fine-tuned on one good part under the new light ({category}, dev parts; dot = choice of part, bar = mean)",
                  color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / f"q2_finetune__{category}.png")
