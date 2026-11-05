@@ -659,3 +659,58 @@ def q2_finetune_figure(raw: pd.DataFrame, category: str, half: str = "dev", out:
                  color=INK, fontsize=12, x=0.01, ha="left")
     name = f"q2_finetune__{category}.png" if half == "dev" else f"q2_finetune__{category}__{half}.png"
     return _save(fig, out or Path("results/figures") / name)
+
+
+def xcond_figure(df: pd.DataFrame, out: Path | None = None) -> Path:
+    """Cross-condition consistency: part-level AUROC per category, one photo vs all photos (mean) vs pixel-min."""
+    models = list(dict.fromkeys(df.model))
+    keys = [("one photo (regular)", "one photo, regular light", SERIES[6]),
+            ("image-mean, all", "all photos, mean of image scores", SERIES[3]),
+            ("pixel-min, all", "all photos, pixel-min (proposed)", SERIES[2])]
+    rows = int(np.ceil(len(models) / 2))
+    fig, axes = plt.subplots(rows, 2, figsize=(17, 4.4 * rows), facecolor=SURFACE, squeeze=False)
+    for ax, m in zip(axes.flat, models):
+        d = df[df.model == m]
+        cats = list(dict.fromkeys(d.category))
+        x = np.arange(len(cats) + 1)
+        for i, (key, label, color) in enumerate(keys):
+            e = d[d.key == key].set_index("category").reindex(cats)
+            vals = np.append(e.auroc.to_numpy(), e.auroc.mean())
+            lo = np.append(e.auroc_lo.to_numpy(), np.nan)
+            hi = np.append(e.auroc_hi.to_numpy(), np.nan)
+            xi = x + (i - 1) * 0.27
+            ax.bar(xi, vals, 0.25, color=color, label=label, edgecolor=SURFACE)
+            ax.errorbar(xi, vals, yerr=[vals - lo, hi - vals], fmt="none", ecolor=INK2, elinewidth=0.8, capsize=2)
+        ax.axhline(0.5, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+        ax.set_xticks(x, [*cats, "mean"], rotation=25, ha="right")
+        ax.set_ylim(0, 1.05)
+        _style(ax, "", "Part-level AUROC", m)
+    for ax in axes.flat[len(models):]:
+        ax.set_visible(False)
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=9, loc="upper right", ncol=3, labelcolor=INK2)
+    fig.suptitle("Cross-condition consistency: score a part from all its photos (bars = 95 % part bootstrap)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "xcond_main.png")
+
+
+def xcond_subset_figure(df: pd.DataFrame, one_photo: pd.Series | None = None, out: Path | None = None) -> Path:
+    """How many photos are needed: AUROC vs number of photos (regular + k-1 others), mean over subsets, then
+    over categories. Only k that every category has (fruit_jelly has 4 conditions), so each point averages
+    the same categories; one_photo (model -> mean AUROC with the regular photo alone) is drawn at k = 1."""
+    kmax = int(df.groupby("category").k.max().min())
+    df = df[df.k <= kmax]
+    fig, (ax,) = _figure(1, 11, 4.6)
+    for m in dict.fromkeys(df.model):
+        for how, ls in (("pixel-min", "-"), ("image-mean", (0, (4, 3)))):
+            d = df[(df.model == m) & (df.combiner == how)].groupby(["k", "category"]).auroc.mean().groupby("k").mean()
+            xs, ys = list(d.index), list(d.values)
+            if one_photo is not None and m in one_photo:
+                xs, ys = [1, *xs], [one_photo[m], *ys]
+            ax.plot(xs, ys, color=model_color(m), linestyle=ls, marker="o",
+                    label=f"{m}, {'pixel-min' if how == 'pixel-min' else 'mean of image scores'}")
+    ax.set_xticks(range(1, kmax + 1))
+    _style(ax, "Photos per part (regular first, then others)", "Part-level AUROC (mean of 8 categories)",
+           "How many photos are needed? (k = 1: regular photo alone)")
+    ax.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.01, 0.5), labelcolor=INK2)
+    return _save(fig, out or Path("results/figures") / "xcond_subsets.png")

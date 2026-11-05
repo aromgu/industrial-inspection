@@ -136,3 +136,4 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - Q2 최종 확인(H2-e, 재학습 없음): walnuts 평가용 절반에서 PatchCore 메모리 뱅크 추가 0.60 → 0.58(재현 안 됨), vial 0.10 → 0.16, sheet_metal 0.83 → 0.86. 임계값 다시 맞추기는 오경보를 줄이지만 놓침이 늘어남(walnuts PatchCore 4 → 8%, sheet_metal 2 → 17%). 개발용 절반 승자는 우연이었음. walnuts 평가용 절반은 이 방법으로 한 번 사용함.
 - Q2 H2-f 다른 카테고리 확인(Dinomaly-L 미세조정, 전체 부품): vial 0.65 → 0.63(20회), sheet_metal 1.00 → 1.00(12회). 재현 안 됨. Q2 종료: 가벼운 대응으로는 조명 과검이 줄지 않음.
 - Q1 wallplugs(게임 모드, PatchCore 256 체크포인트, 맵만 다시 뽑음): test 정상 = validation 정상 점수(46.0 vs 46.3), 보통 조명 AUROC 0.61. 부품 자세가 사진마다 다르고 큰 파손 결함도 맵에서 어두움. `export_maps.py --game-mode` 추가.
+- 새 연구, 촬영 조건 간 일관성(`xcond.py`, 재학습 없음, 기존 맵, 부품 단위, 부트스트랩 500): Dinomaly-L AUROC 0.771(사진 1장) → 0.777(점수 평균) → 0.819(pixel-min), 사진 2장 0.800. 다른 세 모델은 pixel-min이 점수 평균보다 낫지 않음. 구간이 0을 벗어난 카테고리: Dinomaly-L can +0.36, wallplugs −0.06. 엄격한 운영점(정상 경보 0)에서 잡는 불량 부품 70 → 69.
