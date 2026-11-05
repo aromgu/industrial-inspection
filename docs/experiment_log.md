@@ -137,3 +137,4 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - Q2 H2-f 다른 카테고리 확인(Dinomaly-L 미세조정, 전체 부품): vial 0.65 → 0.63(20회), sheet_metal 1.00 → 1.00(12회). 재현 안 됨. Q2 종료: 가벼운 대응으로는 조명 과검이 줄지 않음.
 - Q1 wallplugs(게임 모드, PatchCore 256 체크포인트, 맵만 다시 뽑음): test 정상 = validation 정상 점수(46.0 vs 46.3), 보통 조명 AUROC 0.61. 부품 자세가 사진마다 다르고 큰 파손 결함도 맵에서 어두움. `export_maps.py --game-mode` 추가.
 - 새 연구, 촬영 조건 간 일관성(`xcond.py`, 재학습 없음, 기존 맵, 부품 단위, 부트스트랩 500): Dinomaly-L AUROC 0.771(사진 1장) → 0.777(점수 평균) → 0.819(pixel-min), 사진 2장 0.800. 다른 세 모델은 pixel-min이 점수 평균보다 낫지 않음. 구간이 0을 벗어난 카테고리: Dinomaly-L can +0.36, wallplugs −0.06. 엄격한 운영점(정상 경보 0)에서 잡는 불량 부품 70 → 69.
+- 조건 간 일관성 보완: 사진 간 이동량(경계 위상 상관) 256 격자 기준 대부분 0칸, wallplugs 최대 0.28칸, vial 최대 0.5칸 → 위치 맞추기 불필요. 결함 영역 점수는 조건 간 거의 일정. anchored 0.773, hybrid 0.798(엄격 기준 72개), pixel-min 0.819로 pixel-min 유지.

@@ -13,6 +13,10 @@ Reported per model and category (all test_public parts; the halves are too small
   * which defective parts each combiner rescues or loses at the threshold where no good part alarms.
 The main configuration (pixel-min over every available condition) was fixed by the hypothesis; the
 2- and 3-photo subsets, the other combiners and the alignment tolerance are secondary analyses.
+Added after the first run (2026-11-05): "anchored" (anomalous in the regular photo and in at least
+one other) and "hybrid" (mean of the label-free robust z-scores of the one-photo and pixel-min
+scores), to keep defects that only one photo shows. Photo-to-photo alignment was measured instead of
+added: the shifts are below one map cell in every category (results/xcond/shifts.csv).
 
     uv run python scripts/xcond.py --models patchcore dinomaly_l efficientad mhpatchcore
 """
@@ -33,7 +37,13 @@ from industrial_inspection.q2 import parts_and_tags
 from industrial_inspection.xcond import combine
 
 CATS = ["can", "fabric", "fruit_jelly", "rice", "sheet_metal", "vial", "wallplugs", "walnuts"]
-COMBINERS = ["image-mean", "image-max", "pixel-median", "pixel-2nd", "pixel-min"]
+COMBINERS = ["image-mean", "image-max", "pixel-median", "pixel-2nd", "pixel-min", "anchored"]
+
+
+def robust_z(s: np.ndarray) -> np.ndarray:
+    """Standardise a category's part scores by their median and IQR (no labels used)."""
+    q1, med, q3 = np.quantile(s, [0.25, 0.5, 0.75])
+    return (s - med) / max(q3 - q1, 1e-12)
 
 
 def load(model: str, category: str):
@@ -85,8 +95,13 @@ def main() -> None:
             configs = [("one photo (regular)", ["regular"], "image-mean", 0)]
             configs += [(f"{how}, all {len(conds)}", conds, how, 0) for how in COMBINERS]
             configs += [(f"pixel-min, all {len(conds)}, tol {args.radius}", conds, "pixel-min", args.radius)]
+            configs += [(f"hybrid (one photo + pixel-min), all {len(conds)}", conds, "hybrid", 0)]
             for label, cs, how, r in configs:
-                s, y2, names2 = part_scores(data, cs, how, r)
+                if how == "hybrid":  # half the one-photo score, half the consistency score
+                    s_min, y2, names2 = part_scores(data, cs, "pixel-min", r)
+                    s = 0.5 * robust_z(base_s) + 0.5 * robust_z(s_min)
+                else:
+                    s, y2, names2 = part_scores(data, cs, how, r)
                 assert names2 == names, "every part should have every condition"
                 b = np.array([roc_auc_score(y[i], s[i]) for i in boots])
                 b0 = np.array([roc_auc_score(y[i], base_s[i]) for i in boots])
