@@ -80,6 +80,7 @@ def main() -> None:
                         "(results/scores_val/), e.g. to set a normal-only threshold without touching test")
     p.add_argument("--tag", default="", help="suffix for output names, e.g. the tile grid")
     p.add_argument("--out", type=Path, default=Path("results"))
+    p.add_argument("--game-mode", action="store_true", help="~60 %% GPU duty, 60 %% VRAM, low CPU priority (see score.py)")
     p.add_argument("--eval-side", type=int, default=None,
                    help="score maps on an N x N grid with masks from the full-resolution files (no-crop models)")
     args = p.parse_args()
@@ -88,9 +89,16 @@ def main() -> None:
 
     ckpt = ckpt_of(args.model, args.category, args.out / "runs")
     model = CLASSES[args.model].load_from_checkpoint(ckpt, map_location="cpu")
-    dm = MVTecAD2(root=args.root, category=args.category, eval_batch_size=8, num_workers=2)
+    dm = MVTecAD2(root=args.root, category=args.category, eval_batch_size=8, num_workers=2)  # 2 workers also suits game mode
     dm.setup()
-    engine = Engine(logger=False, enable_progress_bar=False, limit_predict_batches=args.limit_batches)
+    callbacks = []
+    if args.game_mode:
+        from score import GpuThrottle, lower_cpu_priority  # scripts/ is on sys.path when run as a script
+
+        lower_cpu_priority()
+        torch.cuda.set_per_process_memory_fraction(0.6, 0)
+        callbacks.append(GpuThrottle(0.6))
+    engine = Engine(logger=False, enable_progress_bar=False, limit_predict_batches=args.limit_batches, callbacks=callbacks)
     loader = dm.val_dataloader() if args.split == "validation" else dm.test_dataloader()
     batches = engine.predict(model=model, dataloaders=loader)
     if args.split == "validation":

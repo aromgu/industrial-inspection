@@ -135,3 +135,4 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - Q2 H2-f(Dinomaly-L 미세조정, 새 조명 정상 1개 + 학습 사진 반반, 200스텝, StableAdamW lr 2e-4, 회당 약 95초 × 15회): 조명 오경보 0.73 → 0.53, 놓침 14 → 18%. shift_1 1.00 → 0.60, shift_3 1.00 → 0.70, shift_2 변화 없음. 재채점 점수는 저장 점수와 상대 오차 3e-4.
 - Q2 최종 확인(H2-e, 재학습 없음): walnuts 평가용 절반에서 PatchCore 메모리 뱅크 추가 0.60 → 0.58(재현 안 됨), vial 0.10 → 0.16, sheet_metal 0.83 → 0.86. 임계값 다시 맞추기는 오경보를 줄이지만 놓침이 늘어남(walnuts PatchCore 4 → 8%, sheet_metal 2 → 17%). 개발용 절반 승자는 우연이었음. walnuts 평가용 절반은 이 방법으로 한 번 사용함.
 - Q2 H2-f 다른 카테고리 확인(Dinomaly-L 미세조정, 전체 부품): vial 0.65 → 0.63(20회), sheet_metal 1.00 → 1.00(12회). 재현 안 됨. Q2 종료: 가벼운 대응으로는 조명 과검이 줄지 않음.
+- Q1 wallplugs(게임 모드, PatchCore 256 체크포인트, 맵만 다시 뽑음): test 정상 = validation 정상 점수(46.0 vs 46.3), 보통 조명 AUROC 0.61. 부품 자세가 사진마다 다르고 큰 파손 결함도 맵에서 어두움. `export_maps.py --game-mode` 추가.
