@@ -25,6 +25,8 @@ import timm
 import torch
 import torch.nn.functional as F
 from PIL import Image
+from torchvision.transforms.v2 import InterpolationMode
+from torchvision.transforms.v2.functional import rotate as tv_rotate
 
 MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 
@@ -32,20 +34,27 @@ MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 class HiResKNN:
     def __init__(self, backbone: str = "vit_large_patch14_reg4_dinov2.lvd142m", layers=(5, 11, 17, 23),
                  short_side: int = 672, tile: int = 448, overlap: int = 112, n_ref: int = 16,
-                 device: str = "cuda", gpu_duty: float = 1.0) -> None:
+                 device: str = "cuda", gpu_duty: float = 1.0, rotations: tuple[float, ...] = (0.0,)) -> None:
         self.vit = timm.create_model(backbone, pretrained=True, dynamic_img_size=True).eval().to(device)
         self.patch = self.vit.patch_embed.patch_size[0]
         self.layers, self.short_side, self.tile, self.overlap, self.n_ref = list(layers), short_side, tile, overlap, n_ref
-        self.device, self.gpu_duty = device, gpu_duty
+        self.device, self.gpu_duty, self.rotations = device, gpu_duty, list(rotations)
         self.bank: list[torch.Tensor] = []
 
     # ---------- input ----------
-    def load(self, path: str) -> torch.Tensor:
+    def load_raw(self, path: str) -> torch.Tensor:
+        """(1, 3, H, W) in [0, 1], before ImageNet normalisation (so rotation can pad with black)."""
         im = Image.open(path).convert("RGB")
         s = self.short_side / min(im.size)
         w, h = (round(im.width * s / self.patch) * self.patch, round(im.height * s / self.patch) * self.patch)
         x = torch.from_numpy(np.asarray(im.resize((w, h), Image.BICUBIC), dtype=np.float32) / 255).permute(2, 0, 1)
-        return ((x - torch.tensor(MEAN)[:, None, None]) / torch.tensor(STD)[:, None, None])[None]
+        return x[None]
+
+    def normalize(self, x: torch.Tensor) -> torch.Tensor:
+        return (x - torch.tensor(MEAN, device=x.device)[:, None, None]) / torch.tensor(STD, device=x.device)[:, None, None]
+
+    def load(self, path: str) -> torch.Tensor:
+        return self.normalize(self.load_raw(path))
 
     def _starts(self, length: int) -> list[int]:
         if length <= self.tile:
@@ -91,6 +100,11 @@ class HiResKNN:
 
     # ---------- memory bank ----------
     def fit(self, train_paths: list[str]) -> list[str]:
+        """Build the bank from the n_ref most mutually different training images (greedy farthest-point
+        selection on a global descriptor). If self.rotations has more than one angle, each reference
+        image is also rotated by those angles (around its centre, black fill) and its rotated patches
+        are added too -- for a category like wallplugs where the object itself lies at any angle on a
+        uniform background, so a bank built from upright photos alone treats most orientations as novel."""
         d = torch.stack([self.descriptor(p) for p in train_paths])
         chosen = [int(torch.linalg.norm(d - d.mean(0), dim=1).argmin())]  # start at the most typical image
         dist = torch.linalg.norm(d - d[chosen[0]], dim=1)
@@ -101,8 +115,11 @@ class HiResKNN:
         refs = [train_paths[i] for i in chosen]
         banks = [[] for _ in self.layers]
         for p in refs:
-            for b, f in zip(banks, self.features(self.load(p))):
-                b.append(f.flatten(1).T.half())
+            raw = self.load_raw(p)
+            for angle in self.rotations:
+                x = self.normalize(tv_rotate(raw, angle, interpolation=InterpolationMode.BILINEAR, fill=0.0) if angle else raw)
+                for b, f in zip(banks, self.features(x)):
+                    b.append(f.flatten(1).T.half())
         self.bank = [torch.cat(b) for b in banks]
         return refs
 

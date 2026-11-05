@@ -41,9 +41,13 @@ def main() -> None:
     p.add_argument("--n-ref", type=int, default=16)
     p.add_argument("--short-side", type=int, default=672)
     p.add_argument("--sigma", type=float, default=4.0)
+    p.add_argument("--n-rotations", type=int, default=1,
+                   help="bank also gets each reference rotated this many times, evenly over 360 deg "
+                        "(e.g. 8 for a category where the object itself lies at any angle, like wallplugs)")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
+    rotations = tuple(360.0 * i / args.n_rotations for i in range(args.n_rotations))
     out = Path("results/smoke") if args.smoke else Path("results")
     duty = 1.0
     if args.game_mode:
@@ -57,7 +61,7 @@ def main() -> None:
     if args.smoke:
         args.categories, args.n_ref = args.categories[:1] if args.categories != CATS else ["walnuts"], 2
 
-    model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty)
+    model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations)
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat

@@ -740,3 +740,33 @@ def seg_eval_figure(df: pd.DataFrame, superadd: dict | None = None, out: Path | 
     fig.suptitle("Segmentation F1 on MVTec AD 2 test_public (1/4 resolution, SuperADD's local protocol)",
                  color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / "seg_eval.png")
+
+
+def seg_post_figure(df: pd.DataFrame, model: str, best: tuple[str, str], out: Path | None = None) -> Path:
+    """Mean F1 (defect-only) over threshold x post-processing, and per category baseline vs the chosen setting."""
+    d = df[df.protocol == "defect-only"]
+    grid = d.groupby(["threshold", "post"]).f1.mean().unstack("post") * 100
+    posts = list(dict.fromkeys(d.post))
+    grid = grid[posts].reindex(list(dict.fromkeys(d.threshold)))
+    fig, axes = _figure(2, 18, 5.0)
+    im = axes[0].imshow(grid.values, cmap="viridis", aspect="auto")
+    for (i, j), v in np.ndenumerate(grid.values):
+        axes[0].text(j, i, f"{v:.1f}", ha="center", va="center", fontsize=8,
+                     color="white" if v < np.nanmean(grid.values) else INK)
+    axes[0].set_xticks(range(len(posts)), posts, rotation=30, ha="right")
+    axes[0].set_yticks(range(len(grid.index)), grid.index)
+    axes[0].set_title("Mean F1 over categories (defect-only)", color=INK, fontsize=10, loc="left")
+    fig.colorbar(im, ax=axes[0], fraction=0.03)
+    cats = list(dict.fromkeys(d.category))
+    x = np.arange(len(cats) + 1)
+    for k, (key, label, color) in enumerate(((("official", "none"), "official threshold, no post-processing", SERIES[6]),
+                                             (best, f"{best[0]} + {best[1]} (chosen)", SERIES[2]))):
+        v = d[(d.threshold == key[0]) & (d.post == key[1])].set_index("category").reindex(cats).f1.to_numpy() * 100
+        axes[1].bar(x + (k - 0.5) * 0.38, np.append(v, v.mean()), 0.36, color=color, label=label, edgecolor=SURFACE)
+    axes[1].set_xticks(x, [*cats, "mean"], rotation=25, ha="right")
+    axes[1].set_ylim(0, 100)
+    _style(axes[1], "", "F1 (%)", "Per category")
+    axes[1].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    fig.suptitle(f"Thresholds and post-processing on {model} maps (test_public, 1/4 resolution)", color=INK, fontsize=12,
+                 x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"seg_post__{model}.png")
