@@ -121,3 +121,8 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 연구 단계 시작: 모델 PatchCore, Dinomaly-L. Q2(조명 과검, walnuts → vial, sheet_metal), Q1(작은 결함, can → wallplugs). 부품 단위 개발/평가 절반 분할(seed 2026).
 - Q2-1 맵 자기 정규화(walnuts 개발용 절반): 기각. PatchCore shift 과검 1.00 → 최선 0.87, Dinomaly-L 변동 2.36 → (중앙값 빼면) 3.29. 조명 효과는 국소적.
 - Q2 H2-b/H2-c/H2-d 코드 작성(실행은 2026-11-04 예정): `lighting.py`(LightNorm 5종, LocalLight), `score.py` 변형 이름(`<base>_<norm>`, `<base>_light`, `<base>_light_<norm>`), `q2_compare.py`, `q2_preview.py`, `q2_run.sh`. 스모크 테스트 통과(patchcore_light_clahe, dinomaly_l_light_retinex, walnuts). 테스트 16개 통과.
+
+## 2026-11-05
+
+- Q2 H2-b(PatchCore 정규화 5종, walnuts 개발용 절반, 게임 모드, 변형당 약 5분): 주 지표(미검 0% 임계값의 shift 과검)는 보통 조명에서도 1.00이라 판단 불가. 조명 오경보 지표(`fa_shift`, 보통 조명 정상 최고점 기준) 추가. 기준 0.40 → 흑백 0.13(차이 −0.27 [−0.53, 0.00], 놓침 10% 그대로), 표준화 0.00(차이 −0.40 [−0.80, −0.10], 대신 놓침 38%). CLAHE·평활화·Retinex는 효과 없음. 확실한 승자 없음, 흑백이 후보.
+- 경고: 정규화가 들어간 pre-processor(Compose)는 체크포인트에 저장되지 않음(weights_only). 체크포인트로 이상 맵을 다시 뽑을 때는 `score.MODELS`로 모델을 만들어야 함.

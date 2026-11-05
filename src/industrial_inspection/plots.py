@@ -496,8 +496,9 @@ def q2_compare_figure(df: pd.DataFrame, category: str, half: str, out: Path | No
     d = df.iloc[::-1].reset_index(drop=True)  # first variant on top
     y = np.arange(len(d))
     colors = [model_color(b) for b in d.base]
-    fig, axes = _figure(3, 17, 1.6 + 0.42 * len(d))
+    fig, axes = _figure(4, 21, 1.6 + 0.42 * len(d))
     panels = (("overkill_shift", "Overkill under shift (lower is better)", (0, 1.05)),
+              ("fa_shift", "Lighting false alarms (thr = max regular good)", (0, 1.05)),
               ("auroc_shift", "AUROC under shift", (0.3, 1.0)),
               ("drift", "Median good score, shift / regular (1 = no drift)", None))
     for ax, (col, title, xlim) in zip(axes, panels):
@@ -508,8 +509,8 @@ def q2_compare_figure(df: pd.DataFrame, category: str, half: str, out: Path | No
         for b in d.base.unique():  # dashed line at each base model's own value
             ax.axvline(d.loc[d.variant == b, col].iloc[0] if (d.variant == b).any() else np.nan,
                        color=model_color(b), linewidth=1, linestyle=(0, (4, 3)))
-        if col == "overkill_shift":
-            for yi, v, ms in zip(y, d[col], d.miss_shift):
+        if col in ("overkill_shift", "fa_shift"):
+            for yi, v, ms in zip(y, d[col], d.miss_shift if col == "overkill_shift" else d.miss_shift_n):
                 ax.annotate(f"miss {ms:.0%}", (v, yi), xytext=(4, 0), textcoords="offset points", va="center",
                             color=INK2, fontsize=8)
         if col == "drift":

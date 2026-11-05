@@ -4,7 +4,12 @@
   EVAL half (touched only for the final report);
 * main metric: threshold set on "regular" images at a 0 % miss budget, applied unchanged to the
   shift_* conditions -> overkill and miss there; plus AUROC and how far the median good score moves
-  under shift (drift, 1.0 = no drift).
+  under shift (drift, 1.0 = no drift);
+* lighting false alarms (added 2026-11-05): threshold = highest "regular" good score (0 % overkill
+  under regular light, set from good images only), then the share of shift_* good images above it
+  (fa_shift) and of shift_* defective images not above it (miss_shift_n). On a dev half the 0 %-miss
+  threshold rests on ~7 regular defective images and already flags every regular good image for
+  PatchCore on walnuts, so the main metric cannot show a lighting effect there; this one can.
 """
 
 from __future__ import annotations
@@ -47,9 +52,11 @@ def evaluate(s: np.ndarray, y: np.ndarray, tag: np.ndarray) -> dict[str, float]:
     thr = calibrate_threshold(s[reg], y[reg], 0.0)
     op = evaluate_at_threshold(s[sh], y[sh], thr)
     good_reg, good_sh = np.median(s[reg & (y == 0)]), np.median(s[sh & (y == 0)])
+    thr_n = s[reg & (y == 0)].max()
     return {"auroc_all": roc_auc_score(y, s), "auroc_shift": roc_auc_score(y[sh], s[sh]),
             "overkill_shift": op.overkill_rate, "miss_shift": op.miss_rate,
-            "drift": good_sh / good_reg if good_reg != 0 else np.nan}
+            "drift": good_sh / good_reg if good_reg != 0 else np.nan,
+            "fa_shift": float((s[sh & (y == 0)] > thr_n).mean()), "miss_shift_n": float((s[sh & (y == 1)] <= thr_n).mean())}
 
 
 def bootstrap_parts(parts: np.ndarray, labels: np.ndarray, draws: int, seed: int = 0):

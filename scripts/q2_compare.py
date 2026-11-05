@@ -68,19 +68,21 @@ def main() -> None:
         base = base_of(v)
         row = {"variant": v, "base": base, "category": args.category, "half": args.half, "n_images": len(y),
                "n_good_parts": len(np.unique(parts[y == 0])), **point[v]}
-        for k in ("overkill_shift", "auroc_shift", "drift"):
+        for k in ("overkill_shift", "auroc_shift", "drift", "fa_shift"):
             row[f"{k}_lo"], row[f"{k}_hi"] = np.nanquantile(b[k], [0.025, 0.975])
         if base in data and v != base:  # paired change against the base model
-            diff = b.overkill_shift - pd.DataFrame(draws[base]).overkill_shift
-            row["d_overkill_vs_base"] = point[v]["overkill_shift"] - point[base]["overkill_shift"]
-            row["d_overkill_lo"], row["d_overkill_hi"] = np.nanquantile(diff, [0.025, 0.975])
+            ref_draws = pd.DataFrame(draws[base])
+            for k, short in (("overkill_shift", "overkill"), ("fa_shift", "fa")):
+                row[f"d_{short}_vs_base"] = point[v][k] - point[base][k]
+                row[f"d_{short}_lo"], row[f"d_{short}_hi"] = np.nanquantile(b[k] - ref_draws[k], [0.025, 0.975])
         rows.append(row)
     out = pd.DataFrame(rows)
     args.out.mkdir(parents=True, exist_ok=True)
     path = args.out / f"compare__{args.category}__{args.half}.csv"
     out.to_csv(path, index=False)
     cols = ["variant", "overkill_shift", "overkill_shift_lo", "overkill_shift_hi", "miss_shift", "auroc_shift", "drift",
-            "d_overkill_vs_base", "d_overkill_lo", "d_overkill_hi"]
+            "d_overkill_vs_base", "d_overkill_lo", "d_overkill_hi", "fa_shift", "fa_shift_lo", "fa_shift_hi",
+            "miss_shift_n", "d_fa_vs_base", "d_fa_lo", "d_fa_hi"]
     with pd.option_context("display.width", 220, "display.float_format", "{:.3f}".format):
         print(out[[c for c in cols if c in out]].to_string(index=False))
     print("table:", path)
