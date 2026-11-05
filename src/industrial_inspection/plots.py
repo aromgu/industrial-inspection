@@ -599,3 +599,61 @@ def q1_size_figure(df: pd.DataFrame, category: str, out: Path | None = None) -> 
     axes[0].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
     fig.suptitle(f"Q1 - does a larger input help the small defects? ({category})", color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out or Path("results/figures") / f"q1_size__{category}.png")
+
+
+def q1_locnorm_figure(df: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+    """Q1 H1-d: image AUROC (part bootstrap) and AU-PRO per model for raw vs location-normalised maps."""
+    models = list(dict.fromkeys(df.model))
+    scores = list(dict.fromkeys(df.score))
+    fig, axes = _figure(3, 18, 4.6)
+    x = np.arange(len(models))
+    width = 0.8 / len(scores)
+    colors = [SERIES[6], SERIES[0], SERIES[2]]
+    for i, sc in enumerate(scores):
+        d = df[df.score == sc].set_index("model").reindex(models)
+        xi = x + (i - (len(scores) - 1) / 2) * width
+        axes[0].bar(xi, d.auroc, width=width - 0.03, color=colors[i % 3], label=sc, edgecolor=SURFACE)
+        axes[0].errorbar(xi, d.auroc, yerr=[d.auroc - d.auroc_lo, d.auroc_hi - d.auroc], fmt="none", ecolor=INK2,
+                         elinewidth=1, capsize=3)
+        axes[1].bar(xi, d.aupro_005, width=width - 0.03, color=colors[i % 3], label=sc, edgecolor=SURFACE)
+    g = ["small", "medium", "large"]
+    last = models[-1]  # one model keeps the panel readable
+    for i, sc in enumerate(scores):
+        d = df[(df.score == sc) & (df.model == last)].iloc[0]
+        axes[2].plot(g, [d[f"auroc_{k}"] for k in g], color=colors[i % 3], marker="o", label=sc)
+    axes[0].axhline(0.5, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+    axes[2].axhline(0.5, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+    axes[0].set_ylim(0.2, 1.0)
+    for ax in axes[:2]:
+        ax.set_xticks(x, models, rotation=15)
+    _style(axes[0], "", "", "Image AUROC (95 % part bootstrap)")
+    _style(axes[1], "", "", "AU-PRO@0.05 (common grid)")
+    _style(axes[2], "Defect size group", "", f"Image AUROC per defect size ({last})")
+    axes[0].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    axes[2].legend(frameon=False, fontsize=9, loc="lower left", labelcolor=INK2)
+    fig.suptitle(f"Q1 H1-d - subtract each location's normal variation (from validation good maps), {category}",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q1_locnorm__{category}.png")
+
+
+def q2_finetune_figure(raw: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+    """Q2 H2-f: false alarms and misses per condition, before vs after a short fine-tune (one dot per choice)."""
+    conds = sorted(raw.condition.unique())
+    fig, axes = _figure(2, 13, 4.4)
+    for ax, col, title in ((axes[0], "false_alarm", "False alarms under the new light"),
+                           (axes[1], "miss", "Missed defects under the new light")):
+        for j, (method, color) in enumerate((("none", SERIES[2]), ("finetune", SERIES[0]))):
+            d = raw[raw.method == method]
+            for i, c in enumerate(conds):
+                v = d[d.condition == c][col].to_numpy()
+                xs = i + (j - 0.5) * 0.3 + np.linspace(-0.06, 0.06, len(v))
+                ax.scatter(xs, v, s=22, color=color, edgecolors=SURFACE, linewidths=0.8, zorder=3,
+                           label=("no adaptation" if method == "none" else "fine-tuned") if i == 0 else None)
+                ax.hlines(v.mean(), i + (j - 0.5) * 0.3 - 0.12, i + (j - 0.5) * 0.3 + 0.12, color=color, linewidth=2)
+        ax.set_xticks(range(len(conds)), conds)
+        ax.set_ylim(-0.03, 1.03)
+        _style(ax, "New light", "", title)
+    axes[0].legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
+    fig.suptitle(f"Q2 H2-f - Dinomaly-L fine-tuned on one good part under the new light ({category}, dev parts; dot = choice of part, bar = mean)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q2_finetune__{category}.png")
