@@ -22,7 +22,7 @@ from industrial_inspection.metrics import calibrate_threshold, evaluate_at_thres
 SURFACE, INK, INK2, MUTED, GRID, AXIS = "#fcfcfb", "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7"
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
 # Colour follows the entity, never its rank: a model keeps its slot whatever else is on the figure.
-MODEL_SLOT = {"efficientad": 0, "mhpatchcore": 1, "dinomaly_l": 2, "patchcore": 6, "dinomaly": 4}
+MODEL_SLOT = {"efficientad": 0, "mhpatchcore": 1, "dinomaly_l": 2, "patchcore": 6, "dinomaly": 4, "hires_dinov2l": 7}
 BUDGETS = (0.0, 0.01, 0.05)
 
 

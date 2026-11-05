@@ -84,7 +84,7 @@ def main() -> None:
     with pd.option_context("display.width", 250, "display.float_format", "{:.3f}".format):
         print(df.groupby("model")[cols].mean())
     print(f"SuperADD test_public (defect-only, its own threshold): mean F1 {SUPERADD_PUBLIC_F1['mean']:.2f} %")
-    print("figure:", seg_eval_figure(df, SUPERADD_PUBLIC_F1))
+    print("figure:", seg_eval_figure(df, SUPERADD_PUBLIC_F1, args.out.parent / "figures" / "seg_eval.png"))
 
 
 if __name__ == "__main__":

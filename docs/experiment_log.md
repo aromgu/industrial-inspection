@@ -139,3 +139,5 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - 새 연구, 촬영 조건 간 일관성(`xcond.py`, 재학습 없음, 기존 맵, 부품 단위, 부트스트랩 500): Dinomaly-L AUROC 0.771(사진 1장) → 0.777(점수 평균) → 0.819(pixel-min), 사진 2장 0.800. 다른 세 모델은 pixel-min이 점수 평균보다 낫지 않음. 구간이 0을 벗어난 카테고리: Dinomaly-L can +0.36, wallplugs −0.06. 엄격한 운영점(정상 경보 0)에서 잡는 불량 부품 70 → 69.
 - 조건 간 일관성 보완: 사진 간 이동량(경계 위상 상관) 256 격자 기준 대부분 0칸, wallplugs 최대 0.28칸, vial 최대 0.5칸 → 위치 맞추기 불필요. 결함 영역 점수는 조건 간 거의 일정. anchored 0.773, hybrid 0.798(엄격 기준 72개), pixel-min 0.819로 pixel-min 유지.
 - 결함 영역 F1 평가(`seg_eval.py`, 공개 test, SuperADD 방식: 불량 사진만, 1/4 해상도): Dinomaly-L 23.7(공식 임계값)/34.1(최적 임계값 상한), MH-PatchCore 19.5, PatchCore 18.6, EfficientAD 16.6. SuperADD 보고값 62.6. 정상 포함 시 Dinomaly-L 21.0. validation 맵 32개를 게임 모드로 추가 export(`export_maps.py --split validation`이 이제 항상 맵 저장).
+- HiResKNN(DINOv2-L, 짧은 변 672, 448 조각 112 겹침, 4개 층, 참고 사진 16장, 게임 모드 약 30분): 결함 영역 F1 28.1(공식 임계값)/32.3(SuperADD 규칙)/40.3(최적 임계값 상한), AU-ROC@0.05 77.7. Dinomaly-L 23.7보다 좋지만 SuperADD 62.6과 차이 큼. rice는 공식 24.7 vs 최적 69.2로 임계값 영향이 큼.
+- 공식 MVTec AD 2 데이터로 교체: 미러와 4,619장 모두 픽셀 동일, 파일 이름 접미사(-NN)만 다름. 결과 파일 경로 402개 수정. 비공개 test 두 세트 추가.
