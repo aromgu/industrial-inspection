@@ -544,7 +544,7 @@ def q2_preview_figure(rows: list[tuple[str, list[np.ndarray]]], columns: list[st
     return _save(fig, out)
 
 
-def q2_fewshot_figure(summary: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+def q2_fewshot_figure(summary: pd.DataFrame, category: str, half: str = "dev", out: Path | None = None) -> Path:
     """Q2 H2-e: false alarms and misses under a new light after adapting with k good parts."""
     fig, axes = _figure(2, 14, 4.6)
     labels, xs = [], []
@@ -569,9 +569,10 @@ def q2_fewshot_figure(summary: pd.DataFrame, category: str, out: Path | None = N
         ax.set_ylim(0, 1.05)
         _style(ax, "", "", title)
     axes[0].legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
-    fig.suptitle(f"Q2 H2-e - re-photograph k good parts under the new light ({category}, dev parts; bars = min-max over choices of parts)",
+    fig.suptitle(f"Q2 H2-e - re-photograph k good parts under the new light ({category}, {half} parts; bars = min-max over choices of parts)",
                  color=INK, fontsize=12, x=0.01, ha="left")
-    return _save(fig, out or Path("results/figures") / f"q2_fewshot__{category}.png")
+    name = f"q2_fewshot__{category}.png" if half == "dev" else f"q2_fewshot__{category}__{half}.png"
+    return _save(fig, out or Path("results/figures") / name)
 
 
 def q1_size_figure(df: pd.DataFrame, category: str, out: Path | None = None) -> Path:

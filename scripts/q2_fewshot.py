@@ -75,11 +75,11 @@ class BankScorer:
         return np.array(out)
 
 
-def run(model: str, category: str, ks: list[int], device: str) -> pd.DataFrame:
+def run(model: str, category: str, ks: list[int], device: str, half: str = "dev") -> pd.DataFrame:
     df = pd.read_csv(f"results/scores/{model}__{category}__seed0.csv").sort_values("image_path").reset_index(drop=True)
     parts, tag = parts_and_tags(df.image_path)
     y = df.label.to_numpy()
-    dev = half_mask(parts, y, "dev")
+    dev = np.ones(len(y), dtype=bool) if half == "all" else half_mask(parts, y, half)
     df, parts, tag, y = df[dev].reset_index(drop=True), parts[dev], tag[dev], y[dev]
     paths = df.image_path.to_numpy()
     good_parts = np.unique(parts[y == 0])
@@ -117,11 +117,13 @@ def main() -> None:
     p.add_argument("--category", default="walnuts")
     p.add_argument("--models", nargs="+", default=["patchcore", "dinomaly_l"])
     p.add_argument("--ks", nargs="+", type=int, default=[0, 1, 2])
+    p.add_argument("--half", choices=["dev", "eval", "all"], default="dev",
+                   help="eval: the held-out half, once, for the final report; all: other categories (no selection there)")
     p.add_argument("--smoke", action="store_true", help="k = 1 only, first choice, to check the code path")
     p.add_argument("--out", type=Path, default=Path("results/q2"))
     args = p.parse_args()
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    raw = pd.concat([run(m, args.category, [0, 1] if args.smoke else args.ks, device) for m in args.models])
+    raw = pd.concat([run(m, args.category, [0, 1] if args.smoke else args.ks, device, args.half) for m in args.models])
     if args.smoke:
         print(raw.groupby(["model", "k", "method"])[["false_alarm", "miss"]].mean())
         return
@@ -130,11 +132,11 @@ def main() -> None:
         false_alarm=("false_alarm", "mean"), fa_min=("false_alarm", "min"), fa_max=("false_alarm", "max"),
         miss=("miss", "mean"), miss_min=("miss", "min"), miss_max=("miss", "max"), choices=("chosen", "count")).reset_index()
     args.out.mkdir(parents=True, exist_ok=True)
-    raw.to_csv(args.out / f"fewshot__{args.category}__dev_raw.csv", index=False)
-    summary.to_csv(args.out / f"fewshot__{args.category}__dev.csv", index=False)
+    raw.to_csv(args.out / f"fewshot__{args.category}__{args.half}_raw.csv", index=False)
+    summary.to_csv(args.out / f"fewshot__{args.category}__{args.half}.csv", index=False)
     with pd.option_context("display.width", 200, "display.float_format", "{:.3f}".format):
         print(summary.to_string(index=False))
-    print("figure:", q2_fewshot_figure(summary, args.category))
+    print("figure:", q2_fewshot_figure(summary, args.category, args.half))
 
 
 if __name__ == "__main__":
