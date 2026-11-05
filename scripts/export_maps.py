@@ -108,13 +108,17 @@ def main() -> None:
         out.mkdir(parents=True, exist_ok=True)
         pd.DataFrame(rows).to_csv(out / f"{args.model}__{args.category}__seed0.csv", index=False)
         print(f"{len(rows)} validation images -> {out}", flush=True)
-        if args.eval_side:  # good-only maps on the common grid, for per-location normalisation (Q1)
+        # Good-only maps, for thresholds and per-location statistics: on the common grid with --eval-side
+        # (Q1), otherwise shrunk like the test maps (segmentation F1 thresholds, seg_eval.py).
+        raw = [b.anomaly_map.detach().float().cpu().reshape(-1, *b.anomaly_map.shape[-2:]) for b in batches]
+        if args.eval_side:
             n = args.eval_side
-            vmaps = torch.cat([F.interpolate(b.anomaly_map.detach().float().cpu().reshape(-1, 1, *b.anomaly_map.shape[-2:]),
-                                             size=(n, n), mode="bilinear", align_corners=False)[:, 0] for b in batches])
-            (args.out / "maps").mkdir(parents=True, exist_ok=True)
-            np.savez_compressed(args.out / "maps" / f"{args.model}{args.tag}__{args.category}__val.npz",
-                                maps=vmaps.numpy().astype(np.float16), paths=np.array([r["image_path"] for r in rows]))
+            vmaps = torch.cat([F.interpolate(r[:, None], size=(n, n), mode="bilinear", align_corners=False)[:, 0] for r in raw])
+        else:
+            vmaps = torch.cat([shrink(r, "bilinear") for r in raw])
+        (args.out / "maps").mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(args.out / "maps" / f"{args.model}{args.tag}__{args.category}__val.npz",
+                            maps=vmaps.numpy().astype(np.float16), paths=np.array([r["image_path"] for r in rows]))
         return
 
     maps, masks, labels, paths, own = [], [], [], [], []

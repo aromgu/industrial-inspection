@@ -714,3 +714,29 @@ def xcond_subset_figure(df: pd.DataFrame, one_photo: pd.Series | None = None, ou
            "How many photos are needed? (k = 1: regular photo alone)")
     ax.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.01, 0.5), labelcolor=INK2)
     return _save(fig, out or Path("results/figures") / "xcond_subsets.png")
+
+
+def seg_eval_figure(df: pd.DataFrame, superadd: dict | None = None, out: Path | None = None) -> Path:
+    """Segmentation F1 on test_public per category: official threshold vs oracle, defect-only protocol."""
+    models = [m for m in MODEL_SLOT if m in set(df.model)] + [m for m in dict.fromkeys(df.model) if m not in MODEL_SLOT]
+    cats = list(dict.fromkeys(df.category))
+    fig, axes = _figure(2, 18, 4.6)
+    x = np.arange(len(cats) + 1)
+    width = 0.8 / len(models)
+    for ax, col, title in ((axes[0], "f1_defect-only_official", "F1, defect-only, official threshold (mean + 3 std of validation)"),
+                           (axes[1], "f1_defect-only_oracle", "F1, defect-only, best threshold on test (upper bound)")):
+        for i, m in enumerate(models):
+            d = df[df.model == m].set_index("category").reindex(cats)[col]
+            vals = np.append(d.to_numpy(), d.mean()) * 100
+            ax.bar(x + (i - (len(models) - 1) / 2) * width, vals, width - 0.03, color=model_color(m), label=m, edgecolor=SURFACE)
+        if superadd:
+            ref = [superadd.get(c) for c in [*cats, "mean"]]
+            ax.scatter([xi for xi, r in zip(x, ref) if r is not None], [r for r in ref if r is not None], marker="_", s=400,
+                       color=INK, linewidths=2, label="SuperADD (reported)", zorder=4)
+        ax.set_xticks(x, [*cats, "mean"], rotation=25, ha="right")
+        ax.set_ylim(0, 100)
+        _style(ax, "", "F1 (%)", title)
+    axes[0].legend(frameon=False, fontsize=8, loc="upper left", labelcolor=INK2)
+    fig.suptitle("Segmentation F1 on MVTec AD 2 test_public (1/4 resolution, SuperADD's local protocol)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / "seg_eval.png")
