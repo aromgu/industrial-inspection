@@ -124,12 +124,24 @@ class HiResKNN:
         return refs
 
     @torch.no_grad()
-    def score(self, path: str, chunk: int = 4096) -> np.ndarray:
-        """(H/patch, W/patch) anomaly map: mean over layers of the nearest-bank-patch distance."""
+    def score(self, path: str, q_chunk: int = 2048, b_chunk: int = 32768) -> np.ndarray:
+        """(H/patch, W/patch) anomaly map: mean over layers of the nearest-bank-patch distance.
+
+        Both the query patches and the bank are chunked, so the (q_chunk, b_chunk) distance matrix
+        stays small and memory does not grow with the bank size -- a rotation-augmented bank
+        (fit(), rotations=...) can be 8x the default and still score without running out of VRAM."""
         feats = self.features(self.load(path))
         gh, gw = feats[0].shape[1:]
         total = torch.zeros(gh * gw, device=self.device)
         for f, bank in zip(feats, self.bank):
-            q, b = f.flatten(1).T, bank.float()
-            total += torch.cat([torch.cdist(q[i:i + chunk], b).min(dim=1).values for i in range(0, len(q), chunk)])
+            q = f.flatten(1).T
+            best = torch.full((len(q),), float("inf"), device=self.device)
+            for qi in range(0, len(q), q_chunk):
+                qc = q[qi:qi + q_chunk]
+                qmin = torch.full((len(qc),), float("inf"), device=self.device)
+                for bi in range(0, len(bank), b_chunk):
+                    d = torch.cdist(qc, bank[bi:bi + b_chunk].float())
+                    qmin = torch.minimum(qmin, d.min(dim=1).values)
+                best[qi:qi + q_chunk] = qmin
+            total += best
         return (total / len(self.bank)).reshape(gh, gw).cpu().numpy()
