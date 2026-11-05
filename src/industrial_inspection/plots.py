@@ -637,7 +637,7 @@ def q1_locnorm_figure(df: pd.DataFrame, category: str, out: Path | None = None) 
     return _save(fig, out or Path("results/figures") / f"q1_locnorm__{category}.png")
 
 
-def q2_finetune_figure(raw: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+def q2_finetune_figure(raw: pd.DataFrame, category: str, half: str = "dev", out: Path | None = None) -> Path:
     """Q2 H2-f: false alarms and misses per condition, before vs after a short fine-tune (one dot per choice)."""
     conds = sorted(raw.condition.unique())
     fig, axes = _figure(2, 13, 4.4)
@@ -655,6 +655,7 @@ def q2_finetune_figure(raw: pd.DataFrame, category: str, out: Path | None = None
         ax.set_ylim(-0.03, 1.03)
         _style(ax, "New light", "", title)
     axes[0].legend(frameon=False, fontsize=9, loc="lower left", labelcolor=INK2)
-    fig.suptitle(f"Q2 H2-f - Dinomaly-L fine-tuned on one good part under the new light ({category}, dev parts; dot = choice of part, bar = mean)",
+    fig.suptitle(f"Q2 H2-f - Dinomaly-L fine-tuned on one good part under the new light ({category}, {half} parts; dot = choice of part, bar = mean)",
                  color=INK, fontsize=12, x=0.01, ha="left")
-    return _save(fig, out or Path("results/figures") / f"q2_finetune__{category}.png")
+    name = f"q2_finetune__{category}.png" if half == "dev" else f"q2_finetune__{category}__{half}.png"
+    return _save(fig, out or Path("results/figures") / name)

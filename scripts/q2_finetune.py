@@ -45,6 +45,8 @@ def main() -> None:
     p.add_argument("--steps", type=int, default=200)
     p.add_argument("--lr", type=float, default=2e-4)
     p.add_argument("--batch", type=int, default=4, help="half new-light photos, half regular training images")
+    p.add_argument("--half", choices=["dev", "eval", "all"], default="dev",
+                   help="all: categories never used to choose methods (e.g. vial, sheet_metal)")
     p.add_argument("--smoke", action="store_true", help="one condition, one choice, 5 steps")
     p.add_argument("--out", type=Path, default=Path("results/q2"))
     args = p.parse_args()
@@ -61,7 +63,7 @@ def main() -> None:
     df = pd.read_csv(f"results/scores/dinomaly_l__{args.category}__seed0.csv").sort_values("image_path").reset_index(drop=True)
     parts, tag = parts_and_tags(df.image_path)
     y = df.label.to_numpy()
-    dev = half_mask(parts, y, "dev")
+    dev = np.ones(len(y), dtype=bool) if args.half == "all" else half_mask(parts, y, args.half)
     df, parts, tag, y = df[dev].reset_index(drop=True), parts[dev], tag[dev], y[dev]
     paths = df.image_path.to_numpy()
     reg_good = (tag == "regular") & (y == 0)
@@ -125,11 +127,11 @@ def main() -> None:
                                                fa_max=("false_alarm", "max"), miss=("miss", "mean"),
                                                miss_min=("miss", "min"), miss_max=("miss", "max")).reset_index()
     args.out.mkdir(parents=True, exist_ok=True)
-    raw.to_csv(args.out / f"finetune__{args.category}__dev_raw.csv", index=False)
-    summary.to_csv(args.out / f"finetune__{args.category}__dev.csv", index=False)
+    raw.to_csv(args.out / f"finetune__{args.category}__{args.half}_raw.csv", index=False)
+    summary.to_csv(args.out / f"finetune__{args.category}__{args.half}.csv", index=False)
     with pd.option_context("display.width", 200, "display.float_format", "{:.3f}".format):
         print(summary.to_string(index=False))
-    print("figure:", q2_finetune_figure(raw, args.category))
+    print("figure:", q2_finetune_figure(raw, args.category, args.half))
 
 
 if __name__ == "__main__":
