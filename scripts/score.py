@@ -50,11 +50,18 @@ MODELS = {
     # does not also shrink how much of the normal data the bank can hold.
     "mhpatchcore_tilebig": lambda: MHPatchcore(memory_bank_size=9000, **OFF),
 }
+# Q1 (small defects): PatchCore at three input sizes with the same 1 % coreset (the PatchCore paper's
+# PatchCore-1% setting), so that only the resolution changes and the 512 run stays tractable.
+for _size in (256, 392, 512):
+    _name = f"patchcore_{_size}_c01"
+    MODELS[_name] = (lambda n=_size: lambda: Patchcore(
+        pre_processor=Patchcore.configure_pre_processor(image_size=(n, n)), coreset_sampling_ratio=0.01, **OFF))()
 # Training-set augmentation per model (train holds only "regular" lighting; test has more).
 TRAIN_AUG = {"patchcore_aug": lambda: ColorJitter(brightness=0.35, contrast=0.35)}
 # EfficientAD's student-teacher training assumes one image per step.
 TRAIN_BATCH = {"patchcore": 16, "mhpatchcore": 16, "efficientad": 1, "dinomaly": 8, "dinomaly_l": 4,
-               "mhpatchcore_tile": 16, "patchcore_aug": 16, "patchcore_392": 16, "mhpatchcore_tilebig": 16}
+               "mhpatchcore_tile": 16, "patchcore_aug": 16, "patchcore_392": 16, "mhpatchcore_tilebig": 16,
+               "patchcore_256_c01": 16, "patchcore_392_c01": 16, "patchcore_512_c01": 8}
 # Gradient-trained models need an explicit length, otherwise Lightning runs 1000 epochs.
 # Values are the papers' defaults; the memory-bank models fit in a single pass.
 MAX_STEPS = {"efficientad": 70_000, "dinomaly": 5_000, "dinomaly_l": 5_000}

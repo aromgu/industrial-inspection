@@ -8,6 +8,9 @@ Two questions the image scores alone cannot answer:
     MVTec AD 2 paper's metric. It is computed at the model's input resolution (after its resize
     and centre crop, downsampled to at most MAP_SIDE), not at full image resolution as the
     official server does, so it is close to but not the same as the paper's number.
+    With --eval-side N (models without a centre crop only) every map is resized to N x N and the
+    masks are rebuilt from the full-resolution mask files with a max-pool, so a defect of a few
+    pixels survives and models of different input sizes are scored on the same grid (Q1).
 
     uv run python scripts/export_maps.py --model patchcore --category sheet_metal
 """
@@ -25,10 +28,12 @@ from anomalib.data import MVTecAD2
 from anomalib.engine import Engine
 from anomalib.metrics.aupro import _AUPRO
 from anomalib.models import Dinomaly, EfficientAd, MHPatchcore, Patchcore
+from PIL import Image
 from sklearn.metrics import roc_auc_score
 
 CLASSES = {"patchcore": Patchcore, "mhpatchcore": MHPatchcore, "efficientad": EfficientAd, "dinomaly_l": Dinomaly,
-           "patchcore_392": Patchcore, "mhpatchcore_tile": MHPatchcore, "mhpatchcore_tilebig": MHPatchcore}
+           "patchcore_392": Patchcore, "mhpatchcore_tile": MHPatchcore, "mhpatchcore_tilebig": MHPatchcore,
+           "patchcore_256_c01": Patchcore, "patchcore_392_c01": Patchcore, "patchcore_512_c01": Patchcore}
 MAP_SIDE = 256  # maps and masks are stored and scored at most this large
 AGGREGATIONS = {
     "max": lambda m: m.max(axis=1),
@@ -38,11 +43,19 @@ AGGREGATIONS = {
 }
 
 
-def ckpt_of(model: str, category: str) -> Path:
-    found = sorted(Path("results/runs", model, category).rglob("model.ckpt"), key=lambda p: p.stat().st_mtime)
+def ckpt_of(model: str, category: str, runs: Path = Path("results/runs")) -> Path:
+    found = sorted((runs / model / category).rglob("model.ckpt"), key=lambda p: p.stat().st_mtime)
     if not found:
         raise FileNotFoundError(f"no checkpoint under results/runs/{model}/{category}")
     return found[-1]
+
+
+def full_res_mask(path: str, side: int, shape: tuple[int, int]) -> torch.Tensor:
+    """(side, side) mask from the original file: a cell is defective if any of its pixels is."""
+    if not path or not Path(path).exists():
+        return torch.zeros(side, side, dtype=torch.bool)
+    m = torch.from_numpy(np.array(Image.open(path).convert("L")) > 0).float()[None, None]
+    return F.adaptive_max_pool2d(m, (side, side))[0, 0] > 0
 
 
 def shrink(x: torch.Tensor, mode: str) -> torch.Tensor:
@@ -67,9 +80,13 @@ def main() -> None:
                         "(results/scores_val/), e.g. to set a normal-only threshold without touching test")
     p.add_argument("--tag", default="", help="suffix for output names, e.g. the tile grid")
     p.add_argument("--out", type=Path, default=Path("results"))
+    p.add_argument("--eval-side", type=int, default=None,
+                   help="score maps on an N x N grid with masks from the full-resolution files (no-crop models)")
     args = p.parse_args()
+    if args.eval_side:
+        args.tag += f"_s{args.eval_side}"
 
-    ckpt = ckpt_of(args.model, args.category)
+    ckpt = ckpt_of(args.model, args.category, args.out / "runs")
     model = CLASSES[args.model].load_from_checkpoint(ckpt, map_location="cpu")
     dm = MVTecAD2(root=args.root, category=args.category, eval_batch_size=8, num_workers=2)
     dm.setup()
@@ -87,9 +104,15 @@ def main() -> None:
 
     maps, masks, labels, paths, own = [], [], [], [], []
     for b in batches:
-        maps.append(shrink(b.anomaly_map.detach().float().cpu().reshape(-1, *b.anomaly_map.shape[-2:]), "bilinear"))
-        gt = b.gt_mask.detach().cpu().reshape(-1, *b.gt_mask.shape[-2:]).float()
-        masks.append(shrink(gt, "nearest") > 0.5)
+        amap = b.anomaly_map.detach().float().cpu().reshape(-1, *b.anomaly_map.shape[-2:])
+        if args.eval_side:
+            n = args.eval_side
+            maps.append(F.interpolate(amap[:, None], size=(n, n), mode="bilinear", align_corners=False)[:, 0])
+            masks.append(torch.stack([full_res_mask(mp, n, amap.shape[-2:]) for mp in (b.mask_path or [""] * len(amap))]))
+        else:
+            maps.append(shrink(amap, "bilinear"))
+            gt = b.gt_mask.detach().cpu().reshape(-1, *b.gt_mask.shape[-2:]).float()
+            masks.append(shrink(gt, "nearest") > 0.5)
         labels += [int(v) for v in b.gt_label]
         paths += list(b.image_path)
         own += [float(v) for v in b.pred_score]

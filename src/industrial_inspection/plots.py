@@ -542,3 +542,60 @@ def q2_preview_figure(rows: list[tuple[str, list[np.ndarray]]], columns: list[st
                 ax.set_ylabel(name, color=INK2, fontsize=9)
     fig.suptitle(title, color=INK, fontsize=12, x=0.01, ha="left")
     return _save(fig, out)
+
+
+def q2_fewshot_figure(summary: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+    """Q2 H2-e: false alarms and misses under a new light after adapting with k good parts."""
+    fig, axes = _figure(2, 14, 4.6)
+    labels, xs = [], []
+    order = [("none", 0)] + [(m, k) for k in sorted(summary.k.unique()) if k > 0 for m in ("thr", "bank")]
+    models = [m for m in MODEL_SLOT if m in set(summary.model)]
+    width = 0.8 / len(models)
+    for j, (method, k) in enumerate(order):
+        labels.append("no adaptation" if k == 0 else f"{method}, k={k}")
+    x = np.arange(len(order))
+    for ax, col, lo, hi, title in ((axes[0], "false_alarm", "fa_min", "fa_max", "False alarms on good images under the new light"),
+                                   (axes[1], "miss", "miss_min", "miss_max", "Missed defects under the new light")):
+        for i, m in enumerate(models):
+            d = summary[summary.model == m].set_index(["method", "k"])
+            vals = [d.loc[key, col] if key in d.index else np.nan for key in order]
+            los = [d.loc[key, lo] if key in d.index else np.nan for key in order]
+            his = [d.loc[key, hi] if key in d.index else np.nan for key in order]
+            xi = x + (i - (len(models) - 1) / 2) * width
+            ax.bar(xi, vals, width=width - 0.03, color=model_color(m), label=m, edgecolor=SURFACE, linewidth=1)
+            v, l_, h_ = np.array(vals, float), np.array(los, float), np.array(his, float)
+            ax.errorbar(xi, v, yerr=[v - l_, h_ - v], fmt="none", ecolor=INK2, elinewidth=1, capsize=3)
+        ax.set_xticks(x, labels, rotation=20, ha="right")
+        ax.set_ylim(0, 1.05)
+        _style(ax, "", "", title)
+    axes[0].legend(frameon=False, fontsize=9, loc="upper right", labelcolor=INK2)
+    fig.suptitle(f"Q2 H2-e - re-photograph k good parts under the new light ({category}, dev parts; bars = min-max over choices of parts)",
+                 color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q2_fewshot__{category}.png")
+
+
+def q1_size_figure(df: pd.DataFrame, category: str, out: Path | None = None) -> Path:
+    """Q1: image AUROC (with part-bootstrap interval) and AU-PRO per defect-size group and model."""
+    groups = ["small", "medium", "large", "all"]
+    models = list(dict.fromkeys(df.model))
+    fig, axes = _figure(2, 14, 4.6)
+    x = np.arange(len(groups))
+    width = 0.8 / len(models)
+    for i, m in enumerate(models):
+        d = df[df.model == m].set_index("group").reindex(groups)
+        xi = x + (i - (len(models) - 1) / 2) * width
+        color = SERIES[(6, 0, 2, 3)[i % 4]]
+        axes[0].bar(xi, d.auroc, width=width - 0.03, color=color, label=m, edgecolor=SURFACE, linewidth=1)
+        axes[0].errorbar(xi, d.auroc, yerr=[d.auroc - d.auroc_lo, d.auroc_hi - d.auroc], fmt="none", ecolor=INK2,
+                         elinewidth=1, capsize=3)
+        axes[1].bar(xi, d.aupro_005, width=width - 0.03, color=color, label=m, edgecolor=SURFACE, linewidth=1)
+    axes[0].axhline(0.5, color=AXIS, linewidth=1, linestyle=(0, (4, 3)))
+    axes[0].set_ylim(0.2, 1.0)
+    n = df[df.model == models[0]].set_index("group").n_defective
+    for ax, title in ((axes[0], "Image AUROC vs all good images (95 % part bootstrap)"),
+                      (axes[1], "AU-PRO@0.05 (common grid, full-res masks)")):
+        ax.set_xticks(x, [f"{g}\n({n.get(g, 0)} defective)" for g in groups])
+        _style(ax, "Defect size group (terciles of defect area)", "", title)
+    axes[0].legend(frameon=False, fontsize=9, loc="upper left", labelcolor=INK2)
+    fig.suptitle(f"Q1 - does a larger input help the small defects? ({category})", color=INK, fontsize=12, x=0.01, ha="left")
+    return _save(fig, out or Path("results/figures") / f"q1_size__{category}.png")

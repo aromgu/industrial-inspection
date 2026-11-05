@@ -129,3 +129,5 @@ sheet_metal AUROC 0.598 — README 원 실험(0.573, RTX 5060 Ti)과 비슷한 �
 - Q2 H2-c(국소 조명 증강, PatchCore, walnuts 개발용 절반, 변형당 약 5분): 증강만은 오경보 0.40 → 0.47(효과 없음). 증강+흑백은 0.07(차이 −0.33 [−0.67, −0.07])이지만 놓침 10% → 24%. 흑백 단독(0.13, 놓침 10%)이 여전히 최선 후보.
 - H2-d 시작: dinomaly_l_gray, dinomaly_l_light (게임 모드).
 - Q2 H2-d(Dinomaly-L, walnuts 개발용 절반): dinomaly_l_gray는 게임 모드(1.65 it/s, 53분), 사용자가 GPU 전체 사용을 허락해 큐 셸만 멈추고 dinomaly_l_light는 전체 GPU(2.6~2.85 it/s, 34분). 조명 오경보 기준 0.73 → 흑백 0.80, 증강 0.73(변동 2.55 → 2.14배). 둘 다 효과 없음. 성공한 방법이 없어 평가용 절반·vial·sheet_metal 확인은 하지 않음.
+- Q2 H2-e(새 조명에서 정상품 k개 재촬영, walnuts 개발용 절반, 재학습 없음): PatchCore bank k=1 오경보 0.40 → 0.28(놓침 9.5 → 12%), thr k=2 0.28(11%). Dinomaly-L thr는 오경보 0.73 → 0.40/0.29지만 놓침 43/57%. PatchCore 재채점 점수는 저장 점수와 상대 오차 0.15%, 순위 상관 0.9997(이미지 읽기 경로 차이).
+- Q1 H1-a 시작: patchcore_{256,392,512}_c01(코어셋 1%, PatchCore 논문 설정) can. `export_maps.py --eval-side 512`: 모든 해상도의 맵을 512 격자로 맞추고 마스크는 원본 해상도 파일에서 max-pool로 만들어 작은 결함이 사라지지 않게 함. 정상만 든 배치에서 `mask_path`가 None이라 실패하던 것 수정(스모크는 앞쪽 배치만 돌려 못 잡음).
