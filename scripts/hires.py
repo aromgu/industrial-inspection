@@ -40,6 +40,11 @@ def main() -> None:
     p.add_argument("--root", type=Path, default=Path("datasets/MVTec_AD_2"))
     p.add_argument("--n-ref", type=int, default=16)
     p.add_argument("--short-side", type=int, default=672)
+    p.add_argument("--backbone", default="vit_large_patch14_reg4_dinov2.lvd142m",
+                   help="timm name, or dinov3_vith16plus (SuperADD's; weights/dinov3_vith16plus.pth)")
+    p.add_argument("--layers", type=int, nargs="+", default=[5, 11, 17, 23], help="0-based block indices (SuperADD: 7 15 23 31)")
+    p.add_argument("--tile", type=int, default=448)
+    p.add_argument("--overlap", type=int, default=112)
     p.add_argument("--sigma", type=float, default=4.0)
     p.add_argument("--n-rotations", type=int, default=1,
                    help="bank also gets each reference rotated this many times, evenly over 360 deg "
@@ -73,7 +78,8 @@ def main() -> None:
     if args.smoke:
         args.categories, args.n_ref = args.categories[:1] if args.categories != CATS else ["walnuts"], 2
 
-    model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
+    model = HiResKNN(backbone=args.backbone, layers=args.layers, tile=args.tile, overlap=args.overlap,
+                     n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
                      pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
                      max_bank=args.max_bank)
     for cat in args.categories:

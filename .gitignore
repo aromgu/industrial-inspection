@@ -11,3 +11,4 @@ results/
 *.ckpt
 *.onnx
 *.engine
+weights/

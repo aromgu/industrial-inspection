@@ -21,6 +21,8 @@ import math
 import time
 
 import numpy as np
+from pathlib import Path
+
 import timm
 import torch
 import torch.nn.functional as F
@@ -62,6 +64,26 @@ def subsample_distance_based(x: torch.Tensor, target: int, iterations: int = 100
     return x[torch.from_numpy(np.flatnonzero(keep)).to(x.device)]
 
 
+class _DinoV3:
+    """DINOv3 (torch.hub, local weights) behind the slice of the timm interface HiResKNN uses."""
+
+    HUB = Path.home() / ".cache/torch/hub/facebookresearch_dinov3_main"
+
+    def __init__(self, name: str, weights: str) -> None:
+        self.m = torch.hub.load(str(self.HUB), name, source="local", weights=weights).eval()
+        self.patch_embed = type("PE", (), {"patch_size": self.m.patch_embed.patch_size})()
+
+    def to(self, device):
+        self.m = self.m.to(device)
+        return self
+
+    def eval(self):
+        return self
+
+    def forward_intermediates(self, x, indices, norm=False, output_fmt="NCHW", intermediates_only=True):
+        return list(self.m.get_intermediate_layers(x, n=list(indices), reshape=True, norm=norm))
+
+
 class HiResKNN:
     def __init__(self, backbone: str = "vit_large_patch14_reg4_dinov2.lvd142m", layers=(5, 11, 17, 23),
                  short_side: int = 672, tile: int = 448, overlap: int = 112, n_ref: int = 16,
@@ -72,7 +94,10 @@ class HiResKNN:
         matching, for bank and queries alike -- PatchCore's "locally aware patch features", so a
         patch is compared together with its neighbours instead of alone. knn: score a patch by its
         mean distance to the knn nearest bank patches instead of the single nearest one."""
-        self.vit = timm.create_model(backbone, pretrained=True, dynamic_img_size=True).eval().to(device)
+        if backbone.startswith("dinov3"):  # "dinov3_vith16plus" (weights/<name>.pth) -- SuperADD's backbone
+            self.vit = _DinoV3(backbone, f"weights/{backbone}.pth").to(device)
+        else:
+            self.vit = timm.create_model(backbone, pretrained=True, dynamic_img_size=True).eval().to(device)
         self.patch = self.vit.patch_embed.patch_size[0]
         self.layers, self.short_side, self.tile, self.overlap, self.n_ref = list(layers), short_side, tile, overlap, n_ref
         self.device, self.gpu_duty, self.rotations = device, gpu_duty, list(rotations)
