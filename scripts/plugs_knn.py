@@ -60,6 +60,9 @@ def main() -> None:
     p.add_argument("--split", default="test_public",
                    help="test_public (has labels/ground truth) or a flat private split (test_private, "
                         "test_private_mixed): reads the fallback maps already exported for that split")
+    p.add_argument("--cache-only", action="store_true",
+                   help="only run SAM on the validation and test photos and cache the plug masks (no scoring); "
+                        "the masks do not depend on the backbone, so any later scoring run reuses them")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -119,6 +122,15 @@ def main() -> None:
     plug_length = float(np.median(whole))
     print(f"typical plug length {plug_length:.0f}px at work res, {sum(map(len, ref_plugs))} plugs in {len(refs)} refs",
           flush=True)
+
+    if args.cache_only:
+        todo = [val[i] for i in vi] + [test[i] for i in ti]
+        for n, q in enumerate(todo):
+            plugs_of(q)
+            if n % 25 == 0:
+                print(f"sam {n}/{len(todo)} ({time.perf_counter() - t_start:.0f}s)", flush=True)
+        print(f"cached plug masks for {len(todo)} photos, {time.perf_counter() - t_start:.0f}s", flush=True)
+        return
 
     vit = timm.create_model("vit_large_patch14_reg4_dinov2.lvd142m", pretrained=True, dynamic_img_size=True).eval().to(dev)
 
