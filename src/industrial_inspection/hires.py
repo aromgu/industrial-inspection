@@ -204,11 +204,12 @@ class HiResKNN:
         (fit(), rotations=...) can be 8x the default and still score without running out of VRAM."""
         feats = self.features(self.load(path))
         gh, gw = feats[0].shape[1:]
-        out = []
+        out, out1 = [], []
         for f, bank in zip(feats, self.bank):
             q = self._local(f).flatten(1).T
             k = min(self.knn, len(bank))
             best = torch.empty(len(q), device=self.device)
+            best1 = torch.empty(len(q), device=self.device)  # distance to the single nearest patch (k=1)
             for qi in range(0, len(q), q_chunk):
                 qc = q[qi:qi + q_chunk]
                 top = torch.full((len(qc), k), float("inf"), device=self.device)
@@ -217,7 +218,10 @@ class HiResKNN:
                     kk = min(k, d.shape[1])
                     top = torch.cat([top, d.topk(kk, dim=1, largest=False).values], dim=1).topk(k, dim=1, largest=False).values
                 best[qi:qi + q_chunk] = top.mean(dim=1)
+                best1[qi:qi + q_chunk] = top[:, 0]  # topk returns ascending values, so column 0 is the nearest
             out.append(best.reshape(gh, gw).cpu().numpy())
+            out1.append(best1.reshape(gh, gw).cpu().numpy())
+        self.last_nn1 = out1  # the k=1 maps of the same call, for free (used by scripts/hires.py --k1-name)
         return out
 
     def score(self, path: str) -> np.ndarray:

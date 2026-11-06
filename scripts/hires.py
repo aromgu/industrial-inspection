@@ -51,6 +51,9 @@ def main() -> None:
                         "but each 8th, brightness augmentation, distance-based subsampling to --max-bank)")
     p.add_argument("--brightness", type=float, nargs=2, default=[1.0, 1.0], help="random brightness factor range (bank=all)")
     p.add_argument("--max-bank", type=int, default=100_000)
+    p.add_argument("--k1-name", default=None,
+                   help="also save the nearest-patch (k=1) maps of the same run under this model name, so k=1 and "
+                        "k=--knn come from one pass over the photos (same bank)")
     p.add_argument("--save-layers", action="store_true",
                    help="also write each layer's map as its own model <name>_L<layer> (seg_eval.py can score them)")
     p.add_argument("--game-mode", action="store_true")
@@ -86,11 +89,21 @@ def main() -> None:
         refs = model.fit(train)
         hw = eval_size(test[0], DOWNSCALE)
         # per image: one map per layer (at eval size); the model's map is their mean
-        tl = np.stack([np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]) for q in test]).astype(np.float16)
-        vl = np.stack([np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]) for q in val]).astype(np.float16)
+        def maps_for(paths):
+            main, nn1 = [], []
+            for q in paths:
+                main.append(np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]))
+                if args.k1_name:
+                    nn1.append(np.stack([to_eval(m, hw, args.sigma) for m in model.last_nn1]))
+            return np.stack(main).astype(np.float16), (np.stack(nn1).astype(np.float16) if nn1 else None)
+
+        tl, tl1 = maps_for(test)
+        vl, vl1 = maps_for(val)
         (out / "maps").mkdir(parents=True, exist_ok=True)
         (out / "scores").mkdir(parents=True, exist_ok=True)
         outputs = [(args.name, tl.astype(np.float32).mean(1), vl.astype(np.float32).mean(1))]
+        if args.k1_name:
+            outputs.append((args.k1_name, tl1.astype(np.float32).mean(1), vl1.astype(np.float32).mean(1)))
         if args.save_layers:
             outputs += [(f"{args.name}_L{layer + 1}", tl[:, i], vl[:, i]) for i, layer in enumerate(model.layers)]
         for name, tmaps, vmaps in outputs:
