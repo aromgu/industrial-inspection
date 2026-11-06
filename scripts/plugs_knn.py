@@ -51,6 +51,9 @@ def main() -> None:
     p.add_argument("--work", type=int, default=1024, help="long side for SAM")
     p.add_argument("--sigma", type=float, default=4.0)
     p.add_argument("--sam", default="results/weights/sam_vit_b_01ec64.pth")
+    p.add_argument("--no-mask", action="store_true", help="keep the neighbouring plugs in each crop instead of blacking them out")
+    p.add_argument("--pos-tol", type=int, default=1,
+                   help="compare a token with bank tokens within this many tokens of the same place (large = anywhere)")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -128,7 +131,8 @@ def main() -> None:
     def crops_of(path: str, pls):
         full = np.asarray(Image.open(path).convert("RGB"))
         s = full.shape[1] / pls[0].mask.shape[1] if pls else 1.0
-        return full, s, [canonical_crop(full, q, s, plug_length) for q in pls]
+        return full, s, [canonical_crop(full, q, s, plug_length, mask_dilate=0 if args.no_mask else 3, use_mask=not args.no_mask)
+                         for q in pls]
 
     # 2-3. memory bank: every ref plug in 4 orientations
     bank_crops = []
@@ -147,10 +151,21 @@ def main() -> None:
         """(n, 9, 32) mean over layers of the knn-mean distance to bank tokens at the same place (+-1)."""
         n = q[0].shape[0]
         total = torch.zeros(n, gh, gw, device=dev)
+        if args.pos_tol >= max(gh, gw):  # position-free: every query token against every bank token
+            for ql, bl in zip(q, bank):
+                qf, bf = ql.reshape(-1, ql.shape[-1]).float(), bl.reshape(-1, bl.shape[-1])
+                k = min(args.knn, len(bf))
+                top = torch.full((len(qf), k), float("inf"), device=dev)
+                for bi in range(0, len(bf), 32768):
+                    d = torch.cdist(qf, bf[bi:bi + 32768].float())
+                    top = torch.cat([top, d.topk(min(k, d.shape[1]), dim=1, largest=False).values], 1).topk(k, dim=1, largest=False).values
+                total += top.mean(1).reshape(n, gh, gw)
+            return (total / len(bank)).cpu().numpy()
         for ql, bl in zip(q, bank):
             for r in range(gh):
                 for c in range(gw):
-                    cand = bl[:, max(0, r - 1):r + 2, max(0, c - 1):c + 2].reshape(-1, bl.shape[-1]).float()
+                    t = args.pos_tol
+                    cand = bl[:, max(0, r - t):r + t + 1, max(0, c - t):c + t + 1].reshape(-1, bl.shape[-1]).float()
                     d = torch.cdist(ql[:, r, c].float(), cand)
                     k = min(args.knn, d.shape[1])
                     total[:, r, c] += d.topk(k, dim=1, largest=False).values.mean(dim=1)

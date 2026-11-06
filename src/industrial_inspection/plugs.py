@@ -89,10 +89,12 @@ def crop_affine(plug: Plug, scale_to_src: float, plug_length: float, crop: tuple
 
 
 def canonical_crop(image: np.ndarray, plug: Plug, scale_to_src: float, plug_length: float,
-                   crop: tuple[int, int] = CROP, mask_dilate: int = 3) -> tuple[np.ndarray, np.ndarray]:
-    """(crop with everything outside this plug's mask blacked out, affine source->crop)."""
+                   crop: tuple[int, int] = CROP, mask_dilate: int = 3, use_mask: bool = True) -> tuple[np.ndarray, np.ndarray]:
+    """(crop with everything outside this plug's mask blacked out -- unless use_mask is False --, affine source->crop)."""
     M = crop_affine(plug, scale_to_src, plug_length, crop)
     out = cv2.warpAffine(image, M, crop, flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0))
+    if not use_mask:
+        return out, M
     Mm = M.copy()
     Mm[:, :2] = M[:, :2] * scale_to_src  # the mask lives at working resolution
     m = cv2.warpAffine(plug.mask.astype(np.uint8), Mm, crop, flags=cv2.INTER_NEAREST)
