@@ -54,6 +54,9 @@ def main() -> None:
     p.add_argument("--no-mask", action="store_true", help="keep the neighbouring plugs in each crop instead of blacking them out")
     p.add_argument("--pos-tol", type=int, default=1,
                    help="compare a token with bank tokens within this many tokens of the same place (large = anywhere)")
+    p.add_argument("--paste", choices=["mask", "rect"], default="mask",
+                   help="paste each plug's score back under its mask, or over the whole crop rectangle (also covers "
+                        "broken tips and pixels SAM left out of the mask)")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -186,7 +189,10 @@ def main() -> None:
             Me[:, :2] = M[:, :2] * ev
             back = cv2.warpAffine(up, cv2.invertAffineTransform(Me), hw[::-1], flags=cv2.INTER_LINEAR,
                                   borderValue=-np.inf)
-            m = cv2.resize(pl.mask.astype(np.uint8), hw[::-1], interpolation=cv2.INTER_NEAREST).astype(bool)
+            if args.paste == "rect":
+                m = np.isfinite(back)
+            else:
+                m = cv2.resize(pl.mask.astype(np.uint8), hw[::-1], interpolation=cv2.INTER_NEAREST).astype(bool)
             canvas = np.where(m, np.maximum(canvas, back), canvas)
         cov = np.isfinite(canvas)
         return np.where(cov, canvas, np.nan), cov
