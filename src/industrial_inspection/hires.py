@@ -34,12 +34,24 @@ MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 class HiResKNN:
     def __init__(self, backbone: str = "vit_large_patch14_reg4_dinov2.lvd142m", layers=(5, 11, 17, 23),
                  short_side: int = 672, tile: int = 448, overlap: int = 112, n_ref: int = 16,
-                 device: str = "cuda", gpu_duty: float = 1.0, rotations: tuple[float, ...] = (0.0,)) -> None:
+                 device: str = "cuda", gpu_duty: float = 1.0, rotations: tuple[float, ...] = (0.0,),
+                 pool: int = 1, knn: int = 1) -> None:
+        """pool: average each layer's token grid over a pool x pool neighbourhood (stride 1) before
+        matching, for bank and queries alike -- PatchCore's "locally aware patch features", so a
+        patch is compared together with its neighbours instead of alone. knn: score a patch by its
+        mean distance to the knn nearest bank patches instead of the single nearest one."""
         self.vit = timm.create_model(backbone, pretrained=True, dynamic_img_size=True).eval().to(device)
         self.patch = self.vit.patch_embed.patch_size[0]
         self.layers, self.short_side, self.tile, self.overlap, self.n_ref = list(layers), short_side, tile, overlap, n_ref
         self.device, self.gpu_duty, self.rotations = device, gpu_duty, list(rotations)
+        self.pool, self.knn = pool, knn
         self.bank: list[torch.Tensor] = []
+
+    def _local(self, f: torch.Tensor) -> torch.Tensor:
+        """(C, h, w) -> same shape, averaged over the pool x pool neighbourhood (edges: only real cells)."""
+        if self.pool <= 1:
+            return f
+        return F.avg_pool2d(f[None], self.pool, stride=1, padding=self.pool // 2, count_include_pad=False)[0]
 
     # ---------- input ----------
     def load_raw(self, path: str) -> torch.Tensor:
@@ -119,29 +131,35 @@ class HiResKNN:
             for angle in self.rotations:
                 x = self.normalize(tv_rotate(raw, angle, interpolation=InterpolationMode.BILINEAR, fill=0.0) if angle else raw)
                 for b, f in zip(banks, self.features(x)):
-                    b.append(f.flatten(1).T.half())
+                    b.append(self._local(f).flatten(1).T.half())
         self.bank = [torch.cat(b) for b in banks]
         return refs
 
     @torch.no_grad()
-    def score(self, path: str, q_chunk: int = 2048, b_chunk: int = 32768) -> np.ndarray:
-        """(H/patch, W/patch) anomaly map: mean over layers of the nearest-bank-patch distance.
+    def score_layers(self, path: str, q_chunk: int = 2048, b_chunk: int = 32768) -> list[np.ndarray]:
+        """Per layer, an (H/patch, W/patch) map of the mean distance to the knn nearest bank patches.
 
         Both the query patches and the bank are chunked, so the (q_chunk, b_chunk) distance matrix
         stays small and memory does not grow with the bank size -- a rotation-augmented bank
         (fit(), rotations=...) can be 8x the default and still score without running out of VRAM."""
         feats = self.features(self.load(path))
         gh, gw = feats[0].shape[1:]
-        total = torch.zeros(gh * gw, device=self.device)
+        out = []
         for f, bank in zip(feats, self.bank):
-            q = f.flatten(1).T
-            best = torch.full((len(q),), float("inf"), device=self.device)
+            q = self._local(f).flatten(1).T
+            k = min(self.knn, len(bank))
+            best = torch.empty(len(q), device=self.device)
             for qi in range(0, len(q), q_chunk):
                 qc = q[qi:qi + q_chunk]
-                qmin = torch.full((len(qc),), float("inf"), device=self.device)
+                top = torch.full((len(qc), k), float("inf"), device=self.device)
                 for bi in range(0, len(bank), b_chunk):
                     d = torch.cdist(qc, bank[bi:bi + b_chunk].float())
-                    qmin = torch.minimum(qmin, d.min(dim=1).values)
-                best[qi:qi + q_chunk] = qmin
-            total += best
-        return (total / len(self.bank)).reshape(gh, gw).cpu().numpy()
+                    kk = min(k, d.shape[1])
+                    top = torch.cat([top, d.topk(kk, dim=1, largest=False).values], dim=1).topk(k, dim=1, largest=False).values
+                best[qi:qi + q_chunk] = top.mean(dim=1)
+            out.append(best.reshape(gh, gw).cpu().numpy())
+        return out
+
+    def score(self, path: str) -> np.ndarray:
+        """(H/patch, W/patch) anomaly map: the mean of score_layers over layers."""
+        return np.mean(self.score_layers(path), axis=0)

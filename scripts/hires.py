@@ -44,6 +44,10 @@ def main() -> None:
     p.add_argument("--n-rotations", type=int, default=1,
                    help="bank also gets each reference rotated this many times, evenly over 360 deg "
                         "(e.g. 8 for a category where the object itself lies at any angle, like wallplugs)")
+    p.add_argument("--pool", type=int, default=1, help="average each token over a pool x pool neighbourhood before matching (3 = PatchCore's)")
+    p.add_argument("--knn", type=int, default=1, help="score = mean distance to the knn nearest bank patches")
+    p.add_argument("--save-layers", action="store_true",
+                   help="also write each layer's map as its own model <name>_L<layer> (seg_eval.py can score them)")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -61,7 +65,8 @@ def main() -> None:
     if args.smoke:
         args.categories, args.n_ref = args.categories[:1] if args.categories != CATS else ["walnuts"], 2
 
-    model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations)
+    model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
+                     pool=args.pool, knn=args.knn)
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat
@@ -74,15 +79,21 @@ def main() -> None:
             test, labels, val = test[:2] + test[-2:], labels[:2] + labels[-2:], val[:2]
         refs = model.fit(train)
         hw = eval_size(test[0], DOWNSCALE)
-        tmaps = np.stack([to_eval(model.score(q), hw, args.sigma) for q in test]).astype(np.float16)
-        vmaps = np.stack([to_eval(model.score(q), hw, args.sigma) for q in val]).astype(np.float16)
+        # per image: one map per layer (at eval size); the model's map is their mean
+        tl = np.stack([np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]) for q in test]).astype(np.float16)
+        vl = np.stack([np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]) for q in val]).astype(np.float16)
         (out / "maps").mkdir(parents=True, exist_ok=True)
         (out / "scores").mkdir(parents=True, exist_ok=True)
-        np.savez_compressed(out / "maps" / f"{args.name}__{cat}.npz", maps=tmaps, labels=np.array(labels), paths=np.array(test),
-                            refs=np.array(refs))
-        np.savez_compressed(out / "maps" / f"{args.name}__{cat}__val.npz", maps=vmaps, paths=np.array(val))
-        pd.DataFrame({"image_path": test, "label": labels, "score": tmaps.reshape(len(test), -1).max(1).astype(float)}).to_csv(
-            out / "scores" / f"{args.name}__{cat}__seed0.csv", index=False)
+        outputs = [(args.name, tl.astype(np.float32).mean(1), vl.astype(np.float32).mean(1))]
+        if args.save_layers:
+            outputs += [(f"{args.name}_L{layer + 1}", tl[:, i], vl[:, i]) for i, layer in enumerate(model.layers)]
+        for name, tmaps, vmaps in outputs:
+            tmaps, vmaps = tmaps.astype(np.float16), vmaps.astype(np.float16)
+            np.savez_compressed(out / "maps" / f"{name}__{cat}.npz", maps=tmaps, labels=np.array(labels), paths=np.array(test),
+                                refs=np.array(refs))
+            np.savez_compressed(out / "maps" / f"{name}__{cat}__val.npz", maps=vmaps, paths=np.array(val))
+            pd.DataFrame({"image_path": test, "label": labels, "score": tmaps.reshape(len(test), -1).max(1).astype(float)}).to_csv(
+                out / "scores" / f"{name}__{cat}__seed0.csv", index=False)
         print(f"{cat}: {len(test)} test, {len(val)} val, bank {[len(b) for b in model.bank][0]} patches/layer, "
               f"{time.perf_counter() - t0:.0f}s", flush=True)
 
