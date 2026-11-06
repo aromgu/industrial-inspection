@@ -46,6 +46,11 @@ def main() -> None:
                         "(e.g. 8 for a category where the object itself lies at any angle, like wallplugs)")
     p.add_argument("--pool", type=int, default=1, help="average each token over a pool x pool neighbourhood before matching (3 = PatchCore's)")
     p.add_argument("--knn", type=int, default=1, help="score = mean distance to the knn nearest bank patches")
+    p.add_argument("--bank", choices=["fps", "all"], default="fps",
+                   help="fps: n_ref most different images, all patches; all: SuperADD's bank (every training image "
+                        "but each 8th, brightness augmentation, distance-based subsampling to --max-bank)")
+    p.add_argument("--brightness", type=float, nargs=2, default=[1.0, 1.0], help="random brightness factor range (bank=all)")
+    p.add_argument("--max-bank", type=int, default=100_000)
     p.add_argument("--save-layers", action="store_true",
                    help="also write each layer's map as its own model <name>_L<layer> (seg_eval.py can score them)")
     p.add_argument("--game-mode", action="store_true")
@@ -66,7 +71,8 @@ def main() -> None:
         args.categories, args.n_ref = args.categories[:1] if args.categories != CATS else ["walnuts"], 2
 
     model = HiResKNN(n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
-                     pool=args.pool, knn=args.knn)
+                     pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
+                     max_bank=args.max_bank)
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat
@@ -76,7 +82,7 @@ def main() -> None:
             sorted(str(q) for q in (root / "test_public" / "bad").glob("*.png"))
         labels = [0 if "/good/" in q.replace("\\", "/") else 1 for q in test]
         if args.smoke:
-            test, labels, val = test[:2] + test[-2:], labels[:2] + labels[-2:], val[:2]
+            test, labels, val, train = test[:2] + test[-2:], labels[:2] + labels[-2:], val[:2], train[:10]
         refs = model.fit(train)
         hw = eval_size(test[0], DOWNSCALE)
         # per image: one map per layer (at eval size); the model's map is their mean

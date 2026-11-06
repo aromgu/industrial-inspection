@@ -31,11 +31,43 @@ from torchvision.transforms.v2.functional import rotate as tv_rotate
 MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 
 
+def subsample_distance_based(x: torch.Tensor, target: int, iterations: int = 100, knn: int = 100,
+                             seed: int = 0) -> torch.Tensor:
+    """Port of SuperADD's subsampling_distance_based_fast (github.com/LukasRoom/SuperADD,
+    tracks/industrial/src/industrial/nearest_neighbor.py): keep a sample with probability 1 / (number of
+    neighbours closer than r), raising r until about target/iterations samples per random subset survive,
+    so dense regions of feature space are thinned and rare patches are kept. x: (N, C) on the GPU."""
+    if len(x) <= target:
+        return x
+    rng = np.random.default_rng(seed)
+    keep = np.zeros(len(x), bool)
+    size, per = max(1, len(x) // iterations), max(1, target // iterations)
+    for _ in range(iterations):
+        cand = np.flatnonzero(~keep)
+        idx = rng.choice(cand, size=min(size, len(cand)), replace=False)
+        sub = x[idx].float()
+        d = torch.cdist(sub, sub).topk(min(knn, len(idx)), dim=1, largest=False).values.cpu().numpy()
+        r = float(d.mean()) / 10
+        u = rng.random(len(idx))
+        while True:
+            m = u < 1.0 / ((d < r).sum(1) + 1)
+            if m.sum() <= per:
+                break
+            r *= 1.1
+        keep[idx] = m
+    short = target - keep.sum()
+    if short > 0:
+        rest = np.flatnonzero(~keep)
+        keep[rng.choice(rest, size=min(short, len(rest)), replace=False)] = True
+    return x[torch.from_numpy(np.flatnonzero(keep)).to(x.device)]
+
+
 class HiResKNN:
     def __init__(self, backbone: str = "vit_large_patch14_reg4_dinov2.lvd142m", layers=(5, 11, 17, 23),
                  short_side: int = 672, tile: int = 448, overlap: int = 112, n_ref: int = 16,
                  device: str = "cuda", gpu_duty: float = 1.0, rotations: tuple[float, ...] = (0.0,),
-                 pool: int = 1, knn: int = 1) -> None:
+                 pool: int = 1, knn: int = 1, bank: str = "fps", brightness: tuple[float, float] = (1.0, 1.0),
+                 max_bank: int = 100_000, per_image_cap: int = 1500, holdout_every: int = 8) -> None:
         """pool: average each layer's token grid over a pool x pool neighbourhood (stride 1) before
         matching, for bank and queries alike -- PatchCore's "locally aware patch features", so a
         patch is compared together with its neighbours instead of alone. knn: score a patch by its
@@ -45,6 +77,12 @@ class HiResKNN:
         self.layers, self.short_side, self.tile, self.overlap, self.n_ref = list(layers), short_side, tile, overlap, n_ref
         self.device, self.gpu_duty, self.rotations = device, gpu_duty, list(rotations)
         self.pool, self.knn = pool, knn
+        # bank="all": SuperADD's memory bank -- every training image except each holdout_every-th (SuperADD
+        # keeps those for its threshold), each with a random brightness factor in `brightness`, patches pooled
+        # (at most per_image_cap random patches per image, to bound RAM) and thinned to max_bank per layer by
+        # distance-based subsampling. bank="fps": the n_ref most mutually different images, all patches.
+        self.bank_mode, self.brightness = bank, brightness
+        self.max_bank, self.per_image_cap, self.holdout_every = max_bank, per_image_cap, holdout_every
         self.bank: list[torch.Tensor] = []
 
     def _local(self, f: torch.Tensor) -> torch.Tensor:
@@ -117,6 +155,8 @@ class HiResKNN:
         image is also rotated by those angles (around its centre, black fill) and its rotated patches
         are added too -- for a category like wallplugs where the object itself lies at any angle on a
         uniform background, so a bank built from upright photos alone treats most orientations as novel."""
+        if self.bank_mode == "all":
+            return self._fit_all(train_paths)
         d = torch.stack([self.descriptor(p) for p in train_paths])
         chosen = [int(torch.linalg.norm(d - d.mean(0), dim=1).argmin())]  # start at the most typical image
         dist = torch.linalg.norm(d - d[chosen[0]], dim=1)
@@ -133,6 +173,26 @@ class HiResKNN:
                 for b, f in zip(banks, self.features(x)):
                     b.append(self._local(f).flatten(1).T.half())
         self.bank = [torch.cat(b) for b in banks]
+        return refs
+
+    def _fit_all(self, train_paths: list[str]) -> list[str]:
+        refs = [p for i, p in enumerate(train_paths) if self.holdout_every <= 1 or i % self.holdout_every != 0]
+        rng = np.random.default_rng(0)
+        pools = [[] for _ in self.layers]
+        for p in refs:
+            raw = self.load_raw(p)
+            raw = torch.clip(raw * float(rng.uniform(*self.brightness)), 0, 1)
+            for pool, f in zip(pools, self.features(self.normalize(raw))):
+                t = self._local(f).flatten(1).T
+                if len(t) > self.per_image_cap:
+                    t = t[torch.from_numpy(rng.choice(len(t), self.per_image_cap, replace=False)).to(t.device)]
+                pool.append(t.half().cpu())
+        self.bank = []
+        for pool in pools:
+            x = torch.cat(pool).to(self.device)
+            self.bank.append(subsample_distance_based(x, self.max_bank).half())
+            del x
+            torch.cuda.empty_cache()
         return refs
 
     @torch.no_grad()

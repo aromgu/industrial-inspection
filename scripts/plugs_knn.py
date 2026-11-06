@@ -57,6 +57,9 @@ def main() -> None:
     p.add_argument("--paste", choices=["mask", "rect"], default="mask",
                    help="paste each plug's score back under its mask, or over the whole crop rectangle (also covers "
                         "broken tips and pixels SAM left out of the mask)")
+    p.add_argument("--split", default="test_public",
+                   help="test_public (has labels/ground truth) or a flat private split (test_private, "
+                        "test_private_mixed): reads the fallback maps already exported for that split")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -70,6 +73,8 @@ def main() -> None:
         torch.cuda.set_per_process_memory_fraction(0.6, 0)
         duty = 0.6
     out = Path("results/smoke") if args.smoke else Path("results")
+    private = args.split != "test_public"
+    tag = f"__{args.split}" if private else ""
 
     def throttle(t0: float) -> None:
         if duty < 1:
@@ -77,9 +82,10 @@ def main() -> None:
             time.sleep((time.perf_counter() - t0) * (1 / duty - 1))
 
     root = args.root / args.category
-    fb = np.load(f"results/maps/{args.fallback}__{args.category}.npz")
+    fb = np.load(f"results/maps/{args.fallback}__{args.category}{tag}.npz")
     fbv = np.load(f"results/maps/{args.fallback}__{args.category}__val.npz")
-    test, labels = [str(q) for q in fb["paths"]], fb["labels"]
+    test = [str(q) for q in fb["paths"]]
+    labels = fb["labels"] if not private else np.zeros(len(test), dtype=int)  # private: no ground truth locally
     val = [str(q) for q in fbv["paths"]]
     train_all = sorted(str(q) for q in (root / "train" / "good").glob("*.png"))
     refs = [train_all[i] for i in np.linspace(0, len(train_all) - 1, args.n_ref).round().astype(int)]
@@ -226,10 +232,11 @@ def main() -> None:
         tm = np.stack([fuse(m, c, fb["maps"][i], only) for (m, c), i in zip(tmaps, ti)]).astype(np.float16)
         vm = np.stack([fuse(m, c, fbv["maps"][i], only) for (m, c), i in zip(vmaps, vi)]).astype(np.float16)
         paths_t = np.array([test[i] for i in ti])
-        np.savez_compressed(out / "maps" / f"{name}__{args.category}.npz", maps=tm, labels=labels[ti], paths=paths_t)
-        np.savez_compressed(out / "maps" / f"{name}__{args.category}__val.npz", maps=vm, paths=np.array([val[i] for i in vi]))
+        np.savez_compressed(out / "maps" / f"{name}__{args.category}{tag}.npz", maps=tm, labels=labels[ti], paths=paths_t)
+        if not private:  # same validation set regardless of test split; don't rewrite it for private runs
+            np.savez_compressed(out / "maps" / f"{name}__{args.category}__val.npz", maps=vm, paths=np.array([val[i] for i in vi]))
         pd.DataFrame({"image_path": paths_t, "label": labels[ti], "score": tm.reshape(len(ti), -1).max(1).astype(float)}).to_csv(
-            out / "scores" / f"{name}__{args.category}__seed0.csv", index=False)
+            out / "scores" / f"{name}__{args.category}{tag}__seed0.csv", index=False)
     print(f"{args.category}: {len(ti)} test, {len(vi)} val, {time.perf_counter() - t_start:.0f}s", flush=True)
 
 
