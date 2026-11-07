@@ -34,7 +34,7 @@ MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 
 
 def subsample_distance_based(x: torch.Tensor, target: int, iterations: int = 100, knn: int = 100,
-                             seed: int = 0) -> torch.Tensor:
+                             seed: int = 0, device: str = "cuda") -> torch.Tensor:
     """Port of SuperADD's subsampling_distance_based_fast (github.com/LukasRoom/SuperADD,
     tracks/industrial/src/industrial/nearest_neighbor.py): keep a sample with probability 1 / (number of
     neighbours closer than r), raising r until about target/iterations samples per random subset survive,
@@ -47,7 +47,7 @@ def subsample_distance_based(x: torch.Tensor, target: int, iterations: int = 100
     for _ in range(iterations):
         cand = np.flatnonzero(~keep)
         idx = rng.choice(cand, size=min(size, len(cand)), replace=False)
-        sub = x[idx].float()
+        sub = x[torch.from_numpy(idx)].to(device).float()  # x may live on the CPU (large pools), only subsets go to the GPU
         d = torch.cdist(sub, sub).topk(min(knn, len(idx)), dim=1, largest=False).values.cpu().numpy()
         r = float(d.mean()) / 10
         u = rng.random(len(idx))
@@ -214,8 +214,8 @@ class HiResKNN:
                 pool.append(t.half().cpu())
         self.bank = []
         for pool in pools:
-            x = torch.cat(pool).to(self.device)
-            self.bank.append(subsample_distance_based(x, self.max_bank).half())
+            x = torch.cat(pool)  # stays on the CPU: a large pool (per_image_cap x photos) need not fit in VRAM
+            self.bank.append(subsample_distance_based(x, self.max_bank, device=self.device).to(self.device).half())
             del x
             torch.cuda.empty_cache()
         return refs
