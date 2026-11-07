@@ -227,7 +227,35 @@ class HiResKNN:
         Both the query patches and the bank are chunked, so the (q_chunk, b_chunk) distance matrix
         stays small and memory does not grow with the bank size -- a rotation-augmented bank
         (fit(), rotations=...) can be 8x the default and still score without running out of VRAM."""
-        feats = self.features(self.load(path))
+        x = self.load(path)
+        feats = self.features(x)
+        out, out1 = self._dist(feats, q_chunk, b_chunk)
+        if getattr(self, "self_r", 0):
+            self.last_self = [self._self_dist(f, self.self_r) for f in feats]
+        if getattr(self, "tta_flip", False):  # also the mirrored photo, its maps mirrored back, averaged
+            o2, o21 = self._dist(self.features(x.flip(-1)), q_chunk, b_chunk)
+            out = [np.ascontiguousarray((a + b[:, ::-1]) / 2) for a, b in zip(out, o2)]
+            out1 = [np.ascontiguousarray((a + b[:, ::-1]) / 2) for a, b in zip(out1, o21)]
+        self.last_nn1 = out1  # the k=1 maps of the same call, for free (used by scripts/hires.py --k1-name)
+        return out
+
+    @torch.no_grad()
+    def _self_dist(self, f: torch.Tensor, r: int, q_chunk: int = 2048) -> np.ndarray:
+        """In-image comparison: per patch, the distance to the nearest patch of the SAME photo that lies more
+        than r tokens away (Chebyshev). A defect is rare within its photo; a normal part of a plug has look-alikes
+        on the photo's other plugs, under the same exposure."""
+        gh, gw = f.shape[1:]
+        q = f.flatten(1).T
+        yy, xx = torch.meshgrid(torch.arange(gh, device=self.device), torch.arange(gw, device=self.device), indexing="ij")
+        yy, xx = yy.flatten(), xx.flatten()
+        best = torch.empty(len(q), device=self.device)
+        for qi in range(0, len(q), q_chunk):
+            d = torch.cdist(q[qi:qi + q_chunk], q)
+            near = ((yy[qi:qi + q_chunk, None] - yy[None]).abs() <= r) & ((xx[qi:qi + q_chunk, None] - xx[None]).abs() <= r)
+            best[qi:qi + q_chunk] = d.masked_fill(near, float("inf")).min(1).values
+        return best.reshape(gh, gw).cpu().numpy()
+
+    def _dist(self, feats, q_chunk: int, b_chunk: int):
         gh, gw = feats[0].shape[1:]
         out, out1 = [], []
         for f, bank in zip(feats, self.bank):
@@ -246,8 +274,7 @@ class HiResKNN:
                 best1[qi:qi + q_chunk] = top[:, 0]  # topk returns ascending values, so column 0 is the nearest
             out.append(best.reshape(gh, gw).cpu().numpy())
             out1.append(best1.reshape(gh, gw).cpu().numpy())
-        self.last_nn1 = out1  # the k=1 maps of the same call, for free (used by scripts/hires.py --k1-name)
-        return out
+        return out, out1
 
     def score(self, path: str) -> np.ndarray:
         """(H/patch, W/patch) anomaly map: the mean of score_layers over layers."""

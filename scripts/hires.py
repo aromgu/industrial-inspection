@@ -61,6 +61,9 @@ def main() -> None:
                         "k=--knn come from one pass over the photos (same bank)")
     p.add_argument("--save-layers", action="store_true",
                    help="also write each layer's map as its own model <name>_L<layer> (seg_eval.py can score them)")
+    p.add_argument("--self-r", type=int, default=0, help="also compute the in-image comparison map (exclusion radius in tokens)")
+    p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
+    p.add_argument("--tta-flip", action="store_true", help="average with the maps of the left-right mirrored photo")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
@@ -82,6 +85,7 @@ def main() -> None:
                      n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
                      pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
                      max_bank=args.max_bank)
+    model.tta_flip, model.self_r = args.tta_flip, args.self_r
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat
@@ -96,20 +100,25 @@ def main() -> None:
         hw = eval_size(test[0], DOWNSCALE)
         # per image: one map per layer (at eval size); the model's map is their mean
         def maps_for(paths):
-            main, nn1 = [], []
+            main, nn1, sf = [], [], []
             for q in paths:
                 main.append(np.stack([to_eval(m, hw, args.sigma) for m in model.score_layers(q)]))
                 if args.k1_name:
                     nn1.append(np.stack([to_eval(m, hw, args.sigma) for m in model.last_nn1]))
-            return np.stack(main).astype(np.float16), (np.stack(nn1).astype(np.float16) if nn1 else None)
+                if args.self_name:
+                    sf.append(np.stack([to_eval(m, hw, args.sigma) for m in model.last_self]))
+            st = lambda a: np.stack(a).astype(np.float16) if a else None
+            return st(main), st(nn1), st(sf)
 
-        tl, tl1 = maps_for(test)
-        vl, vl1 = maps_for(val)
+        tl, tl1, tls = maps_for(test)
+        vl, vl1, vls = maps_for(val)
         (out / "maps").mkdir(parents=True, exist_ok=True)
         (out / "scores").mkdir(parents=True, exist_ok=True)
         outputs = [(args.name, tl.astype(np.float32).mean(1), vl.astype(np.float32).mean(1))]
         if args.k1_name:
             outputs.append((args.k1_name, tl1.astype(np.float32).mean(1), vl1.astype(np.float32).mean(1)))
+        if args.self_name:
+            outputs.append((args.self_name, tls.astype(np.float32).mean(1), vls.astype(np.float32).mean(1)))
         if args.save_layers:
             outputs += [(f"{args.name}_L{layer + 1}", tl[:, i], vl[:, i]) for i, layer in enumerate(model.layers)]
         for name, tmaps, vmaps in outputs:

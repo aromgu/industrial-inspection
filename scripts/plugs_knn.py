@@ -48,6 +48,8 @@ def main() -> None:
     p.add_argument("--n-ref", type=int, default=16)
     p.add_argument("--knn", type=int, default=50)
     p.add_argument("--layers", type=int, nargs="+", default=[17, 23])
+    p.add_argument("--backbone", default="vit_large_patch14_reg4_dinov2.lvd142m", help="timm name or dinov3_vith16plus")
+    p.add_argument("--crop", type=int, nargs=2, default=list(CROP), help="canonical crop length width (multiples of the patch)")
     p.add_argument("--work", type=int, default=1024, help="long side for SAM")
     p.add_argument("--sigma", type=float, default=4.0)
     p.add_argument("--sam", default="results/weights/sam_vit_b_01ec64.pth")
@@ -66,6 +68,7 @@ def main() -> None:
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
     args = p.parse_args()
+    crop = tuple(args.crop)
     dev = "cuda"
     duty = 1.0
     if args.game_mode:
@@ -132,7 +135,11 @@ def main() -> None:
         print(f"cached plug masks for {len(todo)} photos, {time.perf_counter() - t_start:.0f}s", flush=True)
         return
 
-    vit = timm.create_model("vit_large_patch14_reg4_dinov2.lvd142m", pretrained=True, dynamic_img_size=True).eval().to(dev)
+    if args.backbone.startswith("dinov3"):
+        from industrial_inspection.hires import _DinoV3
+        vit = _DinoV3(args.backbone, f"weights/{args.backbone}.pth").to(dev)
+    else:
+        vit = timm.create_model(args.backbone, pretrained=True, dynamic_img_size=True).eval().to(dev)
 
     @torch.no_grad()
     def feats(crops: list[np.ndarray]) -> list[torch.Tensor]:
@@ -152,7 +159,7 @@ def main() -> None:
     def crops_of(path: str, pls):
         full = np.asarray(Image.open(path).convert("RGB"))
         s = full.shape[1] / pls[0].mask.shape[1] if pls else 1.0
-        return full, s, [canonical_crop(full, q, s, plug_length, mask_dilate=0 if args.no_mask else 3, use_mask=not args.no_mask)
+        return full, s, [canonical_crop(full, q, s, plug_length, crop=crop, mask_dilate=0 if args.no_mask else 3, use_mask=not args.no_mask)
                          for q in pls]
 
     # 2-3. memory bank: every ref plug in 4 orientations
@@ -202,7 +209,7 @@ def main() -> None:
         sc = score_plugs(feats([c for c, _ in cs]))
         ev = full.shape[1] / hw[1]  # eval pixel -> full-res pixel
         for (c, M), grid, pl in zip(cs, sc, pls):
-            up = cv2.resize(grid.astype(np.float32), CROP, interpolation=cv2.INTER_LINEAR)
+            up = cv2.resize(grid.astype(np.float32), crop, interpolation=cv2.INTER_LINEAR)
             Me = M.copy()
             Me[:, :2] = M[:, :2] * ev
             back = cv2.warpAffine(up, cv2.invertAffineTransform(Me), hw[::-1], flags=cv2.INTER_LINEAR,
