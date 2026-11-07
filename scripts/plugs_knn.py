@@ -181,11 +181,13 @@ def main() -> None:
         total = torch.zeros(n, gh, gw, device=dev)
         if args.pos_tol >= max(gh, gw):  # position-free: every query token against every bank token
             for ql, bl in zip(q, bank):
-                qf, bf = ql.reshape(-1, ql.shape[-1]).float(), bl.reshape(-1, bl.shape[-1])
+                qf, bf = ql.reshape(-1, ql.shape[-1]).half(), bl.reshape(-1, bl.shape[-1]).half()
                 k = min(args.knn, len(bf))
                 top = torch.full((len(qf), k), float("inf"), device=dev)
+                qn = qf.float().pow(2).sum(1, keepdim=True)
                 for bi in range(0, len(bf), 32768):
-                    d = torch.cdist(qf, bf[bi:bi + 32768].float())
+                    bc = bf[bi:bi + 32768]  # squared distance via a half-precision matmul (tensor cores)
+                    d = (qn + bc.float().pow(2).sum(1)[None] - 2 * (qf @ bc.T).float()).clamp_min(0).sqrt()
                     top = torch.cat([top, d.topk(min(k, d.shape[1]), dim=1, largest=False).values], 1).topk(k, dim=1, largest=False).values
                 total += top.mean(1).reshape(n, gh, gw)
             return (total / len(bank)).cpu().numpy()
