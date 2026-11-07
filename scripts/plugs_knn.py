@@ -172,7 +172,8 @@ def main() -> None:
             bank_crops += [c, c[::-1, ::-1], c[::-1], c[:, ::-1]]
     bank = [b for b in feats([np.ascontiguousarray(c) for c in bank_crops])]  # per layer (N, 9, 32, C)
     gh, gw = bank[0].shape[1:3]
-    print(f"bank: {len(bank_crops)} crops, token grid {gh}x{gw}", flush=True)
+    print(f"bank: {len(bank_crops)} crops, token grid {gh}x{gw}; GPU allocated {torch.cuda.memory_allocated()/2**30:.1f} GiB, "
+          f"reserved {torch.cuda.memory_reserved()/2**30:.1f} GiB", flush=True)
 
     @torch.no_grad()
     def score_plugs(q: list[torch.Tensor]) -> np.ndarray:
@@ -181,13 +182,15 @@ def main() -> None:
         total = torch.zeros(n, gh, gw, device=dev)
         if args.pos_tol >= max(gh, gw):  # position-free: every query token against every bank token
             for ql, bl in zip(q, bank):
-                qf, bf = ql.reshape(-1, ql.shape[-1]).half(), bl.reshape(-1, bl.shape[-1]).half()
+                # fp32 matmul for the cross term (fp16 overflows: DINOv3 dot products exceed 65504); unlike
+                # torch.cdist it needs no large scratch buffers, only the (q, chunk) result
+                qf, bf = ql.reshape(-1, ql.shape[-1]).float(), bl.reshape(-1, bl.shape[-1])
                 k = min(args.knn, len(bf))
                 top = torch.full((len(qf), k), float("inf"), device=dev)
-                qn = qf.float().pow(2).sum(1, keepdim=True)
+                qn = qf.pow(2).sum(1, keepdim=True)
                 for bi in range(0, len(bf), 32768):
-                    bc = bf[bi:bi + 32768]  # squared distance via a half-precision matmul (tensor cores)
-                    d = (qn + bc.float().pow(2).sum(1)[None] - 2 * (qf @ bc.T).float()).clamp_min(0).sqrt()
+                    bc = bf[bi:bi + 32768].float()
+                    d = (qn + bc.pow(2).sum(1)[None] - 2 * (qf @ bc.T)).clamp_min(0).sqrt()
                     top = torch.cat([top, d.topk(min(k, d.shape[1]), dim=1, largest=False).values], 1).topk(k, dim=1, largest=False).values
                 total += top.mean(1).reshape(n, gh, gw)
             return (total / len(bank)).cpu().numpy()
@@ -225,7 +228,13 @@ def main() -> None:
         return np.where(cov, canvas, np.nan), cov
 
     hw = fb["maps"].shape[1:]
-    vmaps = [instance_map(val[i], hw) for i in vi]
+    vmaps = []
+    for n, i in enumerate(vi):
+        t_v = time.perf_counter()
+        vmaps.append(instance_map(val[i], hw))
+        if n < 3:
+            print(f"val {n}: {time.perf_counter() - t_v:.1f}s, GPU allocated {torch.cuda.memory_allocated()/2**30:.1f} GiB, "
+                  f"peak {torch.cuda.max_memory_allocated()/2**30:.1f} GiB", flush=True)
     print(f"validation done ({time.perf_counter() - t_start:.0f}s)", flush=True)
     tmaps = []
     for n, i in enumerate(ti):
