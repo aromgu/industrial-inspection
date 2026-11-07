@@ -56,6 +56,7 @@ def main() -> None:
                         "but each 8th, brightness augmentation, distance-based subsampling to --max-bank)")
     p.add_argument("--brightness", type=float, nargs=2, default=[1.0, 1.0], help="random brightness factor range (bank=all)")
     p.add_argument("--max-bank", type=int, default=100_000)
+    p.add_argument("--per-image-cap", type=int, default=1500, help="bank=all: random patches kept per training photo before subsampling")
     p.add_argument("--k1-name", default=None,
                    help="also save the nearest-patch (k=1) maps of the same run under this model name, so k=1 and "
                         "k=--knn come from one pass over the photos (same bank)")
@@ -84,7 +85,7 @@ def main() -> None:
     model = HiResKNN(backbone=args.backbone, layers=args.layers, tile=args.tile, overlap=args.overlap,
                      n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
                      pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
-                     max_bank=args.max_bank)
+                     max_bank=args.max_bank, per_image_cap=args.per_image_cap)
     model.tta_flip, model.self_r = args.tta_flip, args.self_r
     for cat in args.categories:
         t0 = time.perf_counter()
