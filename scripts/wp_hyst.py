@@ -12,6 +12,7 @@ from wp_local import gt_of, SMALL  # noqa: E402
 a = argparse.ArgumentParser(); a.add_argument("--seed", required=True); a.add_argument("--extent", required=True)
 a.add_argument("--sigma", type=float, default=0, help="smoothing of the extent map (saved unsmoothed)")
 a.add_argument("--qs", type=float, nargs="+", default=[0.8, 0.9, 0.95]); a.add_argument("--qe", type=float, nargs="+", default=[0.99, 0.995, 0.999])
+a.add_argument("--half", default="all", choices=["all", "dev", "eval"], help="score only this half of the physical parts")
 a.add_argument("--save", default=None, help="save binary predictions for qs[0], qe[0] under this name (npz)")
 args = a.parse_args()
 L = lambda m: (np.load(f"results/maps/{m}__wallplugs.npz"), np.load(f"results/maps/{m}__wallplugs__val.npz"))
@@ -19,8 +20,13 @@ zs, zsv = L(args.seed); ze, zev = L(args.extent)
 S, Sv = zs["maps"].astype(np.float32), zsv["maps"].astype(np.float32)
 sm = (lambda a_: np.stack([ndimage.gaussian_filter(m.astype(np.float32), args.sigma) for m in a_])) if args.sigma else (lambda a_: a_.astype(np.float32))
 E, Ev = sm(ze["maps"]), sm(zev["maps"])
-y = zs["labels"]; gt = gt_of(zs["paths"].astype(str), y, S.shape[1:]); lab = [ndimage.label(g) for g in gt]
-print(f"seed={args.seed} extent={args.extent}\n qs     qe    rec_s  rec_l  fa_test  f1_all  f1_def")
+y = zs["labels"]; gt = gt_of(zs["paths"].astype(str), y, S.shape[1:])
+if args.half != "all":
+    from industrial_inspection.q2 import parts_and_tags, split_parts
+    dev = split_parts(parts_and_tags(zs["paths"].astype(str))[0], y); keep = dev if args.half == "dev" else ~dev
+    S, E, y, gt = S[keep], E[keep], y[keep], gt[keep]
+lab = [ndimage.label(g) for g in gt]
+print(f"[{args.half}] seed={args.seed} extent={args.extent}\n qs     qe    rec_s  rec_l  fa_test  f1_all  f1_def")
 for qs in args.qs:
     ts = np.quantile(Sv.reshape(len(Sv), -1).max(1), qs)
     for qe in args.qe:
