@@ -34,7 +34,8 @@ a.add_argument("--layers", type=int, nargs="+", default=[15, 23])
 a.add_argument("--steps", type=int, default=1500)
 a.add_argument("--batch", type=int, default=6)
 a.add_argument("--lr", type=float, default=1e-3)
-a.add_argument("--kinds", type=int, nargs="+", default=[0, 1, 2, 3], help="0 cut-paste, 1 scratch, 2 blob, 3 missing, 4 local warp (bent fin / deformation)")
+a.add_argument("--kinds", type=int, nargs="+", default=[0, 1, 2, 3], help="0 cut-paste, 1 scratch, 2 blob, 3 missing, 4 local warp (bent fin / deformation), "
+                    "5 Cutout at the plug outline (cut-off material: background texture or a flat fill)")
 a.add_argument("--smoke", action="store_true")
 args = a.parse_args()
 if args.smoke:
@@ -124,6 +125,33 @@ def synth(win: np.ndarray, src: np.ndarray):
             out[y0:y1, x0:x1] = patch
             m = np.zeros_like(mask)
             m[y0:y1, x0:x1] = changed
+        elif kind == 5:  # Cutout (DeVries & Taylor 2017) at the plug OUTLINE: part of the edge / end erased
+            edge = plug & ~cv2.erode(plug.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)
+            ey, ex = np.nonzero(edge[24:-24, 24:-24])
+            if not len(ey):
+                continue
+            j = rng.integers(len(ey))
+            cy, cx = int(ey[j]) + 24, int(ex[j]) + 24
+            r = int(rng.integers(12, 40))  # 001's missing strip is ~30 px at 1792 px input
+            m = np.zeros_like(mask)
+            if rng.random() < 0.5:
+                cv2.ellipse(m, (cx, cy), (r, max(4, int(r * rng.uniform(0.4, 1)))), float(rng.uniform(0, 180)), 0, 360, 1, -1)
+            else:
+                rect = ((cx, cy), (2 * r, int(2 * r * rng.uniform(0.3, 1))), float(rng.uniform(0, 180)))
+                cv2.fillPoly(m, [cv2.boxPoints(rect).astype(np.int32)], 1)
+            m &= plug.astype(np.uint8)
+            y0, x0 = max(0, cy - r - 2), max(0, cx - r - 2)
+            y1, x1 = min(out.shape[0], cy + r + 2), min(out.shape[1], cx + r + 2)
+            sub = m[y0:y1, x0:x1].astype(bool)
+            if rng.random() < 0.7:  # fill with background texture from a dark spot of the window
+                bg = np.argwhere(g < np.quantile(g, 0.2))
+                by, bx = bg[rng.integers(len(bg))]
+                by = int(np.clip(by, 0, win.shape[0] - (y1 - y0))); bx = int(np.clip(bx, 0, win.shape[1] - (x1 - x0)))
+                src_bg = win[by:by + (y1 - y0), bx:bx + (x1 - x0)]
+                if src_bg.shape[:2] == sub.shape:
+                    out[y0:y1, x0:x1][sub] = src_bg[sub]
+            else:  # classic Cutout: flat fill with the background level
+                out[y0:y1, x0:x1][sub] = np.uint8(np.quantile(g, 0.1))
         else:  # missing material: plug pixels replaced by background texture
             bg = np.argwhere(g < np.quantile(g, 0.2))
             if not len(bg):

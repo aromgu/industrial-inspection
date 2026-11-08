@@ -128,6 +128,10 @@ class HiResKNN:
             lab = cv2.cvtColor(a, cv2.COLOR_RGB2LAB)
             lab[..., 0] = cv2.createCLAHE(clipLimit=float(self.clahe), tileGridSize=(16, 16)).apply(lab[..., 0])
             a = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
+        if getattr(self, "unsharp", 0):  # high-frequency boost (unsharp masking): a + k * (a - blur(a)), sigma 2 px
+            import cv2
+            f = a.astype(np.float32)
+            a = np.clip(f + float(self.unsharp) * (f - cv2.GaussianBlur(f, (0, 0), 2.0)), 0, 255).astype(np.uint8)
         x = torch.from_numpy(a.astype(np.float32) / 255).permute(2, 0, 1)
         return x[None]
 
@@ -151,7 +155,16 @@ class HiResKNN:
     # ---------- features ----------
     @torch.no_grad()
     def features(self, x: torch.Tensor) -> list[torch.Tensor]:
-        """Per layer, a (C, H/patch, W/patch) token grid for the whole image."""
+        """Per layer, a (C, H/patch, W/patch) token grid for the whole image. With self.pad_tokens > 0 the photo is
+        reflect-padded by that many patches on every side first (border patches then see context instead of the
+        image edge) and the padded tokens are cropped away again."""
+        pt = int(getattr(self, "pad_tokens", 0))
+        if pt:
+            x = F.pad(x, (pt * self.patch,) * 4, mode="reflect")
+            return [f[:, pt:-pt, pt:-pt] for f in self._features(x)]
+        return self._features(x)
+
+    def _features(self, x: torch.Tensor) -> list[torch.Tensor]:
         _, _, H, W = x.shape
         gh, gw = H // self.patch, W // self.patch
         acc, cnt = None, torch.zeros(1, gh, gw, device=self.device)

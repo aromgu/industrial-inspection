@@ -65,6 +65,8 @@ def main() -> None:
     p.add_argument("--self-r", type=int, default=0, help="also compute the in-image comparison map (exclusion radius in tokens)")
     p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
     p.add_argument("--clahe", type=float, default=0, help="CLAHE clip limit on the input photos (0 = off), bank and queries alike")
+    p.add_argument("--unsharp", type=float, default=0, help="unsharp-mask amount on the input photos (0 = off)")
+    p.add_argument("--pad-tokens", type=int, default=0, help="reflect-pad the photo by this many patches before tiling")
     p.add_argument("--tta-flip", action="store_true", help="average with the maps of the left-right mirrored photo")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
@@ -88,6 +90,7 @@ def main() -> None:
                      pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
                      max_bank=args.max_bank, per_image_cap=args.per_image_cap)
     model.tta_flip, model.self_r, model.clahe = args.tta_flip, args.self_r, args.clahe
+    model.unsharp, model.pad_tokens = args.unsharp, args.pad_tokens
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat
