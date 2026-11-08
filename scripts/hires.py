@@ -66,6 +66,7 @@ def main() -> None:
     p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
     p.add_argument("--clahe", type=float, default=0, help="CLAHE clip limit on the input photos (0 = off), bank and queries alike")
     p.add_argument("--unsharp", type=float, default=0, help="unsharp-mask amount on the input photos (0 = off)")
+    p.add_argument("--private", action="store_true", help="also write maps for test_private and test_private_mixed (same bank)")
     p.add_argument("--histmatch", action="store_true",
                    help="match every photo's L-channel histogram to the mean CDF of the category's training photos (bank and queries alike)")
     p.add_argument("--pad-tokens", type=int, default=0, help="reflect-pad the photo by this many patches before tiling")
@@ -145,6 +146,16 @@ def main() -> None:
             np.savez_compressed(out / "maps" / f"{name}__{cat}__val.npz", maps=vmaps, paths=np.array(val))
             pd.DataFrame({"image_path": test, "label": labels, "score": tmaps.reshape(len(test), -1).max(1).astype(float)}).to_csv(
                 out / "scores" / f"{name}__{cat}__seed0.csv", index=False)
+        if args.private:  # benchmark private splits, same bank and settings (thresholds come from the val maps above)
+            for split in ("test_private", "test_private_mixed"):
+                ps = sorted(str(q) for q in (root / split).glob("*.png"))
+                if args.smoke:
+                    ps = ps[:2]
+                hw = eval_size(ps[0], DOWNSCALE)
+                pm, _, _ = maps_for(ps)
+                np.savez_compressed(out / "maps" / f"{args.name}__{cat}__{split}.npz",
+                                    maps=pm.astype(np.float32).mean(1).astype(np.float16), paths=np.array(ps))
+                print(f"{cat}/{split}: {len(ps)} images, {time.perf_counter() - t0:.0f}s so far", flush=True)
         print(f"{cat}: {len(test)} test, {len(val)} val, bank {[len(b) for b in model.bank][0]} patches/layer, "
               f"{time.perf_counter() - t0:.0f}s", flush=True)
 

@@ -1,21 +1,15 @@
-"""Build the benchmark.mvtec.com submission from the private-test maps already exported by
-hires_private.py (7 categories) and plugs_knn.py/plugs_fuse.py --split test_private[_mixed] (wallplugs).
+"""Build the benchmark.mvtec.com submission from private-test maps written by
+scripts/hires.py --private (DINOv3-H+, 2026-11-09):
 
-Per category/split, picks the threshold + post-processing settled by seg_post.py / the wallplugs
-ablations (docs: README.md "wallplugs: 플러그를 하나씩 잘라서 비교하기"), both computed only from that
-category's *validation* maps (never from a test split, private or public):
+  7 categories  sub_dv3 (layers 7 15 23 31, 640 px tiles, k=1), threshold = validation p95 x 1.2
+                (x 1.421 for rice, walnuts), post = close(r=6) + fill holes + drop components < 64 px
+                (choice on test_public: scripts/sub_compare.py)
+  wallplugs     sub_wp (layers 15 23, short side 1792, k=1), final rule of docs/experiment_log.md 2026-11-08:
+                Gaussian-seed hysteresis with photo-p90 offset, guided-filter extent (wallplugs_masks)
 
-  7 categories  hires_k50, threshold = validation 95th percentile x 1.2 (SuperADD-style rule, the
-                setting chosen across all 8 categories in seg_post.py), post = close(r=6) + fill holes
-                + drop components < 64px
-  wallplugs     plugs_rect_max, threshold = mean over validation images of that image's map maximum
-                (the fixed rule needed because the optimal threshold sits at the extreme tail of the
-                map -- percentile rules miss it by a wide margin, see README), post = fill holes +
-                drop components < 256px
-
-Writes submission_dir/anomaly_images/<cat>/<split>/<stem>.tiff (float16) and
-submission_dir/anomaly_images_thresholded/<cat>/<split>/<stem>.png (0/255), validates file counts and
-formats against the official per-category counts, and packages submission_dir into a .tar.gz.
+All thresholds from each category's validation maps only. Writes submission_dir/anomaly_images/<cat>/<split>/<stem>.tiff
+(float16) and anomaly_images_thresholded/<cat>/<split>/<stem>.png (0/255), validates counts and formats against the
+official checker's rules, and packages a .tar.gz. Upload only after the user confirms (2 uploads per 7 days).
 
     .venv/Scripts/python.exe scripts/make_submission.py
 """
@@ -38,16 +32,60 @@ SPLITS = ["test_private", "test_private_mixed"]
 EXPECTED_COUNTS = {"can": 321, "fabric": 314, "fruit_jelly": 255, "rice": 277, "sheet_metal": 142,
                    "vial": 276, "wallplugs": 232, "walnuts": 228}
 
-# category -> (model name, threshold rule, post-processing)
+# category -> (model name, threshold rule, post-processing). 2026-11-09: DINOv3-H+ for every category (better than
+# DINOv2-L on test_public in all 7 others, scripts/sub_compare.py); threshold factor per category from validation p95
+# (x1.421 = SuperADD's factor where it scored higher on test_public, else x1.2). wallplugs: final config of
+# docs/experiment_log.md (2026-11-08), see wallplugs_masks().
 P95X12 = POSTS["close6+fill+small64"]
-WALLPLUGS_POST = POSTS["fill+small256"]
-CONFIG = {cat: ("hires_k50", "p95x1.2", P95X12) for cat in EXPECTED_COUNTS if cat != "wallplugs"}
-CONFIG["wallplugs"] = ("plugs_rect_max", "valimgmax", WALLPLUGS_POST)
+CONFIG = {cat: ("sub_dv3", "p95x1.2", P95X12) for cat in EXPECTED_COUNTS if cat != "wallplugs"}
+for _c in ("rice", "walnuts"):
+    CONFIG[_c] = ("sub_dv3", "p95x1.421", P95X12)
+CONFIG["wallplugs"] = ("sub_wp", "hysteresis", None)
+
+
+def _guided(p, I, r, eps):
+    from scipy import ndimage
+    box = lambda x: ndimage.uniform_filter(x, 2 * r + 1)
+    mI, mp = box(I), box(p)
+    aa = (box(I * p) - mI * mp) / (box(I * I) - mI * mI + eps)
+    return box(aa) * I + box(mp - aa * mI)
+
+
+def wallplugs_smooth(maps, paths, r=4, eps=0.01):
+    """Extent map: guided filter (photo as guide) on the raw map, as wp_eval.py --guided 4 0.01."""
+    out = []
+    for m, p in zip(maps, paths):
+        I = np.asarray(Image.open(p).convert("L").resize(m.shape[::-1], Image.BILINEAR), dtype=np.float32) / 255
+        m = m.astype(np.float32)
+        lo, hi = np.percentile(m, [1, 99.99])
+        out.append(_guided((m - lo) / (hi - lo + 1e-6), I, r, eps) * (hi - lo) + lo)
+    return np.stack(out)
+
+
+def wallplugs_masks(maps, paths, val_maps, val_paths, qs=0.95, qe=0.995, sigma=2.0):
+    """Final wallplugs rule: seeds = Gaussian(sigma) map minus the photo's own p90 above the qs quantile of the
+    validation per-photo maxima; extent = guided map above the validation pixel qe quantile, connected to a seed."""
+    from scipy import ndimage
+    g = lambda arr: np.stack([ndimage.gaussian_filter(m.astype(np.float32), sigma) for m in arr])
+    seed = lambda A: A - np.percentile(A.reshape(len(A), -1), 90, axis=1)[:, None, None]
+    R, Rv = wallplugs_smooth(maps, paths), wallplugs_smooth(val_maps, val_paths)
+    N, Nv = seed(g(maps)), seed(g(val_maps))
+    te, ts = np.quantile(Rv, qe), np.quantile(Nv.reshape(len(Nv), -1).max(1), qs)
+    pred = np.zeros(maps.shape, bool)
+    for i in range(len(maps)):
+        s = N[i] > ts
+        if s.any():
+            lab, _ = ndimage.label((R[i] > te) | s)
+            k = np.unique(lab[s])
+            pred[i] = np.isin(lab, k[k > 0])
+    return R, pred, (ts, te)
 
 
 def threshold_of(rule: str, val_maps: np.ndarray) -> float:
     if rule == "p95x1.2":
         return float(np.quantile(val_maps, 0.95) * 1.2)
+    if rule == "p95x1.421":
+        return float(np.quantile(val_maps, 0.95) * 1.421)
     if rule == "valimgmax":
         return float(val_maps.reshape(len(val_maps), -1).max(1).mean())
     raise ValueError(rule)
@@ -61,20 +99,25 @@ def main() -> None:
 
     img_root = args.out / "anomaly_images"
     thr_root = args.out / "anomaly_images_thresholded"
-    for cat, (model, rule, (close, fill, min_area)) in CONFIG.items():
-        val = np.load(f"results/maps/{model}__{cat}__val.npz")["maps"].astype(np.float32)
-        thr = threshold_of(rule, val)
+    for cat, (model, rule, post) in CONFIG.items():
+        zv = np.load(f"results/maps/{model}__{cat}__val.npz")
+        val = zv["maps"].astype(np.float32)
+        thr = threshold_of(rule, val) if rule != "hysteresis" else None
         for split in SPLITS:
             z = np.load(f"results/maps/{model}__{cat}__{split}.npz")
             maps, paths = z["maps"].astype(np.float32), z["paths"].astype(str)
             (img_root / cat / split).mkdir(parents=True, exist_ok=True)
             (thr_root / cat / split).mkdir(parents=True, exist_ok=True)
-            for m, path in zip(maps, paths):
+            if rule == "hysteresis":
+                maps, binaries, thr = wallplugs_masks(maps, paths, val, zv["paths"].astype(str))
+            else:
+                binaries = [postprocess(m > thr, *post) for m in maps]
+            for m, b, path in zip(maps, binaries, paths):
                 stem = Path(path).stem
                 tifffile.imwrite(img_root / cat / split / f"{stem}.tiff", m.astype(np.float16))
-                binary = postprocess(m > thr, close, fill, min_area)
-                Image.fromarray((binary * 255).astype(np.uint8)).save(thr_root / cat / split / f"{stem}.png")
-        print(f"{cat}: model {model}, threshold {rule}={thr:.4g}, post {CONFIG[cat][2]}", flush=True)
+                Image.fromarray((np.asarray(b) * 255).astype(np.uint8)).save(thr_root / cat / split / f"{stem}.png")
+            print(f"{cat}/{split}: model {model}, rule {rule}, threshold {thr}, flagged photos "
+                  f"{np.mean([np.asarray(b).any() for b in binaries]) * 100:.0f}%", flush=True)
 
     n_bad = validate(args.out)
     if n_bad:
