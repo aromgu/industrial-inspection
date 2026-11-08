@@ -66,6 +66,8 @@ def main() -> None:
     p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
     p.add_argument("--clahe", type=float, default=0, help="CLAHE clip limit on the input photos (0 = off), bank and queries alike")
     p.add_argument("--unsharp", type=float, default=0, help="unsharp-mask amount on the input photos (0 = off)")
+    p.add_argument("--histmatch", action="store_true",
+                   help="match every photo's L-channel histogram to the mean CDF of the category's training photos (bank and queries alike)")
     p.add_argument("--pad-tokens", type=int, default=0, help="reflect-pad the photo by this many patches before tiling")
     p.add_argument("--bank-light", type=float, default=0, help="bank=all: probability of directional relighting per training photo")
     p.add_argument("--tta-flip", action="store_true", help="average with the maps of the left-right mirrored photo")
@@ -97,6 +99,15 @@ def main() -> None:
         root = args.root / cat
         train = sorted(str(q) for q in (root / "train" / "good").glob("*.png"))
         val = sorted(str(q) for q in (root / "validation" / "good").glob("*.png"))
+        model.hist_ref = None
+        if args.histmatch:
+            import cv2
+            from PIL import Image
+            h = np.zeros(256)
+            for q in train[::4]:
+                g = cv2.cvtColor(np.asarray(Image.open(q).convert("RGB").reduce(4)), cv2.COLOR_RGB2LAB)[..., 0]
+                h += np.bincount(g.ravel(), minlength=256) / g.size
+            model.hist_ref = np.cumsum(h) / h.sum()
         test = sorted(str(q) for q in (root / "test_public" / "good").glob("*.png")) + \
             sorted(str(q) for q in (root / "test_public" / "bad").glob("*.png"))
         labels = [0 if "/good/" in q.replace("\\", "/") else 1 for q in test]

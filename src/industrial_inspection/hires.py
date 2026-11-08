@@ -123,6 +123,14 @@ class HiResKNN:
         s = self.short_side / min(im.size)
         w, h = (round(im.width * s / self.patch) * self.patch, round(im.height * s / self.patch) * self.patch)
         a = np.asarray(im.resize((w, h), Image.BICUBIC))
+        if getattr(self, "hist_ref", None) is not None:  # histogram matching of the L channel to the training photos' mean CDF
+            import cv2
+            lab = cv2.cvtColor(a, cv2.COLOR_RGB2LAB)
+            cdf = np.cumsum(np.bincount(lab[..., 0].ravel(), minlength=256)).astype(np.float64)
+            cdf /= cdf[-1]
+            lut = np.clip(np.round(np.interp(cdf, self.hist_ref, np.arange(256))), 0, 255).astype(np.uint8)
+            lab[..., 0] = lut[lab[..., 0]]
+            a = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
         if getattr(self, "clahe", 0):  # local contrast (CLAHE on the L channel), same for bank and queries
             import cv2
             lab = cv2.cvtColor(a, cv2.COLOR_RGB2LAB)
