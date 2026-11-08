@@ -12,6 +12,11 @@ All thresholds from each category's validation maps only. Writes submission_dir/
 official checker's rules, and packages a .tar.gz. Upload only after the user confirms (2 uploads per 7 days).
 
     .venv/Scripts/python.exe scripts/make_submission.py
+    .venv/Scripts/python.exe scripts/make_submission.py --complete --out results/submission_complete         --archive results/submission_complete.tar.gz      # + wallplugs seeded shape completion (2026-11-09)
+
+--complete: wallplugs predictions also get industrial_inspection.complete.seeded_completion (needs the SAM plug masks
+of the private photos: scripts/plugs_knn.py --category wallplugs --split <split> --cache-only); public test F1 73.4 ->
+75.7 with the two shape thresholds picked on that test set. Completed pixels get map value max(map, extent threshold).
 """
 
 from __future__ import annotations
@@ -95,6 +100,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--out", type=Path, default=Path("results/submission"))
     p.add_argument("--archive", type=Path, default=Path("results/submission.tar.gz"))
+    p.add_argument("--complete", action="store_true", help="wallplugs: add seeded shape completion (cut-off plugs)")
     args = p.parse_args()
 
     img_root = args.out / "anomaly_images"
@@ -110,6 +116,18 @@ def main() -> None:
             (thr_root / cat / split).mkdir(parents=True, exist_ok=True)
             if rule == "hysteresis":
                 maps, binaries, thr = wallplugs_masks(maps, paths, val, zv["paths"].astype(str))
+                if args.complete:
+                    from industrial_inspection.complete import plug_cache_path, seeded_completion
+                    miss = [q for q in paths if not plug_cache_path(q).exists()]
+                    if miss:
+                        raise SystemExit(f"--complete: no SAM plug masks for {len(miss)} {split} photos (plugs_knn.py --cache-only)")
+                    n_add = 0
+                    for i, q in enumerate(paths):
+                        add = seeded_completion(q, plug_cache_path(q), binaries[i])
+                        n_add += bool(add.any())
+                        binaries[i] |= add
+                        maps[i][add] = np.maximum(maps[i][add], thr[1])
+                    print(f"  shape completion extended {n_add} photos", flush=True)
             else:
                 binaries = [postprocess(m > thr, *post) for m in maps]
             for m, b, path in zip(maps, binaries, paths):
