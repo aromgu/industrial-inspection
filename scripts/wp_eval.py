@@ -26,6 +26,7 @@ a.add_argument("--sigma", type=float, default=2.0)
 a.add_argument("--qs", type=float, nargs="+", default=[0.8, 0.9, 0.95])
 a.add_argument("--guided", type=float, nargs=2, default=None, metavar=("R", "EPS"),
                help="edge-aware smoothing instead of the Gaussian: guided filter (He et al. 2013) with the photo as guide")
+a.add_argument("--seed-gauss", action="store_true", help="with --guided: seeds from the Gaussian-smoothed map, extent from the guided one")
 a.add_argument("--qe", type=float, default=0.995)
 args = a.parse_args()
 def guided(p: np.ndarray, I: np.ndarray, r: int, eps: float) -> np.ndarray:
@@ -69,8 +70,12 @@ paths, y = z["paths"].astype(str), z["labels"]
 parts, tag = parts_and_tags(paths)
 hw = R.shape[1:]
 gt = gt_of(paths, y, hw)
-N = R - np.percentile(R.reshape(len(R), -1), 90, axis=1)[:, None, None]
-Nv = Rv - np.percentile(Rv.reshape(len(Rv), -1), 90, axis=1)[:, None, None]
+S, Sv = R, Rv
+if args.guided is not None and args.seed_gauss and not args.model2:
+    g_ = lambda arr: np.stack([ndimage.gaussian_filter(m.astype(np.float32), args.sigma) for m in arr])
+    S, Sv = g_(z["maps"]), g_(np.load(f"results/maps/{args.model}__wallplugs__val.npz")["maps"])
+N = S - np.percentile(S.reshape(len(S), -1), 90, axis=1)[:, None, None]
+Nv = Sv - np.percentile(Sv.reshape(len(Sv), -1), 90, axis=1)[:, None, None]
 te = np.quantile(Rv, args.qe)
 vmax = Nv.reshape(len(Nv), -1).max(1)
 dev = split_parts(parts, y)
@@ -105,7 +110,7 @@ def metrics(pred, keep):
             200 * tp / max(1, 2 * tp + fp + fn), 200 * tpd / max(1, 2 * tpd + fpd + fnd))
 
 
-name = args.model + (f" + {args.mix} x {args.model2}" if args.model2 else "") + (f" guided r{args.guided[0]:.0f} eps{args.guided[1]}" if args.guided else f" sigma {args.sigma}")
+name = args.model + (f" + {args.mix} x {args.model2}" if args.model2 else "") + (f" guided r{args.guided[0]:.0f} eps{args.guided[1]}" + (" (seeds Gaussian)" if args.seed_gauss else "") if args.guided else f" sigma {args.sigma}")
 print(f"== {name}\n  qs    half  rec_s  rec_l  fa_test  f1_all  f1_def")
 preds = {}
 for qs in args.qs:
