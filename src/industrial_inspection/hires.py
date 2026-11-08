@@ -169,8 +169,13 @@ class HiResKNN:
         pt = int(getattr(self, "pad_tokens", 0))
         if pt:
             x = F.pad(x, (pt * self.patch,) * 4, mode="reflect")
-            return [f[:, pt:-pt, pt:-pt] for f in self._features(x)]
-        return self._features(x)
+            fs = [f[:, pt:-pt, pt:-pt] for f in self._features(x)]
+        else:
+            fs = self._features(x)
+        proj = getattr(self, "proj", None)  # optional learned per-layer projection (scripts/wp_adapt.py), bank and queries alike
+        if proj is not None:
+            fs = [p(f.permute(1, 2, 0)).permute(2, 0, 1).contiguous() for p, f in zip(proj, fs)]
+        return fs
 
     def _features(self, x: torch.Tensor) -> list[torch.Tensor]:
         _, _, H, W = x.shape

@@ -66,6 +66,7 @@ def main() -> None:
     p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
     p.add_argument("--clahe", type=float, default=0, help="CLAHE clip limit on the input photos (0 = off), bank and queries alike")
     p.add_argument("--unsharp", type=float, default=0, help="unsharp-mask amount on the input photos (0 = off)")
+    p.add_argument("--proj", default=None, help="learned token projection (scripts/wp_adapt.py) applied to bank and queries")
     p.add_argument("--private", action="store_true", help="also write maps for test_private and test_private_mixed (same bank)")
     p.add_argument("--histmatch", action="store_true",
                    help="match every photo's L-channel histogram to the mean CDF of the category's training photos (bank and queries alike)")
@@ -95,6 +96,9 @@ def main() -> None:
                      max_bank=args.max_bank, per_image_cap=args.per_image_cap)
     model.tta_flip, model.self_r, model.clahe = args.tta_flip, args.self_r, args.clahe
     model.unsharp, model.pad_tokens, model.bank_light = args.unsharp, args.pad_tokens, args.bank_light
+    if args.proj:
+        from industrial_inspection.adapt import load_proj
+        model.proj = load_proj(args.proj)
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat
