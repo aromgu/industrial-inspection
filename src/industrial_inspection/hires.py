@@ -226,6 +226,11 @@ class HiResKNN:
         for p in refs:
             raw = self.load_raw(p)
             raw = torch.clip(raw * float(rng.uniform(*self.brightness)), 0, 1)
+            if rng.random() < float(getattr(self, "bank_light", 0)):  # directional relighting (shadows, highlights,
+                from industrial_inspection.lighting import light_field, relight  # gamma) so the bank covers the
+                gen = torch.Generator().manual_seed(int(rng.integers(1 << 31)))  # test's lighting shifts
+                gain, hl, gamma = light_field(*raw.shape[-2:], generator=gen)
+                raw = relight(raw[0], gain, hl, gamma)[None]
             for pool, f in zip(pools, self.features(self.normalize(raw))):
                 t = self._local(f).flatten(1).T
                 if len(t) > self.per_image_cap:
