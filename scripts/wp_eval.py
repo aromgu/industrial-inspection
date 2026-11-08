@@ -26,6 +26,7 @@ a.add_argument("--sigma", type=float, default=2.0)
 a.add_argument("--qs", type=float, nargs="+", default=[0.8, 0.9, 0.95])
 a.add_argument("--guided", type=float, nargs=2, default=None, metavar=("R", "EPS"),
                help="edge-aware smoothing instead of the Gaussian: guided filter (He et al. 2013) with the photo as guide")
+a.add_argument("--seed-scale", type=float, default=0, help="also divide the seed map by the photo's own (p<this> - p90) spread, e.g. 99.5")
 a.add_argument("--seed-gauss", action="store_true", help="with --guided: seeds from the Gaussian-smoothed map, extent from the guided one")
 a.add_argument("--qe", type=float, default=0.995)
 args = a.parse_args()
@@ -74,8 +75,19 @@ S, Sv = R, Rv
 if args.guided is not None and args.seed_gauss and not args.model2:
     g_ = lambda arr: np.stack([ndimage.gaussian_filter(m.astype(np.float32), args.sigma) for m in arr])
     S, Sv = g_(z["maps"]), g_(np.load(f"results/maps/{args.model}__wallplugs__val.npz")["maps"])
-N = S - np.percentile(S.reshape(len(S), -1), 90, axis=1)[:, None, None]
-Nv = Sv - np.percentile(Sv.reshape(len(Sv), -1), 90, axis=1)[:, None, None]
+def seedmap(A):
+    flat = A.reshape(len(A), -1)
+    p90 = np.percentile(flat, 90, axis=1)[:, None, None]
+    if not args.seed_scale:
+        return A - p90
+    if args.seed_scale < 90:  # spread from the bulk below p90 (defects cover < 10 % of a photo, so they do not move it)
+        lo = np.percentile(flat, args.seed_scale, axis=1)[:, None, None]
+        return (A - p90) / (p90 - lo + 1e-6)
+    hi = np.percentile(flat, args.seed_scale, axis=1)[:, None, None]
+    return (A - p90) / (hi - p90 + 1e-6)
+
+
+N, Nv = seedmap(S), seedmap(Sv)
 te = np.quantile(Rv, args.qe)
 vmax = Nv.reshape(len(Nv), -1).max(1)
 dev = split_parts(parts, y)
@@ -110,7 +122,7 @@ def metrics(pred, keep):
             200 * tp / max(1, 2 * tp + fp + fn), 200 * tpd / max(1, 2 * tpd + fpd + fnd))
 
 
-name = args.model + (f" + {args.mix} x {args.model2}" if args.model2 else "") + (f" guided r{args.guided[0]:.0f} eps{args.guided[1]}" + (" (seeds Gaussian)" if args.seed_gauss else "") if args.guided else f" sigma {args.sigma}")
+name = (f"[seed scale p{args.seed_scale}] " if args.seed_scale else "") + args.model + (f" + {args.mix} x {args.model2}" if args.model2 else "") + (f" guided r{args.guided[0]:.0f} eps{args.guided[1]}" + (" (seeds Gaussian)" if args.seed_gauss else "") if args.guided else f" sigma {args.sigma}")
 print(f"== {name}\n  qs    half  rec_s  rec_l  fa_test  f1_all  f1_def")
 preds = {}
 for qs in args.qs:
