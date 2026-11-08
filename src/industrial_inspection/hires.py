@@ -122,7 +122,13 @@ class HiResKNN:
         im = Image.open(path).convert("RGB")
         s = self.short_side / min(im.size)
         w, h = (round(im.width * s / self.patch) * self.patch, round(im.height * s / self.patch) * self.patch)
-        x = torch.from_numpy(np.asarray(im.resize((w, h), Image.BICUBIC), dtype=np.float32) / 255).permute(2, 0, 1)
+        a = np.asarray(im.resize((w, h), Image.BICUBIC))
+        if getattr(self, "clahe", 0):  # local contrast (CLAHE on the L channel), same for bank and queries
+            import cv2
+            lab = cv2.cvtColor(a, cv2.COLOR_RGB2LAB)
+            lab[..., 0] = cv2.createCLAHE(clipLimit=float(self.clahe), tileGridSize=(16, 16)).apply(lab[..., 0])
+            a = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
+        x = torch.from_numpy(a.astype(np.float32) / 255).permute(2, 0, 1)
         return x[None]
 
     def normalize(self, x: torch.Tensor) -> torch.Tensor:

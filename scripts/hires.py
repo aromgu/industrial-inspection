@@ -64,6 +64,7 @@ def main() -> None:
                    help="also write each layer's map as its own model <name>_L<layer> (seg_eval.py can score them)")
     p.add_argument("--self-r", type=int, default=0, help="also compute the in-image comparison map (exclusion radius in tokens)")
     p.add_argument("--self-name", default=None, help="model name for the in-image comparison maps (needs --self-r)")
+    p.add_argument("--clahe", type=float, default=0, help="CLAHE clip limit on the input photos (0 = off), bank and queries alike")
     p.add_argument("--tta-flip", action="store_true", help="average with the maps of the left-right mirrored photo")
     p.add_argument("--game-mode", action="store_true")
     p.add_argument("--smoke", action="store_true")
@@ -86,7 +87,7 @@ def main() -> None:
                      n_ref=args.n_ref, short_side=args.short_side, gpu_duty=duty, rotations=rotations,
                      pool=args.pool, knn=args.knn, bank=args.bank, brightness=tuple(args.brightness),
                      max_bank=args.max_bank, per_image_cap=args.per_image_cap)
-    model.tta_flip, model.self_r = args.tta_flip, args.self_r
+    model.tta_flip, model.self_r, model.clahe = args.tta_flip, args.self_r, args.clahe
     for cat in args.categories:
         t0 = time.perf_counter()
         root = args.root / cat

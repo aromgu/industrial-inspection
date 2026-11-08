@@ -34,6 +34,7 @@ a.add_argument("--layers", type=int, nargs="+", default=[15, 23])
 a.add_argument("--steps", type=int, default=1500)
 a.add_argument("--batch", type=int, default=6)
 a.add_argument("--lr", type=float, default=1e-3)
+a.add_argument("--kinds", type=int, nargs="+", default=[0, 1, 2, 3], help="0 cut-paste, 1 scratch, 2 blob, 3 missing, 4 local warp (bent fin / deformation)")
 a.add_argument("--smoke", action="store_true")
 args = a.parse_args()
 if args.smoke:
@@ -89,7 +90,7 @@ def synth(win: np.ndarray, src: np.ndarray):
         i = rng.integers(len(ys))
         cy, cx = int(ys[i]), int(xs[i])
         r = int(rng.integers(4, 18))
-        kind = int(rng.integers(4))
+        kind = int(rng.choice(args.kinds))
         if kind == 0:  # cut-paste: a small rotated patch from elsewhere in the photo
             sy, sx = int(rng.integers(r, src.shape[0] - r)), int(rng.integers(r, src.shape[1] - r))
             patch = cv2.warpAffine(np.ascontiguousarray(src[sy - r:sy + r, sx - r:sx + r]),
@@ -109,6 +110,20 @@ def synth(win: np.ndarray, src: np.ndarray):
             m = ellipse(mask.shape, cy, cx, r, rng.uniform(0.4, 1))
             w = cv2.GaussianBlur(m.astype(np.float32), (0, 0), r / 3) * float(rng.choice([-1, 1])) * rng.uniform(0.25, 0.5)
             out = np.clip(out.astype(np.float32) * (1 + w[..., None]), 0, 255).astype(np.uint8)
+        elif kind == 4:  # local warp: a small region pushed sideways (bent fin, deformed rim); label = moved pixels
+            R2 = 2 * r
+            y0, x0 = max(0, cy - R2), max(0, cx - R2)
+            y1, x1 = min(out.shape[0], cy + R2), min(out.shape[1], cx + R2)
+            yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32)
+            wgt = np.exp(-((yy - cy) ** 2 + (xx - cx) ** 2) / (2 * (r * 0.7) ** 2))
+            ang = rng.uniform(0, 2 * np.pi)
+            amp = rng.uniform(0.35, 0.8) * r
+            mx, my = xx - amp * wgt * np.cos(ang), yy - amp * wgt * np.sin(ang)
+            patch = cv2.remap(out, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+            changed = np.abs(patch.astype(np.int16) - out[y0:y1, x0:x1].astype(np.int16)).max(2) > 25
+            out[y0:y1, x0:x1] = patch
+            m = np.zeros_like(mask)
+            m[y0:y1, x0:x1] = changed
         else:  # missing material: plug pixels replaced by background texture
             bg = np.argwhere(g < np.quantile(g, 0.2))
             if not len(bg):
