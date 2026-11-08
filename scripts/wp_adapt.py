@@ -40,6 +40,8 @@ a.add_argument("--ratio", type=float, default=1.0, help="weight of the invarianc
 a.add_argument("--cfa", type=float, default=0.0, help="weight of CFA-style nearest-memory compactness (0 = off)")
 a.add_argument("--hidden", type=int, default=512)
 a.add_argument("--lr", type=float, default=3e-4)
+a.add_argument("--no-rot", action="store_true", help="views differ only photometrically (no rot90/flip invariance)")
+a.add_argument("--bright", type=float, nargs=2, default=[0.5, 1.2], help="brightness factor range of the views")
 a.add_argument("--smoke", action="store_true")
 args = a.parse_args()
 if args.smoke:
@@ -65,7 +67,7 @@ sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, args.steps)
 
 
 def photometric(x):
-    x = torch.clip(x * float(rng.uniform(0.5, 1.2)), 0, 1)
+    x = torch.clip(x * float(rng.uniform(*args.bright)), 0, 1)
     if rng.random() < 0.7:
         gen = torch.Generator().manual_seed(int(rng.integers(1 << 31)))
         gain, hl, gamma = light_field(*x.shape[-2:], generator=gen)
@@ -96,7 +98,7 @@ def pairs():
     """Two views of one window: A = photometric(win); B = photometric(rot90^k / flip of win), tokens of B mapped
     back to A's grid. Returns per layer (fa, fb) as (N, C) at sampled positions."""
     win, plug = window()
-    k, fl = int(rng.integers(4)), bool(rng.integers(2))
+    k, fl = (0, False) if args.no_rot else (int(rng.integers(4)), bool(rng.integers(2)))
     wb = torch.rot90(win, k, (1, 2))
     if fl:
         wb = torch.flip(wb, (2,))
