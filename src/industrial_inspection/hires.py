@@ -244,11 +244,17 @@ class HiResKNN:
                 gen = torch.Generator().manual_seed(int(rng.integers(1 << 31)))  # test's lighting shifts
                 gain, hl, gamma = light_field(*raw.shape[-2:], generator=gen)
                 raw = relight(raw[0], gain, hl, gamma)[None]
-            for pool, f in zip(pools, self.features(self.normalize(raw))):
-                t = self._local(f).flatten(1).T
-                if len(t) > self.per_image_cap:
-                    t = t[torch.from_numpy(rng.choice(len(t), self.per_image_cap, replace=False)).to(t.device)]
-                pool.append(t.half().cpu())
+            views = [raw]
+            if getattr(self, "bank_rot90", 0):  # extra copies rotated by k x 90 deg (+ random mirror): the plugs then
+                for _ in range(int(self.bank_rot90)):  # face the (fixed) light from other sides, as under shift light
+                    v = torch.rot90(raw, int(rng.integers(1, 4)), (2, 3))
+                    views.append(torch.flip(v, (3,)) if rng.random() < 0.5 else v)
+            for view in views:
+                for pool, f in zip(pools, self.features(self.normalize(view))):
+                    t = self._local(f).flatten(1).T
+                    if len(t) > self.per_image_cap:
+                        t = t[torch.from_numpy(rng.choice(len(t), self.per_image_cap, replace=False)).to(t.device)]
+                    pool.append(t.half().cpu())
         self.bank = []
         for pool in pools:
             x = torch.cat(pool)  # stays on the CPU: a large pool (per_image_cap x photos) need not fit in VRAM

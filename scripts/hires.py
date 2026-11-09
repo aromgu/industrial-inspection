@@ -71,6 +71,8 @@ def main() -> None:
     p.add_argument("--histmatch", action="store_true",
                    help="match every photo's L-channel histogram to the mean CDF of the category's training photos (bank and queries alike)")
     p.add_argument("--pad-tokens", type=int, default=0, help="reflect-pad the photo by this many patches before tiling")
+    p.add_argument("--bank-rot90", type=int, default=0,
+                   help="bank=all: also add this many copies of each training photo rotated by a random k x 90 deg (+ mirror)")
     p.add_argument("--bank-light", type=float, default=0, help="bank=all: probability of directional relighting per training photo")
     p.add_argument("--tta-flip", action="store_true", help="average with the maps of the left-right mirrored photo")
     p.add_argument("--game-mode", action="store_true")
@@ -96,6 +98,7 @@ def main() -> None:
                      max_bank=args.max_bank, per_image_cap=args.per_image_cap)
     model.tta_flip, model.self_r, model.clahe = args.tta_flip, args.self_r, args.clahe
     model.unsharp, model.pad_tokens, model.bank_light = args.unsharp, args.pad_tokens, args.bank_light
+    model.bank_rot90 = args.bank_rot90
     if args.proj:
         from industrial_inspection.adapt import load_proj
         model.proj = load_proj(args.proj)
