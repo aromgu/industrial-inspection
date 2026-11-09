@@ -25,6 +25,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--rows", nargs="+")
 ap.add_argument("--out", default="docs/figures/wp_cut_gallery.png")
 ap.add_argument("--no-title", action="store_true")
+ap.add_argument("--clean", action="store_true", help="no text inside the figure (slide version), 220 dpi")
 ARGS = ap.parse_args()
 ROWS = ARGS.rows or ["000_regular", "000_overexposed", "000_underexposed", "000_shift_1", "000_shift_2", "000_shift_3", "001_regular"]
 z, zv = np.load(f"results/maps/{M}__wallplugs.npz"), np.load(f"results/maps/{M}__wallplugs__val.npz")
@@ -40,7 +41,8 @@ def contour(ax, m, color, lw=2.0):
         ax.plot(np.r_[q[:, 0], q[0, 0]], np.r_[q[:, 1], q[0, 1]], color=color, lw=lw)
 
 
-fig, axs = plt.subplots(len(ROWS), 3, figsize=(11.5, 3.5 * len(ROWS)), facecolor="#fcfcfb")
+fig, axs = plt.subplots(len(ROWS), 3, figsize=(11.5, 3.5 * len(ROWS)), facecolor="#fcfcfb",
+                        gridspec_kw=dict(wspace=0.03, hspace=0.03) if ARGS.clean else None)
 for r, name in enumerate(ROWS):
     i = [k for k, p in enumerate(paths) if p.replace("\\", "/").endswith(f"bad/{name}.png")][0]
     p = paths[i]
@@ -67,17 +69,27 @@ for r, name in enumerate(ROWS):
         msg = f"검출 {cov0*100:.0f}%, 형태 복원 조건 미달"
     else:
         msg = "검출 없음 → 형태 복원도 시작 못 함"
-    a2.text(0.02, 0.02, msg, transform=a2.transAxes, fontsize=10.5, color="white", va="bottom",
-            bbox=dict(fc="#000000aa", ec="none", pad=3))
-    a0.set_ylabel({"000_regular": "보통 조명", "000_shift_1": "shift 조명"}.get(name, name.replace("_", " ", 1)), fontsize=12, fontweight="bold", color="#0b0b0b")
+    if not ARGS.clean:
+        a2.text(0.02, 0.02, msg, transform=a2.transAxes, fontsize=10.5, color="white", va="bottom",
+                bbox=dict(fc="#000000aa", ec="none", pad=3))
+    if not ARGS.clean:
+        a0.set_ylabel({"000_regular": "보통 조명", "000_shift_1": "shift 조명"}.get(name, name.replace("_", " ", 1)), fontsize=12, fontweight="bold", color="#0b0b0b")
     for a in (a0, a1, a2):
         a.set_xticks([]); a.set_yticks([])
+        if ARGS.clean:
+            a.axis("off")
         for s in a.spines.values():
             s.set_visible(False)
-for a, t in zip(axs[0], ["원본 (빨강 = 정답: 없어진 부분)", "이상 점수 지도 (초록 = 정답)", "최종 예측 (하늘 = 검출, 노랑 = 복원)"]):
+for a, t in ([] if ARGS.clean else zip(axs[0], ["원본 (빨강 = 정답: 없어진 부분)", "이상 점수 지도 (초록 = 정답)", "최종 예측 (하늘 = 검출, 노랑 = 복원)"])):
     a.set_title(t, fontsize=12.5, fontweight="bold", loc="left", color="#0b0b0b")
 if not ARGS.no_title:
     fig.suptitle("잘려 나간 플러그를 최종 모델이 예측하는 방식 (공개 test)", x=0.01, ha="left", fontsize=16, fontweight="bold")
-fig.tight_layout(rect=(0, 0, 1, 1 if ARGS.no_title else 0.985))
-fig.savefig(ARGS.out, dpi=100, facecolor="#fcfcfb")
+if ARGS.clean:
+    asp = (x1 - x0) / (y1 - y0)  # crop width / height (rows share the crop size for one defect)
+    g = 0.03
+    fig.set_size_inches(4 * (3 * asp + 2 * g * asp), 4 * (len(ROWS) + (len(ROWS) - 1) * g))
+    fig.subplots_adjust(0, 0, 1, 1, g, g)
+else:
+    fig.tight_layout(rect=(0, 0, 1, 1 if ARGS.no_title else 0.985))
+fig.savefig(ARGS.out, dpi=220 if ARGS.clean else 100, facecolor="#fcfcfb")
 print("saved", ARGS.out)
