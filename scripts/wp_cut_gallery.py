@@ -20,7 +20,13 @@ from make_submission import wallplugs_masks  # noqa: E402
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 M = "s0_r1792_L1523"
-ROWS = ["000_regular", "000_overexposed", "000_underexposed", "000_shift_1", "000_shift_2", "000_shift_3", "001_regular"]
+import argparse
+ap = argparse.ArgumentParser()
+ap.add_argument("--rows", nargs="+")
+ap.add_argument("--out", default="docs/figures/wp_cut_gallery.png")
+ap.add_argument("--no-title", action="store_true")
+ARGS = ap.parse_args()
+ROWS = ARGS.rows or ["000_regular", "000_overexposed", "000_underexposed", "000_shift_1", "000_shift_2", "000_shift_3", "001_regular"]
 z, zv = np.load(f"results/maps/{M}__wallplugs.npz"), np.load(f"results/maps/{M}__wallplugs__val.npz")
 paths = z["paths"].astype(str)
 R, pred, (ts, te) = wallplugs_masks(z["maps"].astype(np.float32), paths, zv["maps"].astype(np.float32), zv["paths"].astype(str))
@@ -63,14 +69,15 @@ for r, name in enumerate(ROWS):
         msg = "검출 없음 → 형태 복원도 시작 못 함"
     a2.text(0.02, 0.02, msg, transform=a2.transAxes, fontsize=10.5, color="white", va="bottom",
             bbox=dict(fc="#000000aa", ec="none", pad=3))
-    a0.set_ylabel(name.replace("_", " ", 1), fontsize=12, fontweight="bold", color="#0b0b0b")
+    a0.set_ylabel({"000_regular": "보통 조명", "000_shift_1": "shift 조명"}.get(name, name.replace("_", " ", 1)), fontsize=12, fontweight="bold", color="#0b0b0b")
     for a in (a0, a1, a2):
         a.set_xticks([]); a.set_yticks([])
         for s in a.spines.values():
             s.set_visible(False)
 for a, t in zip(axs[0], ["원본 (빨강 = 정답: 없어진 부분)", "이상 점수 지도 (초록 = 정답)", "최종 예측 (하늘 = 검출, 노랑 = 복원)"]):
     a.set_title(t, fontsize=12.5, fontweight="bold", loc="left", color="#0b0b0b")
-fig.suptitle("잘려 나간 플러그를 최종 모델이 예측하는 방식 (공개 test)", x=0.01, ha="left", fontsize=16, fontweight="bold")
-fig.tight_layout(rect=(0, 0, 1, 0.985))
-fig.savefig("docs/figures/wp_cut_gallery.png", dpi=100, facecolor="#fcfcfb")
-print("saved docs/figures/wp_cut_gallery.png")
+if not ARGS.no_title:
+    fig.suptitle("잘려 나간 플러그를 최종 모델이 예측하는 방식 (공개 test)", x=0.01, ha="left", fontsize=16, fontweight="bold")
+fig.tight_layout(rect=(0, 0, 1, 1 if ARGS.no_title else 0.985))
+fig.savefig(ARGS.out, dpi=100, facecolor="#fcfcfb")
+print("saved", ARGS.out)
