@@ -27,7 +27,7 @@ def arrow(x0, y0, x1, y1):
     ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=18, lw=1.6, color="#444444"))
 
 
-ax.text(0.2, 9.25, "wallplugs 최종 모델 (학습 없음: 고정 백본 + 정상 패치 메모리 뱅크 + 판정 규칙)", fontsize=16, weight="bold")
+ax.text(0.2, 9.25, "wallplugs 최종 모델 (학습 없음: 고정 백본 + 정상 패치 메모리 뱅크 + 판정 규칙 + 형태 복원)", fontsize=16, weight="bold")
 # row 1: bank
 box(0.2, 6.6, 2.6, 2.2, "정상 학습 사진", "train/good\n(8장마다 1장 제외)", IO)
 box(3.4, 6.6, 3.6, 2.2, "특징 추출 (같은 과정)", "DINOv3-H+ (고정)\n640px 조각, 128px 겹침", SAME)
@@ -49,8 +49,10 @@ arrow(11.2, 4.5, 11.8, 2.8)
 box(6.2, 0.4, 4.6, 2.2, "③ 판정: 이중 임계값", "씨앗과 연결된 영역만 결함\n[SuperADD: p95 x 1.421\n 기준 하나로 전체 판정]", NEW, "#C77700")
 arrow(11.8, 2.0, 10.8, 1.6)
 arrow(11.8, 6.0, 10.6, 2.6)
-box(0.2, 0.4, 5.2, 2.2, "출력", "결함 지도 (TIFF) + 결함 마스크 (PNG)\n임계값은 모두 정상 검증 사진으로만 결정", IO)
-arrow(6.2, 1.5, 5.4, 1.5)
+box(3.0, 0.2, 2.9, 2.6, "④ 형태 복원", "결함 영역이 플러그 끝을\n가로지르면(부러진 단면)\n정상 길이까지 빈 배경을 칠함\n[SuperADD: 없음]", NEW, "#C77700")
+arrow(6.2, 1.5, 5.9, 1.5)
+box(0.2, 0.2, 2.4, 2.6, "출력", "결함 지도 (TIFF)\n+ 결함 마스크 (PNG)\n임계값은 모두\n정상 검증 사진으로만", IO)
+arrow(3.0, 1.5, 2.6, 1.5)
 ax.add_patch(FancyBboxPatch((0.3, 8.95), 0.35, 0.2, boxstyle="square,pad=0", fc=SAME, ec="#555555"))
 ax.text(0.75, 9.05, "SuperADD와 같음", fontsize=10, va="center")
 ax.add_patch(FancyBboxPatch((2.6, 8.95), 0.35, 0.2, boxstyle="square,pad=0", fc=NEW, ec="#C77700"))
