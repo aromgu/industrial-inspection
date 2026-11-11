@@ -1,0 +1,16 @@
+hires_dinov2l wallplugs: F1 defect-only official 0.060 oracle 0.240 | all official 0.036
+hires_p1k9 wallplugs: F1 defect-only official 0.079 oracle 0.271 | all official 0.048
+hires_p1k25 wallplugs: F1 defect-only official 0.097 oracle 0.292 | all official 0.059
+hires_p1k50 wallplugs: F1 defect-only official 0.114 oracle 0.310 | all official 0.069
+hires_p1k100 wallplugs: F1 defect-only official 0.138 oracle 0.333 | all official 0.084
+               f1_defect-only_official  ...  au_roc_005
+model                                   ...            
+hires_dinov2l                    0.060  ...       0.804
+hires_p1k100                     0.138  ...       0.829
+hires_p1k25                      0.097  ...       0.822
+hires_p1k50                      0.114  ...       0.826
+hires_p1k9                       0.079  ...       0.816
+
+[5 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\seg\figures\seg_eval.png

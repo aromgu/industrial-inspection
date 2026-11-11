@@ -1,0 +1,9 @@
+model,category,runtime,input,median_ms,p95_ms,provider,score_abs_diff
+patchcore,sheet_metal,pytorch,256x256,14.058449999993172,14.989664999211527,cuda,0.008575439453125
+patchcore,sheet_metal,onnxruntime-cuda,256x256,13.72834999983752,13.961469999503606,CUDAExecutionProvider,0.008575439453125
+mhpatchcore,sheet_metal,pytorch,256x256,14.66275000029782,15.540079999937007,cuda,1.87890625
+mhpatchcore,sheet_metal,onnxruntime-cuda,256x256,9.836100000029546,10.414309999578109,CUDAExecutionProvider,1.87890625
+efficientad,sheet_metal,pytorch,256x256,7.39384999997128,8.358285000304022,cuda,1.9073486328125e-06
+efficientad,sheet_metal,onnxruntime-cuda,256x256,6.024000000252272,7.189220000509522,CUDAExecutionProvider,1.9073486328125e-06
+dinomaly_l,sheet_metal,pytorch,448x448,90.52990000009231,91.82331500078362,cuda,2.899765968322754e-05
+dinomaly_l,sheet_metal,onnxruntime-cuda,448x448,52.4457500000608,53.416044999812584,CUDAExecutionProvider,2.899765968322754e-05

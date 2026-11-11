@@ -1,0 +1,53 @@
+W1106 15:29:31.071000 32232 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+typical plug length 257px at work res, 390 plugs in 16 refs
+bank: 1560 crops, token grid 9x32
+validation done (63s)
+test 0/150 (65s)
+test 25/150 (92s)
+test 50/150 (122s)
+test 75/150 (153s)
+test 100/150 (183s)
+test 125/150 (214s)
+plug coverage of test pixels 32.7%
+wallplugs: 150 test, 33 val, 349s
+plugs_nomask exit 0
+W1106 15:35:26.905000 33752 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+typical plug length 257px at work res, 390 plugs in 16 refs
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+bank: 1560 crops, token grid 9x32
+validation done (139s)
+test 0/150 (142s)
+test 25/150 (209s)
+test 50/150 (286s)
+test 75/150 (376s)
+test 100/150 (457s)
+test 125/150 (543s)
+plug coverage of test pixels 32.7%
+wallplugs: 150 test, 33 val, 728s
+plugs_nopos exit 0
+W1106 15:47:41.209000 31680 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+typical plug length 257px at work res, 390 plugs in 16 refs
+bank: 1560 crops, token grid 9x32
+validation done (137s)
+test 0/150 (141s)
+test 25/150 (205s)
+test 50/150 (280s)
+test 75/150 (363s)
+test 100/150 (438s)
+test 125/150 (519s)
+plug coverage of test pixels 32.7%
+wallplugs: 150 test, 33 val, 695s
+plugs_free exit 0
+seg exit 0

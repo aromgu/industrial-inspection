@@ -1,0 +1,24 @@
+wallplugs/test_private: 232 images, 2001s so far
+wallplugs/test_private_mixed: 232 images, 2824s so far
+wallplugs: 150 test, 33 val, bank 100000 patches/layer, 2824s
+can/test_private: 321 images, 770s so far
+can/test_private_mixed: 321 images, 1138s so far
+can: 162 test, 46 val, bank 100000 patches/layer, 1138s
+sheet_metal/test_private: 142 images, 890s so far
+sheet_metal/test_private_mixed: 142 images, 1270s so far
+sheet_metal: 114 test, 19 val, bank 100000 patches/layer, 1270s
+vial/test_private: 276 images, 1885s so far
+vial/test_private_mixed: 276 images, 2788s so far
+vial: 140 test, 41 val, bank 100000 patches/layer, 2788s
+fruit_jelly/test_private: 255 images, 5754s so far
+fruit_jelly/test_private_mixed: 255 images, 6628s so far
+fruit_jelly: 80 test, 37 val, bank 100000 patches/layer, 6628s
+rice/test_private: 277 images, 1602s so far
+rice/test_private_mixed: 277 images, 2385s so far
+rice: 132 test, 35 val, bank 100000 patches/layer, 2385s
+walnuts/test_private: 228 images, 1679s so far
+walnuts/test_private_mixed: 228 images, 2321s so far
+walnuts: 150 test, 48 val, bank 100000 patches/layer, 2321s
+fabric/test_private: 314 images, 1874s so far
+fabric/test_private_mixed: 314 images, 2759s so far
+fabric: 156 test, 43 val, bank 100000 patches/layer, 2759s

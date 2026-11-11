@@ -1,0 +1,11 @@
+14:18:24 mhpatchcore_tile can start
+14:44:10 mhpatchcore_tile can exit 0
+1296 tiles -> 162 images (90 defective) -> results\scores\mhpatchcore_tilemax__can__seed0.csv
+14:44:11 mhpatchcore_tile wallplugs start
+15:04:06 mhpatchcore_tile wallplugs exit 0
+1350 tiles -> 150 images (90 defective) -> results\scores\mhpatchcore_tilemax__wallplugs__seed0.csv
+15:04:07 patchcore_aug sweep start
+15:28:54 queue1 done
+15:29:15 latency start
+15:30:24 latency exit 0
+15:30:24 efficientad sweep start

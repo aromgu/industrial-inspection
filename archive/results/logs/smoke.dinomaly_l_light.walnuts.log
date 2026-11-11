@@ -1,0 +1,40 @@
+W1105 12:39:48.443000 10296 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+`Trainer(limit_val_batches=1)` was configured so 1 batch will be used.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+┌───┬───────────────────┬───────────────┬────────┬───────┬───────┐
+│   │ Name              │ Type          │ Params │ Mode  │ FLOPs │
+├───┼───────────────────┼───────────────┼────────┼───────┼───────┤
+│ 0 │ pre_processor     │ PreProcessor  │      0 │ train │     0 │
+│ 1 │ model             │ DinomalyModel │  413 M │ train │     0 │
+│ 2 │ trainable_modules │ ModuleList    │  109 M │ train │     0 │
+└───┴───────────────────┴───────────────┴────────┴───────┴───────┘
+Trainable params: 109 M                                                        
+Non-trainable params: 304 M                                                    
+Total params: 413 M                                                            
+Total estimated model params size (MB): 1,653.953                              
+Modules in train mode: 667                                                     
+Modules in eval mode: 0                                                        
+Total FLOPs: 0                                                                 
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+dinomaly_l_light train:   0%|          | 0/20 [00:00<?, ?it/s]C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\data.py:79: Trying to infer the `batch_size` from an ambiguous collection. The batch size we found is 3. To avoid any miscalculations, use `self.log(..., batch_size=batch_size)`.
+dinomaly_l_light train:  80%|########  | 16/20 [00:15<00:03,  1.03it/s]`Trainer.fit` stopped: `max_steps=20` reached.
+dinomaly_l_light train: 100%|##########| 20/20 [00:26<00:00,  1.33s/it]ckpt_path is not provided. Model weights will not be loaded.
+The following callbacks returned in `LightningModule.configure_callbacks` will override existing callbacks passed to Trainer: PreProcessor
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+
+dinomaly_l_light predict:   0%|          | 0/1 [00:00<?, ?it/s]dinomaly_l_light predict: 100%|##########| 1/1 [00:00<00:00,  1.32it/s]
+4 test images (2 defective) -> results\smoke\scores\dinomaly_l_light__walnuts__seed0.csv  [train 27s]
+figure: results\smoke\figures\dinomaly_l_light__walnuts__seed0__test.png
+figure: results\smoke\figures\dinomaly_l_light__walnuts__seed0__training.png

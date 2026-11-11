@@ -1,0 +1,3 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+can: 162 test, 46 val, bank 100000 patches/layer, 937s
+fabric: 156 test, 43 val, bank 100000 patches/layer, 338s

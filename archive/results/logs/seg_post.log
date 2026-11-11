@@ -1,0 +1,38 @@
+can: done
+fabric: done
+fruit_jelly: done
+rice: done
+sheet_metal: done
+vial: done
+wallplugs: done
+walnuts: done
+
+== mean F1 over categories, defect-only
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   28.1  31.7  ...                 31.7           32.7
+p95x1.0    13.7  14.4  ...                 14.2           15.5
+p95x1.2    34.7  39.7  ...                 39.9           40.6
+p95x1.4    33.0  32.8  ...                 35.9           32.5
+p95x1.6    25.4  25.5  ...                 25.5           24.5
+p99        23.6  26.0  ...                 26.2           28.5
+
+[6 rows x 8 columns]
+
+== mean F1 over categories, all
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   25.5  28.5  ...                 28.6           29.7
+p95x1.0    10.8  11.4  ...                 11.2           12.3
+p95x1.2    32.3  37.0  ...                 37.3           38.4
+p95x1.4    31.3  31.2  ...                 34.2           30.8
+p95x1.6    24.4  24.5  ...                 24.5           23.6
+p99        20.3  22.2  ...                 22.4           24.8
+
+[6 rows x 8 columns]
+
+best for all categories together: threshold p95x1.2, post fill+small256
+category  can  fabric  fruit_jelly  rice  sheet_metal  vial  wallplugs  walnuts
+baseline  0.1    28.0         31.5  24.7         41.4  38.8        6.0     54.3
+best      0.0    73.4         40.1  58.1         49.2  40.2        7.7     56.1
+figure: results\figures\seg_post__hires_dinov2l.png

@@ -1,0 +1,51 @@
+hires_dinov2l can: F1 defect-only official 0.001 oracle 0.008 | all official 0.000
+hires_dinov2l fabric: F1 defect-only official 0.280 oracle 0.315 | all official 0.224
+hires_dinov2l fruit_jelly: F1 defect-only official 0.315 oracle 0.400 | all official 0.312
+hires_dinov2l rice: F1 defect-only official 0.247 oracle 0.692 | all official 0.206
+hires_dinov2l sheet_metal: F1 defect-only official 0.414 oracle 0.509 | all official 0.414
+hires_dinov2l vial: F1 defect-only official 0.388 oracle 0.398 | all official 0.369
+hires_dinov2l wallplugs: F1 defect-only official 0.060 oracle 0.240 | all official 0.036
+hires_dinov2l walnuts: F1 defect-only official 0.543 oracle 0.665 | all official 0.475
+dinomaly_l can: F1 defect-only official 0.002 oracle 0.002 | all official 0.001
+dinomaly_l fabric: F1 defect-only official 0.330 oracle 0.355 | all official 0.263
+dinomaly_l fruit_jelly: F1 defect-only official 0.504 oracle 0.527 | all official 0.488
+dinomaly_l rice: F1 defect-only official 0.165 oracle 0.435 | all official 0.151
+dinomaly_l sheet_metal: F1 defect-only official 0.202 oracle 0.442 | all official 0.194
+dinomaly_l vial: F1 defect-only official 0.321 oracle 0.357 | all official 0.286
+dinomaly_l wallplugs: F1 defect-only official 0.017 oracle 0.070 | all official 0.010
+dinomaly_l walnuts: F1 defect-only official 0.359 oracle 0.539 | all official 0.288
+patchcore can: F1 defect-only official 0.001 oracle 0.001 | all official 0.001
+patchcore fabric: F1 defect-only official 0.105 oracle 0.125 | all official 0.091
+patchcore fruit_jelly: F1 defect-only official 0.463 oracle 0.474 | all official 0.456
+patchcore rice: F1 defect-only official 0.039 oracle 0.125 | all official 0.028
+patchcore sheet_metal: F1 defect-only official 0.151 oracle 0.308 | all official 0.146
+patchcore vial: F1 defect-only official 0.301 oracle 0.304 | all official 0.277
+patchcore wallplugs: F1 defect-only official 0.010 oracle 0.055 | all official 0.007
+patchcore walnuts: F1 defect-only official 0.418 oracle 0.486 | all official 0.387
+mhpatchcore can: F1 defect-only official 0.000 oracle 0.003 | all official 0.000
+mhpatchcore fabric: F1 defect-only official 0.100 oracle 0.136 | all official 0.088
+mhpatchcore fruit_jelly: F1 defect-only official 0.417 oracle 0.426 | all official 0.402
+mhpatchcore rice: F1 defect-only official 0.018 oracle 0.093 | all official 0.012
+mhpatchcore sheet_metal: F1 defect-only official 0.190 oracle 0.406 | all official 0.183
+mhpatchcore vial: F1 defect-only official 0.328 oracle 0.384 | all official 0.322
+mhpatchcore wallplugs: F1 defect-only official 0.060 oracle 0.073 | all official 0.035
+mhpatchcore walnuts: F1 defect-only official 0.443 oracle 0.499 | all official 0.410
+efficientad can: F1 defect-only official 0.001 oracle 0.001 | all official 0.000
+efficientad fabric: F1 defect-only official 0.036 oracle 0.041 | all official 0.022
+efficientad fruit_jelly: F1 defect-only official 0.543 oracle 0.577 | all official 0.543
+efficientad rice: F1 defect-only official 0.007 oracle 0.009 | all official 0.005
+efficientad sheet_metal: F1 defect-only official 0.137 oracle 0.260 | all official 0.113
+efficientad vial: F1 defect-only official 0.387 oracle 0.415 | all official 0.377
+efficientad wallplugs: F1 defect-only official 0.014 oracle 0.016 | all official 0.008
+efficientad walnuts: F1 defect-only official 0.202 oracle 0.289 | all official 0.161
+               f1_defect-only_official  ...  au_roc_005
+model                                   ...            
+dinomaly_l                       0.237  ...       0.720
+efficientad                      0.166  ...       0.610
+hires_dinov2l                    0.281  ...       0.777
+mhpatchcore                      0.195  ...       0.661
+patchcore                        0.186  ...       0.646
+
+[5 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\figures\seg_eval.png

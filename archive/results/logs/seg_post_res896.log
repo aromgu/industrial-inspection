@@ -1,0 +1,31 @@
+wallplugs: done
+
+== mean F1 over categories, defect-only
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official    6.5   6.5  ...                  6.4            7.3
+p95x1.0     2.0   1.8  ...                  1.7            1.9
+p95x1.2     8.6   8.6  ...                  8.5            9.7
+p95x1.4    20.7  20.7  ...                 21.6           24.2
+p95x1.6    14.5  14.5  ...                 14.4           10.9
+p99         4.5   4.5  ...                  4.3            4.9
+
+[6 rows x 8 columns]
+
+== mean F1 over categories, all
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official    3.9   3.8  ...                  3.7            4.2
+p95x1.0     1.2   1.1  ...                  1.0            1.2
+p95x1.2     5.1   5.1  ...                  5.0            5.7
+p95x1.4    13.1  13.1  ...                 13.7           15.4
+p95x1.6    11.0  11.0  ...                 11.0            8.8
+p99         2.7   2.7  ...                  2.6            2.9
+
+[6 rows x 8 columns]
+
+best for all categories together: threshold p95x1.4, post fill+small256
+category  wallplugs
+baseline        6.5
+best           24.2
+figure: results\figures\seg_post__hires_res896.png

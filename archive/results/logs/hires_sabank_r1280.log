@@ -1,0 +1,4 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+vial: 140 test, 41 val, bank 100000 patches/layer, 637s
+fruit_jelly: 80 test, 37 val, bank 100000 patches/layer, 457s
+rice: 132 test, 35 val, bank 100000 patches/layer, 617s

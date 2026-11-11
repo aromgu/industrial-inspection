@@ -1,0 +1,128 @@
+W1103 14:07:16.503000 33680 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+`Trainer(limit_val_batches=1)` was configured so 1 batch will be used.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\core\optimizer.py:183: `LightningModule.configure_optimizers` returned `None`, this fit will run with no optimizer
+┌───┬───────────────┬────────────────┬────────┬───────┬───────┐
+│   │ Name          │ Type           │ Params │ Mode  │ FLOPs │
+├───┼───────────────┼────────────────┼────────┼───────┼───────┤
+│ 0 │ pre_processor │ PreProcessor   │      0 │ train │     0 │
+│ 1 │ model         │ PatchcoreModel │ 24.9 M │ train │     0 │
+└───┴───────────────┴────────────────┴────────┴───────┴───────┘
+Trainable params: 24.9 M                                                       
+Non-trainable params: 0                                                        
+Total params: 24.9 M                                                           
+Total estimated model params size (MB): 99.450                                 
+Modules in train mode: 7                                                       
+Modules in eval mode: 174                                                      
+Total FLOPs: 0                                                                 
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:429: Consider setting `persistent_workers=True` in 'train_dataloader' to speed up the dataloader worker initialization.
+W1103 14:07:29.550000 33448 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:07:39.785000 34512 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:07:50.734000 31528 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:08:02.393000 30316 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:429: Consider setting `persistent_workers=True` in 'val_dataloader' to speed up the dataloader worker initialization.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\loops\fit_loop.py:538: Found 174 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+patchcore train:   0%|          | 0/2 [00:00<?, ?it/s]W1103 14:08:15.326000 27168 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:08:26.637000 34604 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:08:38.369000 36116 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 14:08:48.137000 34352 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+
+Selecting Coreset Indices.:   0%|          | 0/3275 [00:00<?, ?it/s][A
+Selecting Coreset Indices.:   0%|          | 1/3275 [00:00<08:08,  6.70it/s][A
+Selecting Coreset Indices.:   1%|▏         | 49/3275 [00:00<00:13, 237.72it/s][A
+Selecting Coreset Indices.:   5%|▌         | 180/3275 [00:00<00:04, 673.14it/s][A
+Selecting Coreset Indices.:   9%|▊         | 282/3275 [00:00<00:03, 800.58it/s][A
+Selecting Coreset Indices.:  11%|█         | 368/3275 [00:00<00:03, 730.92it/s][A
+Selecting Coreset Indices.:  14%|█▎        | 446/3275 [00:00<00:04, 652.54it/s][A
+Selecting Coreset Indices.:  16%|█▌        | 516/3275 [00:00<00:04, 642.64it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 592/3275 [00:00<00:03, 674.97it/s][A
+Selecting Coreset Indices.:  20%|██        | 662/3275 [00:01<00:04, 650.54it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 737/3275 [00:01<00:03, 669.09it/s][A
+Selecting Coreset Indices.:  25%|██▍       | 806/3275 [00:01<00:03, 651.16it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 872/3275 [00:01<00:03, 640.92it/s][A
+Selecting Coreset Indices.:  29%|██▊       | 937/3275 [00:01<00:03, 622.58it/s][A
+Selecting Coreset Indices.:  31%|███       | 1000/3275 [00:01<00:03, 611.00it/s][A
+Selecting Coreset Indices.:  33%|███▎      | 1090/3275 [00:01<00:03, 686.50it/s][A
+Selecting Coreset Indices.:  35%|███▌      | 1160/3275 [00:01<00:03, 653.16it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 1226/3275 [00:01<00:03, 654.54it/s][A
+Selecting Coreset Indices.:  40%|███▉      | 1294/3275 [00:02<00:03, 653.04it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 1360/3275 [00:02<00:02, 655.03it/s][A
+Selecting Coreset Indices.:  44%|████▎     | 1426/3275 [00:02<00:02, 648.84it/s][A
+Selecting Coreset Indices.:  46%|████▌     | 1493/3275 [00:02<00:02, 648.99it/s][A
+Selecting Coreset Indices.:  48%|████▊     | 1559/3275 [00:02<00:02, 637.68it/s][A
+Selecting Coreset Indices.:  50%|████▉     | 1623/3275 [00:02<00:02, 608.32it/s][A
+Selecting Coreset Indices.:  51%|█████▏    | 1685/3275 [00:02<00:02, 606.64it/s][A
+Selecting Coreset Indices.:  54%|█████▎    | 1754/3275 [00:02<00:02, 630.25it/s][A
+Selecting Coreset Indices.:  56%|█████▌    | 1822/3275 [00:02<00:02, 641.15it/s][A
+Selecting Coreset Indices.:  58%|█████▊    | 1887/3275 [00:02<00:02, 643.73it/s][A
+Selecting Coreset Indices.:  60%|█████▉    | 1952/3275 [00:03<00:02, 632.54it/s][A
+Selecting Coreset Indices.:  62%|██████▏   | 2028/3275 [00:03<00:01, 669.59it/s][A
+Selecting Coreset Indices.:  64%|██████▍   | 2096/3275 [00:03<00:01, 661.17it/s][A
+Selecting Coreset Indices.:  66%|██████▌   | 2166/3275 [00:03<00:01, 672.49it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 2235/3275 [00:03<00:01, 673.60it/s][A
+Selecting Coreset Indices.:  70%|███████   | 2303/3275 [00:03<00:01, 659.91it/s][A
+Selecting Coreset Indices.:  72%|███████▏  | 2370/3275 [00:03<00:01, 626.43it/s][A
+Selecting Coreset Indices.:  74%|███████▍  | 2434/3275 [00:03<00:01, 628.39it/s][A
+Selecting Coreset Indices.:  76%|███████▋  | 2500/3275 [00:03<00:01, 635.58it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 2564/3275 [00:04<00:01, 631.46it/s][A
+Selecting Coreset Indices.:  80%|████████  | 2628/3275 [00:04<00:01, 607.27it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 2689/3275 [00:04<00:00, 599.51it/s][A
+Selecting Coreset Indices.:  84%|████████▍ | 2750/3275 [00:04<00:00, 577.72it/s][A
+Selecting Coreset Indices.:  86%|████████▌ | 2809/3275 [00:04<00:00, 559.19it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 2870/3275 [00:04<00:00, 571.85it/s][A
+Selecting Coreset Indices.:  89%|████████▉ | 2928/3275 [00:04<00:00, 570.64it/s][A
+Selecting Coreset Indices.:  91%|█████████ | 2986/3275 [00:04<00:00, 565.16it/s][A
+Selecting Coreset Indices.:  95%|█████████▍| 3105/3275 [00:04<00:00, 741.11it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 3180/3275 [00:04<00:00, 722.70it/s][A
+Selecting Coreset Indices.:  99%|█████████▉| 3256/3275 [00:05<00:00, 731.70it/s][ASelecting Coreset Indices.: 100%|██████████| 3275/3275 [00:05<00:00, 639.09it/s]
+`Trainer.fit` stopped: `max_epochs=1` reached.
+patchcore train: 100%|##########| 2/2 [00:51<00:00, 25.76s/it]ckpt_path is not provided. Model weights will not be loaded.
+The following callbacks returned in `LightningModule.configure_callbacks` will override existing callbacks passed to Trainer: PreProcessor
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+
+patchcore predict:   0%|          | 0/1 [00:00<?, ?it/s]patchcore predict: 100%|##########| 1/1 [00:00<00:00,  2.74it/s]
+4 test images (2 defective) -> results\smoke\scores\patchcore__bottle__seed0.csv  [train 98s]
+figure: results\smoke\figures\patchcore__bottle__seed0__test.png
+figure: (no training curve: single-pass model)

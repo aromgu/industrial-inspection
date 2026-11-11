@@ -1,0 +1,22 @@
+hires_k50 wallplugs: F1 defect-only official 0.114 oracle 0.310 | all official 0.069
+plugs_k50_only wallplugs: F1 defect-only official 0.188 oracle 0.196 | all official 0.122
+plugs_nomask_only wallplugs: F1 defect-only official 0.216 oracle 0.238 | all official 0.157
+plugs_nopos_only wallplugs: F1 defect-only official 0.194 oracle 0.225 | all official 0.120
+plugs_free_only wallplugs: F1 defect-only official 0.253 oracle 0.323 | all official 0.179
+plugs_nomask wallplugs: F1 defect-only official 0.058 oracle 0.064 | all official 0.036
+plugs_nopos wallplugs: F1 defect-only official 0.060 oracle 0.067 | all official 0.036
+plugs_free wallplugs: F1 defect-only official 0.067 oracle 0.107 | all official 0.041
+                   f1_defect-only_official  ...  au_roc_005
+model                                       ...            
+hires_k50                            0.114  ...       0.826
+plugs_free                           0.067  ...       0.694
+plugs_free_only                      0.253  ...       0.751
+plugs_k50_only                       0.188  ...       0.731
+plugs_nomask                         0.058  ...       0.625
+plugs_nomask_only                    0.216  ...       0.738
+plugs_nopos                          0.060  ...       0.639
+plugs_nopos_only                     0.194  ...       0.742
+
+[8 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\seg\figures\seg_eval.png

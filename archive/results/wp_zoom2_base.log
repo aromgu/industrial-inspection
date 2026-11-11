@@ -1,0 +1,80 @@
+zoom bank 100000 tokens/layer from 256 photos (282s)
+second looks: 145 test / 5 val candidates (86s)
+== second look (base): zoom 3584, 5 candidates/photo above val-q0.5 (109.0)
+  variant              half  rec_s  rec_l  fa     f1_all  f1_def
+  final                all    50.0   76.7    5.0   73.4   74.0
+  final                dev    50.0   66.7    3.3   70.5   70.7
+  final                eval   50.0   91.7    6.7   76.3   77.3
+  + zoom qz0.9         all    55.0   80.0   35.0   72.8   74.0
+  + zoom qz0.9         dev    62.5   66.7   33.3   69.7   70.6
+  + zoom qz0.9         eval   50.0  100.0   36.7   75.9   77.3
+  + zoom qz0.95        all    55.0   80.0   28.3   72.8   74.0
+  + zoom qz0.95        dev    62.5   66.7   33.3   69.7   70.6
+  + zoom qz0.95        eval   50.0  100.0   23.3   75.9   77.4
+  + zoom qz1.0         all    50.0   80.0   18.3   73.0   74.0
+  + zoom qz1.0         dev    50.0   66.7   20.0   69.9   70.6
+  + zoom qz1.0         eval   50.0  100.0   16.7   76.1   77.5
+  val per-photo max zoom score: median 0.0, q90 375.8, max 428.8
+  GT regions with a candidate on them: 61
+  small GT regions (photo, zoom score, normal-scale N, already detected):
+    001_overexposed      zoom    nan  N    nan  -
+    001_regular          zoom    nan  N    nan  -
+    001_shift_1          zoom    nan  N    nan  -
+    001_shift_2          zoom    nan  N    nan  -
+    001_shift_3          zoom    nan  N    nan  -
+    001_underexposed     zoom    nan  N    nan  -
+    002_overexposed      zoom    nan  N    nan  -
+    002_regular          zoom    nan  N    nan  -
+    002_shift_1          zoom    nan  N    nan  -
+    002_shift_2          zoom    nan  N    nan  -
+    002_shift_3          zoom    nan  N    nan  -
+    002_underexposed     zoom    nan  N    nan  -
+    004_overexposed      zoom    nan  N    nan  -
+    004_regular          zoom    nan  N    nan  -
+    004_shift_1          zoom    nan  N    nan  -
+    004_shift_2          zoom    nan  N    nan  -
+    004_shift_3          zoom    nan  N    nan  -
+    004_underexposed     zoom    nan  N    nan  -
+    005_overexposed      zoom  428.5  N  116.9  -
+    005_regular          zoom  421.7  N  119.1  -
+    005_shift_1          zoom    nan  N    nan  -
+    005_shift_2          zoom    nan  N    nan  -
+    005_shift_3          zoom    nan  N    nan  -
+    005_underexposed     zoom  425.6  N  128.9  -
+    007_overexposed      zoom    nan  N    nan  -
+    007_regular          zoom    nan  N    nan  -
+    007_shift_1          zoom    nan  N    nan  -
+    007_shift_2          zoom    nan  N    nan  -
+    007_shift_3          zoom    nan  N    nan  -
+    007_underexposed     zoom    nan  N    nan  -
+    008_overexposed      zoom  520.5  N  229.1  det
+    008_regular          zoom  524.8  N  237.1  det
+    008_shift_1          zoom  534.1  N  205.9  det
+    008_shift_2          zoom  536.0  N  190.4  det
+    008_shift_3          zoom  550.0  N  186.5  det
+    008_underexposed     zoom  518.6  N  221.1  det
+    009_overexposed      zoom  515.4  N  222.4  det
+    009_regular          zoom  508.2  N  221.5  det
+    009_shift_1          zoom  522.2  N  189.8  det
+    009_shift_2          zoom  493.0  N  158.0  det
+    009_shift_3          zoom  520.9  N  181.7  det
+    009_underexposed     zoom  513.0  N  236.9  det
+    011_overexposed      zoom  490.3  N  229.9  det
+    011_regular          zoom  497.3  N  226.9  det
+    011_shift_1          zoom  500.0  N  199.4  det
+    011_shift_2          zoom  494.8  N  180.9  det
+    011_shift_3          zoom  492.7  N  189.5  det
+    011_underexposed     zoom  496.0  N  222.9  det
+    013_overexposed      zoom  471.3  N  190.1  det
+    013_regular          zoom  470.3  N  184.6  det
+    013_shift_1          zoom  496.4  N  172.1  det
+    013_shift_2          zoom  480.2  N  169.4  det
+    013_shift_3          zoom  496.0  N  154.7  det
+    013_underexposed     zoom  472.6  N  185.8  det
+    014_overexposed      zoom  480.1  N  195.9  det
+    014_regular          zoom  476.7  N  191.4  det
+    014_shift_1          zoom  469.3  N  161.8  det
+    014_shift_2          zoom  464.7  N  141.7  det
+    014_shift_3          zoom  466.7  N  150.7  det
+    014_underexposed     zoom  484.2  N  193.1  det
+saved docs/figures/wp_zoom_base.png

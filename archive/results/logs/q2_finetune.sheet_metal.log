@@ -1,0 +1,26 @@
+W1105 15:50:36.512000 40204 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+max |rescored - saved| / saved = 4.90e-07
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\scripts\q2_finetune.py:118: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  "regular_good_max": float(thr), "loss_end": float(loss), "seconds": time.perf_counter() - t0})
+shift_1 ('good/000',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [99s]
+shift_1 ('good/001',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [94s]
+shift_1 ('good/002',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [94s]
+shift_1 ('good/003',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [93s]
+shift_2 ('good/000',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [93s]
+shift_2 ('good/001',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [93s]
+shift_2 ('good/002',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [94s]
+shift_2 ('good/003',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [95s]
+shift_3 ('good/000',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [94s]
+shift_3 ('good/001',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [93s]
+shift_3 ('good/002',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [93s]
+shift_3 ('good/003',): fa 1.00 -> 1.00, miss 0.00 -> 0.00  [95s]
+  method  false_alarm  fa_min  fa_max  miss  miss_min  miss_max
+finetune        1.000   1.000   1.000 0.000     0.000     0.000
+    none        1.000   1.000   1.000 0.000     0.000     0.000
+figure: results\figures\q2_finetune__sheet_metal__all.png

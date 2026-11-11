@@ -1,0 +1,33 @@
+11:06:25 smoke patchcore_clahe walnuts
+11:06:50 smoke patchcore_histeq walnuts
+11:07:06 smoke patchcore_standardize walnuts
+11:07:20 smoke patchcore_gray walnuts
+11:07:35 smoke patchcore_retinex walnuts
+11:07:50 start patchcore_clahe walnuts
+11:12:39 patchcore_clahe exit 0
+11:12:39 start patchcore_histeq walnuts
+11:17:38 patchcore_histeq exit 0
+11:17:38 start patchcore_standardize walnuts
+11:22:32 patchcore_standardize exit 0
+11:22:32 start patchcore_gray walnuts
+11:27:28 patchcore_gray exit 0
+11:27:28 start patchcore_retinex walnuts
+11:32:23 patchcore_retinex exit 0
+11:32:29 q2 done
+---- H2-c
+11:33:45 smoke patchcore_light walnuts
+11:34:02 smoke patchcore_light_gray walnuts
+11:34:19 start patchcore_light walnuts
+11:39:34 patchcore_light exit 0
+11:39:34 start patchcore_light_gray walnuts
+11:44:51 patchcore_light_gray exit 0
+11:44:55 q2 done
+---- H2-d
+11:45:17 smoke dinomaly_l_gray walnuts
+11:46:01 smoke dinomaly_l_light walnuts
+11:46:46 start dinomaly_l_gray walnuts
+12:39:44 dinomaly_l_gray finished (queue shell stopped to drop game mode)
+12:39:44 smoke dinomaly_l_light walnuts
+12:40:23 start dinomaly_l_light walnuts
+13:14:47 dinomaly_l_light exit 0
+13:14:51 q2 done

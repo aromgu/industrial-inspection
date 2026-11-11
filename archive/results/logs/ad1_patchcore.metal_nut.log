@@ -1,0 +1,580 @@
+W1103 15:29:35.336000 41956 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\core\optimizer.py:183: `LightningModule.configure_optimizers` returned `None`, this fit will run with no optimizer
+┌───┬───────────────┬────────────────┬────────┬───────┬───────┐
+│   │ Name          │ Type           │ Params │ Mode  │ FLOPs │
+├───┼───────────────┼────────────────┼────────┼───────┼───────┤
+│ 0 │ pre_processor │ PreProcessor   │      0 │ train │     0 │
+│ 1 │ model         │ PatchcoreModel │ 24.9 M │ train │     0 │
+└───┴───────────────┴────────────────┴────────┴───────┴───────┘
+Trainable params: 24.9 M                                                       
+Non-trainable params: 0                                                        
+Total params: 24.9 M                                                           
+Total estimated model params size (MB): 99.450                                 
+Modules in train mode: 7                                                       
+Modules in eval mode: 174                                                      
+Total FLOPs: 0                                                                 
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:429: Consider setting `persistent_workers=True` in 'train_dataloader' to speed up the dataloader worker initialization.
+W1103 15:29:42.416000 41744 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:29:47.793000 36016 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:29:53.136000 34884 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:29:58.469000 40568 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:429: Consider setting `persistent_workers=True` in 'val_dataloader' to speed up the dataloader worker initialization.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\loops\fit_loop.py:538: Found 174 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+patchcore train:   0%|          | 0/14 [00:00<?, ?it/s]W1103 15:30:04.996000 40868 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:30:10.351000 26592 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:30:15.622000 41980 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:30:20.903000 41812 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+
+Selecting Coreset Indices.:   0%|          | 0/22527 [00:00<?, ?it/s][A
+Selecting Coreset Indices.:   0%|          | 28/22527 [00:00<01:21, 276.36it/s][A
+Selecting Coreset Indices.:   0%|          | 74/22527 [00:00<00:58, 381.53it/s][A
+Selecting Coreset Indices.:   1%|          | 121/22527 [00:00<00:53, 418.52it/s][A
+Selecting Coreset Indices.:   1%|          | 168/22527 [00:00<00:51, 436.32it/s][A
+Selecting Coreset Indices.:   1%|          | 215/22527 [00:00<00:50, 444.16it/s][A
+Selecting Coreset Indices.:   1%|          | 262/22527 [00:00<00:49, 450.74it/s][A
+Selecting Coreset Indices.:   1%|▏         | 309/22527 [00:00<00:48, 455.49it/s][A
+Selecting Coreset Indices.:   2%|▏         | 356/22527 [00:00<00:48, 457.34it/s][A
+Selecting Coreset Indices.:   2%|▏         | 403/22527 [00:00<00:48, 458.86it/s][A
+Selecting Coreset Indices.:   2%|▏         | 450/22527 [00:01<00:48, 459.52it/s][A
+Selecting Coreset Indices.:   2%|▏         | 497/22527 [00:01<00:47, 461.29it/s][A
+Selecting Coreset Indices.:   2%|▏         | 544/22527 [00:01<00:47, 461.23it/s][A
+Selecting Coreset Indices.:   3%|▎         | 591/22527 [00:01<00:47, 461.78it/s][A
+Selecting Coreset Indices.:   3%|▎         | 638/22527 [00:01<00:47, 461.66it/s][A
+Selecting Coreset Indices.:   3%|▎         | 685/22527 [00:01<00:47, 461.81it/s][A
+Selecting Coreset Indices.:   3%|▎         | 732/22527 [00:01<00:47, 462.86it/s][A
+Selecting Coreset Indices.:   3%|▎         | 779/22527 [00:01<00:47, 462.24it/s][A
+Selecting Coreset Indices.:   4%|▎         | 826/22527 [00:01<00:46, 461.91it/s][A
+Selecting Coreset Indices.:   4%|▍         | 873/22527 [00:01<00:46, 462.76it/s][A
+Selecting Coreset Indices.:   4%|▍         | 920/22527 [00:02<00:46, 462.46it/s][A
+Selecting Coreset Indices.:   4%|▍         | 967/22527 [00:02<00:46, 461.75it/s][A
+Selecting Coreset Indices.:   5%|▍         | 1014/22527 [00:02<00:46, 462.61it/s][A
+Selecting Coreset Indices.:   5%|▍         | 1061/22527 [00:02<00:46, 461.93it/s][A
+Selecting Coreset Indices.:   5%|▍         | 1108/22527 [00:02<00:46, 463.19it/s][A
+Selecting Coreset Indices.:   5%|▌         | 1155/22527 [00:02<00:46, 462.01it/s][A
+Selecting Coreset Indices.:   5%|▌         | 1202/22527 [00:02<00:46, 462.83it/s][A
+Selecting Coreset Indices.:   6%|▌         | 1249/22527 [00:02<00:46, 461.40it/s][A
+Selecting Coreset Indices.:   6%|▌         | 1296/22527 [00:02<00:45, 462.97it/s][A
+Selecting Coreset Indices.:   6%|▌         | 1343/22527 [00:02<00:45, 462.19it/s][A
+Selecting Coreset Indices.:   6%|▌         | 1390/22527 [00:03<00:45, 462.56it/s][A
+Selecting Coreset Indices.:   6%|▋         | 1437/22527 [00:03<00:45, 461.88it/s][A
+Selecting Coreset Indices.:   7%|▋         | 1484/22527 [00:03<00:45, 462.74it/s][A
+Selecting Coreset Indices.:   7%|▋         | 1531/22527 [00:03<00:45, 461.45it/s][A
+Selecting Coreset Indices.:   7%|▋         | 1578/22527 [00:03<00:45, 462.61it/s][A
+Selecting Coreset Indices.:   7%|▋         | 1625/22527 [00:03<00:45, 462.04it/s][A
+Selecting Coreset Indices.:   7%|▋         | 1672/22527 [00:03<00:45, 462.13it/s][A
+Selecting Coreset Indices.:   8%|▊         | 1719/22527 [00:03<00:44, 463.21it/s][A
+Selecting Coreset Indices.:   8%|▊         | 1766/22527 [00:03<00:44, 463.20it/s][A
+Selecting Coreset Indices.:   8%|▊         | 1813/22527 [00:03<00:44, 462.03it/s][A
+Selecting Coreset Indices.:   8%|▊         | 1860/22527 [00:04<00:44, 463.16it/s][A
+Selecting Coreset Indices.:   8%|▊         | 1907/22527 [00:04<00:44, 461.70it/s][A
+Selecting Coreset Indices.:   9%|▊         | 1954/22527 [00:04<00:44, 461.95it/s][A
+Selecting Coreset Indices.:   9%|▉         | 2001/22527 [00:04<00:44, 461.85it/s][A
+Selecting Coreset Indices.:   9%|▉         | 2048/22527 [00:04<00:44, 462.52it/s][A
+Selecting Coreset Indices.:   9%|▉         | 2095/22527 [00:04<00:44, 462.60it/s][A
+Selecting Coreset Indices.:  10%|▉         | 2142/22527 [00:04<00:44, 462.89it/s][A
+Selecting Coreset Indices.:  10%|▉         | 2189/22527 [00:04<00:44, 462.02it/s][A
+Selecting Coreset Indices.:  10%|▉         | 2236/22527 [00:04<00:43, 463.00it/s][A
+Selecting Coreset Indices.:  10%|█         | 2283/22527 [00:04<00:43, 461.48it/s][A
+Selecting Coreset Indices.:  10%|█         | 2330/22527 [00:05<00:43, 461.26it/s][A
+Selecting Coreset Indices.:  11%|█         | 2377/22527 [00:05<00:43, 462.67it/s][A
+Selecting Coreset Indices.:  11%|█         | 2424/22527 [00:05<00:43, 462.16it/s][A
+Selecting Coreset Indices.:  11%|█         | 2471/22527 [00:05<00:43, 462.52it/s][A
+Selecting Coreset Indices.:  11%|█         | 2518/22527 [00:05<00:43, 463.35it/s][A
+Selecting Coreset Indices.:  11%|█▏        | 2565/22527 [00:05<00:43, 463.02it/s][A
+Selecting Coreset Indices.:  12%|█▏        | 2612/22527 [00:05<00:43, 462.34it/s][A
+Selecting Coreset Indices.:  12%|█▏        | 2659/22527 [00:05<00:42, 463.92it/s][A
+Selecting Coreset Indices.:  12%|█▏        | 2706/22527 [00:05<00:42, 463.21it/s][A
+Selecting Coreset Indices.:  12%|█▏        | 2753/22527 [00:05<00:42, 461.86it/s][A
+Selecting Coreset Indices.:  12%|█▏        | 2800/22527 [00:06<00:42, 461.13it/s][A
+Selecting Coreset Indices.:  13%|█▎        | 2847/22527 [00:06<00:42, 461.04it/s][A
+Selecting Coreset Indices.:  13%|█▎        | 2894/22527 [00:06<00:42, 461.88it/s][A
+Selecting Coreset Indices.:  13%|█▎        | 2941/22527 [00:06<00:42, 462.38it/s][A
+Selecting Coreset Indices.:  13%|█▎        | 2988/22527 [00:06<00:42, 462.74it/s][A
+Selecting Coreset Indices.:  13%|█▎        | 3035/22527 [00:06<00:42, 462.49it/s][A
+Selecting Coreset Indices.:  14%|█▎        | 3082/22527 [00:06<00:42, 461.66it/s][A
+Selecting Coreset Indices.:  14%|█▍        | 3129/22527 [00:06<00:41, 462.91it/s][A
+Selecting Coreset Indices.:  14%|█▍        | 3176/22527 [00:06<00:41, 462.52it/s][A
+Selecting Coreset Indices.:  14%|█▍        | 3223/22527 [00:07<00:41, 461.61it/s][A
+Selecting Coreset Indices.:  15%|█▍        | 3270/22527 [00:07<00:41, 461.68it/s][A
+Selecting Coreset Indices.:  15%|█▍        | 3317/22527 [00:07<00:41, 462.16it/s][A
+Selecting Coreset Indices.:  15%|█▍        | 3364/22527 [00:07<00:41, 462.86it/s][A
+Selecting Coreset Indices.:  15%|█▌        | 3411/22527 [00:07<00:41, 462.14it/s][A
+Selecting Coreset Indices.:  15%|█▌        | 3458/22527 [00:07<00:41, 462.22it/s][A
+Selecting Coreset Indices.:  16%|█▌        | 3505/22527 [00:07<00:41, 463.57it/s][A
+Selecting Coreset Indices.:  16%|█▌        | 3552/22527 [00:07<00:41, 462.67it/s][A
+Selecting Coreset Indices.:  16%|█▌        | 3599/22527 [00:07<00:40, 463.60it/s][A
+Selecting Coreset Indices.:  16%|█▌        | 3646/22527 [00:07<00:40, 462.62it/s][A
+Selecting Coreset Indices.:  16%|█▋        | 3693/22527 [00:08<00:40, 462.75it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 3740/22527 [00:08<00:40, 462.61it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 3787/22527 [00:08<00:40, 462.85it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 3834/22527 [00:08<00:40, 461.55it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 3881/22527 [00:08<00:40, 462.61it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 3928/22527 [00:08<00:40, 462.61it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 3975/22527 [00:08<00:40, 462.55it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 4022/22527 [00:08<00:39, 463.11it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 4069/22527 [00:08<00:39, 463.32it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 4116/22527 [00:08<00:39, 462.05it/s][A
+Selecting Coreset Indices.:  18%|█▊        | 4163/22527 [00:09<00:39, 462.38it/s][A
+Selecting Coreset Indices.:  19%|█▊        | 4210/22527 [00:09<00:39, 462.52it/s][A
+Selecting Coreset Indices.:  19%|█▉        | 4257/22527 [00:09<00:39, 463.24it/s][A
+Selecting Coreset Indices.:  19%|█▉        | 4304/22527 [00:09<00:39, 462.52it/s][A
+Selecting Coreset Indices.:  19%|█▉        | 4351/22527 [00:09<00:39, 462.00it/s][A
+Selecting Coreset Indices.:  20%|█▉        | 4398/22527 [00:09<00:39, 462.05it/s][A
+Selecting Coreset Indices.:  20%|█▉        | 4445/22527 [00:09<00:39, 463.00it/s][A
+Selecting Coreset Indices.:  20%|█▉        | 4492/22527 [00:09<00:38, 462.65it/s][A
+Selecting Coreset Indices.:  20%|██        | 4539/22527 [00:09<00:38, 462.13it/s][A
+Selecting Coreset Indices.:  20%|██        | 4586/22527 [00:09<00:38, 463.18it/s][A
+Selecting Coreset Indices.:  21%|██        | 4633/22527 [00:10<00:38, 462.16it/s][A
+Selecting Coreset Indices.:  21%|██        | 4680/22527 [00:10<00:38, 461.61it/s][A
+Selecting Coreset Indices.:  21%|██        | 4727/22527 [00:10<00:38, 462.14it/s][A
+Selecting Coreset Indices.:  21%|██        | 4774/22527 [00:10<00:38, 463.48it/s][A
+Selecting Coreset Indices.:  21%|██▏       | 4821/22527 [00:10<00:38, 462.06it/s][A
+Selecting Coreset Indices.:  22%|██▏       | 4868/22527 [00:10<00:38, 462.61it/s][A
+Selecting Coreset Indices.:  22%|██▏       | 4915/22527 [00:10<00:38, 462.74it/s][A
+Selecting Coreset Indices.:  22%|██▏       | 4962/22527 [00:10<00:37, 463.29it/s][A
+Selecting Coreset Indices.:  22%|██▏       | 5009/22527 [00:10<00:37, 462.79it/s][A
+Selecting Coreset Indices.:  22%|██▏       | 5056/22527 [00:10<00:37, 463.05it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 5103/22527 [00:11<00:37, 461.67it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 5150/22527 [00:11<00:37, 461.58it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 5197/22527 [00:11<00:37, 461.31it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 5244/22527 [00:11<00:37, 463.69it/s][A
+Selecting Coreset Indices.:  23%|██▎       | 5291/22527 [00:11<00:37, 462.99it/s][A
+Selecting Coreset Indices.:  24%|██▎       | 5338/22527 [00:11<00:37, 461.76it/s][A
+Selecting Coreset Indices.:  24%|██▍       | 5385/22527 [00:11<00:37, 462.31it/s][A
+Selecting Coreset Indices.:  24%|██▍       | 5432/22527 [00:11<00:36, 463.00it/s][A
+Selecting Coreset Indices.:  24%|██▍       | 5479/22527 [00:11<00:36, 463.30it/s][A
+Selecting Coreset Indices.:  25%|██▍       | 5526/22527 [00:11<00:36, 463.01it/s][A
+Selecting Coreset Indices.:  25%|██▍       | 5573/22527 [00:12<00:36, 462.32it/s][A
+Selecting Coreset Indices.:  25%|██▍       | 5620/22527 [00:12<00:36, 461.80it/s][A
+Selecting Coreset Indices.:  25%|██▌       | 5667/22527 [00:12<00:36, 462.58it/s][A
+Selecting Coreset Indices.:  25%|██▌       | 5714/22527 [00:12<00:36, 462.16it/s][A
+Selecting Coreset Indices.:  26%|██▌       | 5761/22527 [00:12<00:36, 462.40it/s][A
+Selecting Coreset Indices.:  26%|██▌       | 5808/22527 [00:12<00:36, 461.86it/s][A
+Selecting Coreset Indices.:  26%|██▌       | 5855/22527 [00:12<00:36, 462.84it/s][A
+Selecting Coreset Indices.:  26%|██▌       | 5902/22527 [00:12<00:35, 462.16it/s][A
+Selecting Coreset Indices.:  26%|██▋       | 5949/22527 [00:12<00:35, 462.96it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 5996/22527 [00:13<00:35, 462.68it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 6043/22527 [00:13<00:35, 463.07it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 6090/22527 [00:13<00:35, 461.20it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 6137/22527 [00:13<00:35, 462.42it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 6184/22527 [00:13<00:35, 462.21it/s][A
+Selecting Coreset Indices.:  28%|██▊       | 6231/22527 [00:13<00:35, 462.90it/s][A
+Selecting Coreset Indices.:  28%|██▊       | 6278/22527 [00:13<00:35, 462.57it/s][A
+Selecting Coreset Indices.:  28%|██▊       | 6325/22527 [00:13<00:35, 462.17it/s][A
+Selecting Coreset Indices.:  28%|██▊       | 6372/22527 [00:13<00:34, 463.12it/s][A
+Selecting Coreset Indices.:  28%|██▊       | 6419/22527 [00:13<00:34, 461.85it/s][A
+Selecting Coreset Indices.:  29%|██▊       | 6466/22527 [00:14<00:34, 461.24it/s][A
+Selecting Coreset Indices.:  29%|██▉       | 6513/22527 [00:14<00:34, 462.63it/s][A
+Selecting Coreset Indices.:  29%|██▉       | 6560/22527 [00:14<00:34, 461.57it/s][A
+Selecting Coreset Indices.:  29%|██▉       | 6607/22527 [00:14<00:34, 462.60it/s][A
+Selecting Coreset Indices.:  30%|██▉       | 6654/22527 [00:14<00:34, 462.23it/s][A
+Selecting Coreset Indices.:  30%|██▉       | 6701/22527 [00:14<00:34, 462.53it/s][A
+Selecting Coreset Indices.:  30%|██▉       | 6748/22527 [00:14<00:34, 462.29it/s][A
+Selecting Coreset Indices.:  30%|███       | 6795/22527 [00:14<00:34, 462.47it/s][A
+Selecting Coreset Indices.:  30%|███       | 6842/22527 [00:14<00:33, 463.44it/s][A
+Selecting Coreset Indices.:  31%|███       | 6889/22527 [00:14<00:33, 462.64it/s][A
+Selecting Coreset Indices.:  31%|███       | 6936/22527 [00:15<00:33, 462.85it/s][A
+Selecting Coreset Indices.:  31%|███       | 6983/22527 [00:15<00:33, 461.68it/s][A
+Selecting Coreset Indices.:  31%|███       | 7030/22527 [00:15<00:33, 463.09it/s][A
+Selecting Coreset Indices.:  31%|███▏      | 7077/22527 [00:15<00:33, 461.27it/s][A
+Selecting Coreset Indices.:  32%|███▏      | 7124/22527 [00:15<00:33, 462.94it/s][A
+Selecting Coreset Indices.:  32%|███▏      | 7171/22527 [00:15<00:33, 462.90it/s][A
+Selecting Coreset Indices.:  32%|███▏      | 7218/22527 [00:15<00:33, 462.82it/s][A
+Selecting Coreset Indices.:  32%|███▏      | 7265/22527 [00:15<00:32, 463.28it/s][A
+Selecting Coreset Indices.:  32%|███▏      | 7312/22527 [00:15<00:32, 462.20it/s][A
+Selecting Coreset Indices.:  33%|███▎      | 7359/22527 [00:15<00:32, 461.60it/s][A
+Selecting Coreset Indices.:  33%|███▎      | 7406/22527 [00:16<00:32, 461.35it/s][A
+Selecting Coreset Indices.:  33%|███▎      | 7453/22527 [00:16<00:32, 461.14it/s][A
+Selecting Coreset Indices.:  33%|███▎      | 7500/22527 [00:16<00:32, 461.22it/s][A
+Selecting Coreset Indices.:  34%|███▎      | 7547/22527 [00:16<00:32, 460.52it/s][A
+Selecting Coreset Indices.:  34%|███▎      | 7594/22527 [00:16<00:32, 461.95it/s][A
+Selecting Coreset Indices.:  34%|███▍      | 7641/22527 [00:16<00:32, 461.76it/s][A
+Selecting Coreset Indices.:  34%|███▍      | 7688/22527 [00:16<00:32, 462.04it/s][A
+Selecting Coreset Indices.:  34%|███▍      | 7735/22527 [00:16<00:31, 463.04it/s][A
+Selecting Coreset Indices.:  35%|███▍      | 7782/22527 [00:16<00:31, 462.58it/s][A
+Selecting Coreset Indices.:  35%|███▍      | 7829/22527 [00:16<00:31, 462.95it/s][A
+Selecting Coreset Indices.:  35%|███▍      | 7876/22527 [00:17<00:31, 462.27it/s][A
+Selecting Coreset Indices.:  35%|███▌      | 7923/22527 [00:17<00:31, 461.79it/s][A
+Selecting Coreset Indices.:  35%|███▌      | 7970/22527 [00:17<00:31, 461.73it/s][A
+Selecting Coreset Indices.:  36%|███▌      | 8017/22527 [00:17<00:31, 461.53it/s][A
+Selecting Coreset Indices.:  36%|███▌      | 8064/22527 [00:17<00:31, 462.31it/s][A
+Selecting Coreset Indices.:  36%|███▌      | 8111/22527 [00:17<00:31, 462.09it/s][A
+Selecting Coreset Indices.:  36%|███▌      | 8158/22527 [00:17<00:31, 461.64it/s][A
+Selecting Coreset Indices.:  36%|███▋      | 8205/22527 [00:17<00:30, 462.36it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 8252/22527 [00:17<00:30, 463.26it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 8299/22527 [00:17<00:30, 462.13it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 8346/22527 [00:18<00:30, 461.12it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 8393/22527 [00:18<00:30, 461.40it/s][A
+Selecting Coreset Indices.:  37%|███▋      | 8440/22527 [00:18<00:30, 461.53it/s][A
+Selecting Coreset Indices.:  38%|███▊      | 8487/22527 [00:18<00:30, 462.43it/s][A
+Selecting Coreset Indices.:  38%|███▊      | 8534/22527 [00:18<00:30, 462.54it/s][A
+Selecting Coreset Indices.:  38%|███▊      | 8581/22527 [00:18<00:30, 462.72it/s][A
+Selecting Coreset Indices.:  38%|███▊      | 8628/22527 [00:18<00:30, 461.77it/s][A
+Selecting Coreset Indices.:  39%|███▊      | 8675/22527 [00:18<00:29, 462.55it/s][A
+Selecting Coreset Indices.:  39%|███▊      | 8722/22527 [00:18<00:29, 462.80it/s][A
+Selecting Coreset Indices.:  39%|███▉      | 8769/22527 [00:19<00:29, 462.88it/s][A
+Selecting Coreset Indices.:  39%|███▉      | 8816/22527 [00:19<00:29, 462.38it/s][A
+Selecting Coreset Indices.:  39%|███▉      | 8863/22527 [00:19<00:29, 462.28it/s][A
+Selecting Coreset Indices.:  40%|███▉      | 8910/22527 [00:19<00:29, 462.41it/s][A
+Selecting Coreset Indices.:  40%|███▉      | 8957/22527 [00:19<00:29, 462.27it/s][A
+Selecting Coreset Indices.:  40%|███▉      | 9004/22527 [00:19<00:29, 462.69it/s][A
+Selecting Coreset Indices.:  40%|████      | 9051/22527 [00:19<00:29, 462.57it/s][A
+Selecting Coreset Indices.:  40%|████      | 9098/22527 [00:19<00:29, 462.65it/s][A
+Selecting Coreset Indices.:  41%|████      | 9145/22527 [00:19<00:28, 462.83it/s][A
+Selecting Coreset Indices.:  41%|████      | 9192/22527 [00:19<00:28, 462.57it/s][A
+Selecting Coreset Indices.:  41%|████      | 9239/22527 [00:20<00:28, 462.75it/s][A
+Selecting Coreset Indices.:  41%|████      | 9286/22527 [00:20<00:28, 462.54it/s][A
+Selecting Coreset Indices.:  41%|████▏     | 9333/22527 [00:20<00:28, 461.95it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 9380/22527 [00:20<00:28, 462.36it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 9427/22527 [00:20<00:28, 461.98it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 9474/22527 [00:20<00:28, 462.04it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 9521/22527 [00:20<00:28, 463.03it/s][A
+Selecting Coreset Indices.:  42%|████▏     | 9568/22527 [00:20<00:28, 462.20it/s][A
+Selecting Coreset Indices.:  43%|████▎     | 9615/22527 [00:20<00:27, 463.17it/s][A
+Selecting Coreset Indices.:  43%|████▎     | 9662/22527 [00:20<00:27, 462.76it/s][A
+Selecting Coreset Indices.:  43%|████▎     | 9709/22527 [00:21<00:27, 462.79it/s][A
+Selecting Coreset Indices.:  43%|████▎     | 9756/22527 [00:21<00:27, 461.91it/s][A
+Selecting Coreset Indices.:  44%|████▎     | 9803/22527 [00:21<00:27, 461.39it/s][A
+Selecting Coreset Indices.:  44%|████▎     | 9850/22527 [00:21<00:27, 461.91it/s][A
+Selecting Coreset Indices.:  44%|████▍     | 9897/22527 [00:21<00:27, 461.87it/s][A
+Selecting Coreset Indices.:  44%|████▍     | 9944/22527 [00:21<00:27, 462.80it/s][A
+Selecting Coreset Indices.:  44%|████▍     | 9991/22527 [00:21<00:27, 462.05it/s][A
+Selecting Coreset Indices.:  45%|████▍     | 10038/22527 [00:21<00:27, 462.27it/s][A
+Selecting Coreset Indices.:  45%|████▍     | 10085/22527 [00:21<00:26, 463.15it/s][A
+Selecting Coreset Indices.:  45%|████▍     | 10132/22527 [00:21<00:26, 462.51it/s][A
+Selecting Coreset Indices.:  45%|████▌     | 10179/22527 [00:22<00:26, 461.53it/s][A
+Selecting Coreset Indices.:  45%|████▌     | 10226/22527 [00:22<00:26, 461.85it/s][A
+Selecting Coreset Indices.:  46%|████▌     | 10273/22527 [00:22<00:26, 462.65it/s][A
+Selecting Coreset Indices.:  46%|████▌     | 10320/22527 [00:22<00:26, 462.34it/s][A
+Selecting Coreset Indices.:  46%|████▌     | 10367/22527 [00:22<00:26, 461.88it/s][A
+Selecting Coreset Indices.:  46%|████▌     | 10414/22527 [00:22<00:26, 462.23it/s][A
+Selecting Coreset Indices.:  46%|████▋     | 10461/22527 [00:22<00:26, 462.75it/s][A
+Selecting Coreset Indices.:  47%|████▋     | 10508/22527 [00:22<00:26, 462.14it/s][A
+Selecting Coreset Indices.:  47%|████▋     | 10555/22527 [00:22<00:25, 461.95it/s][A
+Selecting Coreset Indices.:  47%|████▋     | 10602/22527 [00:22<00:25, 462.43it/s][A
+Selecting Coreset Indices.:  47%|████▋     | 10649/22527 [00:23<00:25, 461.98it/s][A
+Selecting Coreset Indices.:  47%|████▋     | 10696/22527 [00:23<00:25, 461.41it/s][A
+Selecting Coreset Indices.:  48%|████▊     | 10743/22527 [00:23<00:25, 462.58it/s][A
+Selecting Coreset Indices.:  48%|████▊     | 10790/22527 [00:23<00:25, 463.11it/s][A
+Selecting Coreset Indices.:  48%|████▊     | 10837/22527 [00:23<00:25, 462.46it/s][A
+Selecting Coreset Indices.:  48%|████▊     | 10884/22527 [00:23<00:25, 461.68it/s][A
+Selecting Coreset Indices.:  49%|████▊     | 10931/22527 [00:23<00:25, 462.24it/s][A
+Selecting Coreset Indices.:  49%|████▊     | 10978/22527 [00:23<00:24, 463.23it/s][A
+Selecting Coreset Indices.:  49%|████▉     | 11025/22527 [00:23<00:24, 462.18it/s][A
+Selecting Coreset Indices.:  49%|████▉     | 11072/22527 [00:23<00:24, 463.57it/s][A
+Selecting Coreset Indices.:  49%|████▉     | 11119/22527 [00:24<00:24, 461.59it/s][A
+Selecting Coreset Indices.:  50%|████▉     | 11166/22527 [00:24<00:24, 461.53it/s][A
+Selecting Coreset Indices.:  50%|████▉     | 11213/22527 [00:24<00:24, 461.95it/s][A
+Selecting Coreset Indices.:  50%|████▉     | 11260/22527 [00:24<00:24, 463.59it/s][A
+Selecting Coreset Indices.:  50%|█████     | 11307/22527 [00:24<00:24, 462.31it/s][A
+Selecting Coreset Indices.:  50%|█████     | 11354/22527 [00:24<00:24, 462.55it/s][A
+Selecting Coreset Indices.:  51%|█████     | 11401/22527 [00:24<00:24, 462.13it/s][A
+Selecting Coreset Indices.:  51%|█████     | 11448/22527 [00:24<00:23, 462.82it/s][A
+Selecting Coreset Indices.:  51%|█████     | 11495/22527 [00:24<00:23, 462.58it/s][A
+Selecting Coreset Indices.:  51%|█████     | 11542/22527 [00:25<00:23, 462.23it/s][A
+Selecting Coreset Indices.:  51%|█████▏    | 11589/22527 [00:25<00:23, 463.38it/s][A
+Selecting Coreset Indices.:  52%|█████▏    | 11636/22527 [00:25<00:23, 462.50it/s][A
+Selecting Coreset Indices.:  52%|█████▏    | 11683/22527 [00:25<00:23, 461.31it/s][A
+Selecting Coreset Indices.:  52%|█████▏    | 11730/22527 [00:25<00:23, 462.70it/s][A
+Selecting Coreset Indices.:  52%|█████▏    | 11777/22527 [00:25<00:23, 462.47it/s][A
+Selecting Coreset Indices.:  52%|█████▏    | 11824/22527 [00:25<00:23, 461.94it/s][A
+Selecting Coreset Indices.:  53%|█████▎    | 11871/22527 [00:25<00:23, 462.80it/s][A
+Selecting Coreset Indices.:  53%|█████▎    | 11918/22527 [00:25<00:22, 462.62it/s][A
+Selecting Coreset Indices.:  53%|█████▎    | 11965/22527 [00:25<00:22, 462.78it/s][A
+Selecting Coreset Indices.:  53%|█████▎    | 12012/22527 [00:26<00:22, 461.67it/s][A
+Selecting Coreset Indices.:  54%|█████▎    | 12059/22527 [00:26<00:22, 461.05it/s][A
+Selecting Coreset Indices.:  54%|█████▎    | 12106/22527 [00:26<00:22, 461.62it/s][A
+Selecting Coreset Indices.:  54%|█████▍    | 12153/22527 [00:26<00:22, 462.49it/s][A
+Selecting Coreset Indices.:  54%|█████▍    | 12200/22527 [00:26<00:22, 461.97it/s][A
+Selecting Coreset Indices.:  54%|█████▍    | 12247/22527 [00:26<00:22, 461.89it/s][A
+Selecting Coreset Indices.:  55%|█████▍    | 12294/22527 [00:26<00:22, 461.90it/s][A
+Selecting Coreset Indices.:  55%|█████▍    | 12341/22527 [00:26<00:22, 461.55it/s][A
+Selecting Coreset Indices.:  55%|█████▍    | 12388/22527 [00:26<00:21, 462.27it/s][A
+Selecting Coreset Indices.:  55%|█████▌    | 12435/22527 [00:26<00:21, 461.95it/s][A
+Selecting Coreset Indices.:  55%|█████▌    | 12482/22527 [00:27<00:21, 461.19it/s][A
+Selecting Coreset Indices.:  56%|█████▌    | 12529/22527 [00:27<00:21, 462.42it/s][A
+Selecting Coreset Indices.:  56%|█████▌    | 12576/22527 [00:27<00:21, 462.64it/s][A
+Selecting Coreset Indices.:  56%|█████▌    | 12623/22527 [00:27<00:21, 462.81it/s][A
+Selecting Coreset Indices.:  56%|█████▌    | 12670/22527 [00:27<00:21, 462.59it/s][A
+Selecting Coreset Indices.:  56%|█████▋    | 12717/22527 [00:27<00:21, 462.63it/s][A
+Selecting Coreset Indices.:  57%|█████▋    | 12764/22527 [00:27<00:21, 462.12it/s][A
+Selecting Coreset Indices.:  57%|█████▋    | 12811/22527 [00:27<00:21, 462.01it/s][A
+Selecting Coreset Indices.:  57%|█████▋    | 12858/22527 [00:27<00:20, 462.72it/s][A
+Selecting Coreset Indices.:  57%|█████▋    | 12905/22527 [00:27<00:20, 462.96it/s][A
+Selecting Coreset Indices.:  57%|█████▋    | 12952/22527 [00:28<00:20, 462.06it/s][A
+Selecting Coreset Indices.:  58%|█████▊    | 12999/22527 [00:28<00:20, 461.68it/s][A
+Selecting Coreset Indices.:  58%|█████▊    | 13046/22527 [00:28<00:20, 461.90it/s][A
+Selecting Coreset Indices.:  58%|█████▊    | 13093/22527 [00:28<00:20, 462.47it/s][A
+Selecting Coreset Indices.:  58%|█████▊    | 13140/22527 [00:28<00:20, 463.26it/s][A
+Selecting Coreset Indices.:  59%|█████▊    | 13187/22527 [00:28<00:20, 462.59it/s][A
+Selecting Coreset Indices.:  59%|█████▊    | 13234/22527 [00:28<00:20, 462.15it/s][A
+Selecting Coreset Indices.:  59%|█████▉    | 13281/22527 [00:28<00:20, 462.15it/s][A
+Selecting Coreset Indices.:  59%|█████▉    | 13328/22527 [00:28<00:19, 461.63it/s][A
+Selecting Coreset Indices.:  59%|█████▉    | 13375/22527 [00:28<00:19, 461.66it/s][A
+Selecting Coreset Indices.:  60%|█████▉    | 13422/22527 [00:29<00:19, 463.20it/s][A
+Selecting Coreset Indices.:  60%|█████▉    | 13469/22527 [00:29<00:19, 461.28it/s][A
+Selecting Coreset Indices.:  60%|█████▉    | 13516/22527 [00:29<00:19, 461.48it/s][A
+Selecting Coreset Indices.:  60%|██████    | 13563/22527 [00:29<00:19, 462.52it/s][A
+Selecting Coreset Indices.:  60%|██████    | 13610/22527 [00:29<00:19, 462.32it/s][A
+Selecting Coreset Indices.:  61%|██████    | 13657/22527 [00:29<00:19, 462.78it/s][A
+Selecting Coreset Indices.:  61%|██████    | 13704/22527 [00:29<00:19, 462.44it/s][A
+Selecting Coreset Indices.:  61%|██████    | 13751/22527 [00:29<00:18, 462.46it/s][A
+Selecting Coreset Indices.:  61%|██████▏   | 13798/22527 [00:29<00:18, 462.83it/s][A
+Selecting Coreset Indices.:  61%|██████▏   | 13845/22527 [00:29<00:18, 462.67it/s][A
+Selecting Coreset Indices.:  62%|██████▏   | 13892/22527 [00:30<00:18, 461.58it/s][A
+Selecting Coreset Indices.:  62%|██████▏   | 13939/22527 [00:30<00:18, 463.03it/s][A
+Selecting Coreset Indices.:  62%|██████▏   | 13986/22527 [00:30<00:18, 462.68it/s][A
+Selecting Coreset Indices.:  62%|██████▏   | 14033/22527 [00:30<00:18, 461.78it/s][A
+Selecting Coreset Indices.:  63%|██████▎   | 14080/22527 [00:30<00:18, 461.83it/s][A
+Selecting Coreset Indices.:  63%|██████▎   | 14127/22527 [00:30<00:18, 462.22it/s][A
+Selecting Coreset Indices.:  63%|██████▎   | 14174/22527 [00:30<00:18, 462.73it/s][A
+Selecting Coreset Indices.:  63%|██████▎   | 14221/22527 [00:30<00:17, 462.82it/s][A
+Selecting Coreset Indices.:  63%|██████▎   | 14268/22527 [00:30<00:17, 462.16it/s][A
+Selecting Coreset Indices.:  64%|██████▎   | 14315/22527 [00:31<00:17, 461.55it/s][A
+Selecting Coreset Indices.:  64%|██████▍   | 14362/22527 [00:31<00:17, 461.51it/s][A
+Selecting Coreset Indices.:  64%|██████▍   | 14409/22527 [00:31<00:17, 462.05it/s][A
+Selecting Coreset Indices.:  64%|██████▍   | 14456/22527 [00:31<00:17, 462.12it/s][A
+Selecting Coreset Indices.:  64%|██████▍   | 14503/22527 [00:31<00:17, 461.71it/s][A
+Selecting Coreset Indices.:  65%|██████▍   | 14550/22527 [00:31<00:17, 462.65it/s][A
+Selecting Coreset Indices.:  65%|██████▍   | 14597/22527 [00:31<00:17, 463.10it/s][A
+Selecting Coreset Indices.:  65%|██████▌   | 14644/22527 [00:31<00:17, 462.78it/s][A
+Selecting Coreset Indices.:  65%|██████▌   | 14691/22527 [00:31<00:16, 462.95it/s][A
+Selecting Coreset Indices.:  65%|██████▌   | 14738/22527 [00:31<00:16, 462.48it/s][A
+Selecting Coreset Indices.:  66%|██████▌   | 14785/22527 [00:32<00:16, 462.02it/s][A
+Selecting Coreset Indices.:  66%|██████▌   | 14832/22527 [00:32<00:16, 460.81it/s][A
+Selecting Coreset Indices.:  66%|██████▌   | 14879/22527 [00:32<00:16, 462.09it/s][A
+Selecting Coreset Indices.:  66%|██████▋   | 14926/22527 [00:32<00:16, 462.26it/s][A
+Selecting Coreset Indices.:  66%|██████▋   | 14973/22527 [00:32<00:16, 462.50it/s][A
+Selecting Coreset Indices.:  67%|██████▋   | 15020/22527 [00:32<00:16, 462.04it/s][A
+Selecting Coreset Indices.:  67%|██████▋   | 15067/22527 [00:32<00:16, 463.87it/s][A
+Selecting Coreset Indices.:  67%|██████▋   | 15114/22527 [00:32<00:16, 462.18it/s][A
+Selecting Coreset Indices.:  67%|██████▋   | 15161/22527 [00:32<00:15, 462.13it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 15208/22527 [00:32<00:15, 462.45it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 15255/22527 [00:33<00:15, 463.32it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 15302/22527 [00:33<00:15, 462.88it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 15349/22527 [00:33<00:15, 461.97it/s][A
+Selecting Coreset Indices.:  68%|██████▊   | 15396/22527 [00:33<00:15, 463.22it/s][A
+Selecting Coreset Indices.:  69%|██████▊   | 15443/22527 [00:33<00:15, 462.29it/s][A
+Selecting Coreset Indices.:  69%|██████▉   | 15490/22527 [00:33<00:15, 461.62it/s][A
+Selecting Coreset Indices.:  69%|██████▉   | 15537/22527 [00:33<00:15, 462.67it/s][A
+Selecting Coreset Indices.:  69%|██████▉   | 15584/22527 [00:33<00:15, 462.34it/s][A
+Selecting Coreset Indices.:  69%|██████▉   | 15631/22527 [00:33<00:14, 461.61it/s][A
+Selecting Coreset Indices.:  70%|██████▉   | 15678/22527 [00:33<00:14, 462.52it/s][A
+Selecting Coreset Indices.:  70%|██████▉   | 15725/22527 [00:34<00:14, 462.80it/s][A
+Selecting Coreset Indices.:  70%|███████   | 15772/22527 [00:34<00:14, 462.89it/s][A
+Selecting Coreset Indices.:  70%|███████   | 15819/22527 [00:34<00:14, 461.27it/s][A
+Selecting Coreset Indices.:  70%|███████   | 15866/22527 [00:34<00:14, 461.76it/s][A
+Selecting Coreset Indices.:  71%|███████   | 15913/22527 [00:34<00:14, 462.00it/s][A
+Selecting Coreset Indices.:  71%|███████   | 15960/22527 [00:34<00:14, 462.58it/s][A
+Selecting Coreset Indices.:  71%|███████   | 16007/22527 [00:34<00:14, 462.66it/s][A
+Selecting Coreset Indices.:  71%|███████▏  | 16054/22527 [00:34<00:14, 462.24it/s][A
+Selecting Coreset Indices.:  71%|███████▏  | 16101/22527 [00:34<00:13, 462.57it/s][A
+Selecting Coreset Indices.:  72%|███████▏  | 16148/22527 [00:34<00:13, 462.23it/s][A
+Selecting Coreset Indices.:  72%|███████▏  | 16195/22527 [00:35<00:13, 461.84it/s][A
+Selecting Coreset Indices.:  72%|███████▏  | 16242/22527 [00:35<00:13, 462.79it/s][A
+Selecting Coreset Indices.:  72%|███████▏  | 16289/22527 [00:35<00:13, 462.28it/s][A
+Selecting Coreset Indices.:  73%|███████▎  | 16336/22527 [00:35<00:13, 462.31it/s][A
+Selecting Coreset Indices.:  73%|███████▎  | 16383/22527 [00:35<00:13, 463.30it/s][A
+Selecting Coreset Indices.:  73%|███████▎  | 16430/22527 [00:35<00:13, 462.76it/s][A
+Selecting Coreset Indices.:  73%|███████▎  | 16477/22527 [00:35<00:13, 461.82it/s][A
+Selecting Coreset Indices.:  73%|███████▎  | 16524/22527 [00:35<00:12, 461.80it/s][A
+Selecting Coreset Indices.:  74%|███████▎  | 16571/22527 [00:35<00:12, 462.30it/s][A
+Selecting Coreset Indices.:  74%|███████▍  | 16618/22527 [00:35<00:12, 462.12it/s][A
+Selecting Coreset Indices.:  74%|███████▍  | 16665/22527 [00:36<00:12, 462.45it/s][A
+Selecting Coreset Indices.:  74%|███████▍  | 16712/22527 [00:36<00:12, 462.52it/s][A
+Selecting Coreset Indices.:  74%|███████▍  | 16759/22527 [00:36<00:12, 461.91it/s][A
+Selecting Coreset Indices.:  75%|███████▍  | 16806/22527 [00:36<00:12, 461.70it/s][A
+Selecting Coreset Indices.:  75%|███████▍  | 16853/22527 [00:36<00:12, 462.65it/s][A
+Selecting Coreset Indices.:  75%|███████▌  | 16900/22527 [00:36<00:12, 462.96it/s][A
+Selecting Coreset Indices.:  75%|███████▌  | 16947/22527 [00:36<00:12, 461.59it/s][A
+Selecting Coreset Indices.:  75%|███████▌  | 16994/22527 [00:36<00:11, 462.98it/s][A
+Selecting Coreset Indices.:  76%|███████▌  | 17041/22527 [00:36<00:11, 462.95it/s][A
+Selecting Coreset Indices.:  76%|███████▌  | 17088/22527 [00:37<00:11, 463.20it/s][A
+Selecting Coreset Indices.:  76%|███████▌  | 17135/22527 [00:37<00:11, 460.66it/s][A
+Selecting Coreset Indices.:  76%|███████▋  | 17182/22527 [00:37<00:11, 461.48it/s][A
+Selecting Coreset Indices.:  76%|███████▋  | 17229/22527 [00:37<00:11, 463.00it/s][A
+Selecting Coreset Indices.:  77%|███████▋  | 17276/22527 [00:37<00:11, 461.91it/s][A
+Selecting Coreset Indices.:  77%|███████▋  | 17323/22527 [00:37<00:11, 462.72it/s][A
+Selecting Coreset Indices.:  77%|███████▋  | 17370/22527 [00:37<00:11, 462.94it/s][A
+Selecting Coreset Indices.:  77%|███████▋  | 17417/22527 [00:37<00:11, 462.10it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 17464/22527 [00:37<00:10, 461.65it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 17511/22527 [00:37<00:10, 462.65it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 17558/22527 [00:38<00:10, 462.16it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 17605/22527 [00:38<00:10, 461.82it/s][A
+Selecting Coreset Indices.:  78%|███████▊  | 17652/22527 [00:38<00:10, 460.59it/s][A
+Selecting Coreset Indices.:  79%|███████▊  | 17699/22527 [00:38<00:10, 462.14it/s][A
+Selecting Coreset Indices.:  79%|███████▉  | 17746/22527 [00:38<00:10, 462.55it/s][A
+Selecting Coreset Indices.:  79%|███████▉  | 17793/22527 [00:38<00:10, 462.59it/s][A
+Selecting Coreset Indices.:  79%|███████▉  | 17840/22527 [00:38<00:10, 462.10it/s][A
+Selecting Coreset Indices.:  79%|███████▉  | 17887/22527 [00:38<00:10, 462.97it/s][A
+Selecting Coreset Indices.:  80%|███████▉  | 17934/22527 [00:38<00:09, 462.83it/s][A
+Selecting Coreset Indices.:  80%|███████▉  | 17981/22527 [00:38<00:09, 462.84it/s][A
+Selecting Coreset Indices.:  80%|████████  | 18028/22527 [00:39<00:09, 462.36it/s][A
+Selecting Coreset Indices.:  80%|████████  | 18075/22527 [00:39<00:09, 461.52it/s][A
+Selecting Coreset Indices.:  80%|████████  | 18122/22527 [00:39<00:09, 462.25it/s][A
+Selecting Coreset Indices.:  81%|████████  | 18169/22527 [00:39<00:09, 462.66it/s][A
+Selecting Coreset Indices.:  81%|████████  | 18216/22527 [00:39<00:09, 450.80it/s][A
+Selecting Coreset Indices.:  81%|████████  | 18262/22527 [00:39<00:09, 438.51it/s][A
+Selecting Coreset Indices.:  81%|████████▏ | 18306/22527 [00:39<00:09, 434.32it/s][A
+Selecting Coreset Indices.:  81%|████████▏ | 18350/22527 [00:39<00:09, 428.80it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 18393/22527 [00:39<00:09, 424.16it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 18436/22527 [00:39<00:09, 423.09it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 18479/22527 [00:40<00:09, 421.23it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 18522/22527 [00:40<00:09, 421.40it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 18565/22527 [00:40<00:09, 423.33it/s][A
+Selecting Coreset Indices.:  83%|████████▎ | 18609/22527 [00:40<00:09, 426.17it/s][A
+Selecting Coreset Indices.:  83%|████████▎ | 18653/22527 [00:40<00:09, 428.70it/s][A
+Selecting Coreset Indices.:  83%|████████▎ | 18696/22527 [00:40<00:08, 427.05it/s][A
+Selecting Coreset Indices.:  83%|████████▎ | 18739/22527 [00:40<00:08, 426.32it/s][A
+Selecting Coreset Indices.:  83%|████████▎ | 18782/22527 [00:40<00:08, 421.00it/s][A
+Selecting Coreset Indices.:  84%|████████▎ | 18825/22527 [00:40<00:08, 419.78it/s][A
+Selecting Coreset Indices.:  84%|████████▍ | 18869/22527 [00:40<00:08, 424.28it/s][A
+Selecting Coreset Indices.:  84%|████████▍ | 18912/22527 [00:41<00:08, 422.52it/s][A
+Selecting Coreset Indices.:  84%|████████▍ | 18955/22527 [00:41<00:08, 423.71it/s][A
+Selecting Coreset Indices.:  84%|████████▍ | 19001/22527 [00:41<00:08, 434.22it/s][A
+Selecting Coreset Indices.:  85%|████████▍ | 19047/22527 [00:41<00:07, 441.17it/s][A
+Selecting Coreset Indices.:  85%|████████▍ | 19093/22527 [00:41<00:07, 446.49it/s][A
+Selecting Coreset Indices.:  85%|████████▍ | 19140/22527 [00:41<00:07, 450.65it/s][A
+Selecting Coreset Indices.:  85%|████████▌ | 19186/22527 [00:41<00:07, 451.01it/s][A
+Selecting Coreset Indices.:  85%|████████▌ | 19233/22527 [00:41<00:07, 454.01it/s][A
+Selecting Coreset Indices.:  86%|████████▌ | 19279/22527 [00:41<00:07, 455.68it/s][A
+Selecting Coreset Indices.:  86%|████████▌ | 19325/22527 [00:42<00:07, 455.95it/s][A
+Selecting Coreset Indices.:  86%|████████▌ | 19371/22527 [00:42<00:06, 456.58it/s][A
+Selecting Coreset Indices.:  86%|████████▌ | 19417/22527 [00:42<00:06, 457.14it/s][A
+Selecting Coreset Indices.:  86%|████████▋ | 19463/22527 [00:42<00:06, 453.44it/s][A
+Selecting Coreset Indices.:  87%|████████▋ | 19509/22527 [00:42<00:06, 454.50it/s][A
+Selecting Coreset Indices.:  87%|████████▋ | 19555/22527 [00:42<00:06, 454.85it/s][A
+Selecting Coreset Indices.:  87%|████████▋ | 19601/22527 [00:42<00:06, 449.78it/s][A
+Selecting Coreset Indices.:  87%|████████▋ | 19646/22527 [00:42<00:06, 447.99it/s][A
+Selecting Coreset Indices.:  87%|████████▋ | 19693/22527 [00:42<00:06, 451.44it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 19740/22527 [00:42<00:06, 455.18it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 19786/22527 [00:43<00:06, 455.00it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 19833/22527 [00:43<00:05, 457.43it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 19880/22527 [00:43<00:05, 457.70it/s][A
+Selecting Coreset Indices.:  88%|████████▊ | 19927/22527 [00:43<00:05, 459.40it/s][A
+Selecting Coreset Indices.:  89%|████████▊ | 19974/22527 [00:43<00:05, 460.00it/s][A
+Selecting Coreset Indices.:  89%|████████▉ | 20021/22527 [00:43<00:05, 459.71it/s][A
+Selecting Coreset Indices.:  89%|████████▉ | 20067/22527 [00:43<00:05, 459.40it/s][A
+Selecting Coreset Indices.:  89%|████████▉ | 20114/22527 [00:43<00:05, 460.38it/s][A
+Selecting Coreset Indices.:  89%|████████▉ | 20161/22527 [00:43<00:05, 454.87it/s][A
+Selecting Coreset Indices.:  90%|████████▉ | 20207/22527 [00:43<00:05, 445.04it/s][A
+Selecting Coreset Indices.:  90%|████████▉ | 20252/22527 [00:44<00:05, 438.26it/s][A
+Selecting Coreset Indices.:  90%|█████████ | 20297/22527 [00:44<00:05, 438.19it/s][A
+Selecting Coreset Indices.:  90%|█████████ | 20344/22527 [00:44<00:04, 446.10it/s][A
+Selecting Coreset Indices.:  91%|█████████ | 20391/22527 [00:44<00:04, 451.13it/s][A
+Selecting Coreset Indices.:  91%|█████████ | 20438/22527 [00:44<00:04, 454.08it/s][A
+Selecting Coreset Indices.:  91%|█████████ | 20485/22527 [00:44<00:04, 456.07it/s][A
+Selecting Coreset Indices.:  91%|█████████ | 20532/22527 [00:44<00:04, 458.96it/s][A
+Selecting Coreset Indices.:  91%|█████████▏| 20579/22527 [00:44<00:04, 460.90it/s][A
+Selecting Coreset Indices.:  92%|█████████▏| 20626/22527 [00:44<00:04, 462.09it/s][A
+Selecting Coreset Indices.:  92%|█████████▏| 20673/22527 [00:44<00:04, 461.71it/s][A
+Selecting Coreset Indices.:  92%|█████████▏| 20720/22527 [00:45<00:03, 461.04it/s][A
+Selecting Coreset Indices.:  92%|█████████▏| 20767/22527 [00:45<00:03, 461.87it/s][A
+Selecting Coreset Indices.:  92%|█████████▏| 20814/22527 [00:45<00:03, 461.59it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 20861/22527 [00:45<00:03, 461.55it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 20908/22527 [00:45<00:03, 461.65it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 20955/22527 [00:45<00:03, 463.04it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 21002/22527 [00:45<00:03, 462.21it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 21049/22527 [00:45<00:03, 462.48it/s][A
+Selecting Coreset Indices.:  94%|█████████▎| 21096/22527 [00:45<00:03, 462.67it/s][A
+Selecting Coreset Indices.:  94%|█████████▍| 21143/22527 [00:45<00:02, 462.38it/s][A
+Selecting Coreset Indices.:  94%|█████████▍| 21190/22527 [00:46<00:02, 462.33it/s][A
+Selecting Coreset Indices.:  94%|█████████▍| 21237/22527 [00:46<00:02, 461.71it/s][A
+Selecting Coreset Indices.:  94%|█████████▍| 21284/22527 [00:46<00:02, 461.37it/s][A
+Selecting Coreset Indices.:  95%|█████████▍| 21331/22527 [00:46<00:02, 462.00it/s][A
+Selecting Coreset Indices.:  95%|█████████▍| 21378/22527 [00:46<00:02, 461.80it/s][A
+Selecting Coreset Indices.:  95%|█████████▌| 21425/22527 [00:46<00:02, 462.33it/s][A
+Selecting Coreset Indices.:  95%|█████████▌| 21472/22527 [00:46<00:02, 461.81it/s][A
+Selecting Coreset Indices.:  96%|█████████▌| 21519/22527 [00:46<00:02, 462.80it/s][A
+Selecting Coreset Indices.:  96%|█████████▌| 21566/22527 [00:46<00:02, 462.28it/s][A
+Selecting Coreset Indices.:  96%|█████████▌| 21613/22527 [00:47<00:01, 461.51it/s][A
+Selecting Coreset Indices.:  96%|█████████▌| 21660/22527 [00:47<00:01, 462.77it/s][A
+Selecting Coreset Indices.:  96%|█████████▋| 21707/22527 [00:47<00:01, 461.84it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 21754/22527 [00:47<00:01, 462.36it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 21801/22527 [00:47<00:01, 462.77it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 21848/22527 [00:47<00:01, 462.24it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 21895/22527 [00:47<00:01, 462.52it/s][A
+Selecting Coreset Indices.:  97%|█████████▋| 21942/22527 [00:47<00:01, 462.75it/s][A
+Selecting Coreset Indices.:  98%|█████████▊| 21989/22527 [00:47<00:01, 462.03it/s][A
+Selecting Coreset Indices.:  98%|█████████▊| 22036/22527 [00:47<00:01, 461.77it/s][A
+Selecting Coreset Indices.:  98%|█████████▊| 22083/22527 [00:48<00:00, 460.96it/s][A
+Selecting Coreset Indices.:  98%|█████████▊| 22130/22527 [00:48<00:00, 461.72it/s][A
+Selecting Coreset Indices.:  98%|█████████▊| 22177/22527 [00:48<00:00, 462.09it/s][A
+Selecting Coreset Indices.:  99%|█████████▊| 22224/22527 [00:48<00:00, 462.19it/s][A
+Selecting Coreset Indices.:  99%|█████████▉| 22271/22527 [00:48<00:00, 461.91it/s][A
+Selecting Coreset Indices.:  99%|█████████▉| 22318/22527 [00:48<00:00, 462.12it/s][A
+Selecting Coreset Indices.:  99%|█████████▉| 22365/22527 [00:48<00:00, 462.02it/s][A
+Selecting Coreset Indices.:  99%|█████████▉| 22412/22527 [00:48<00:00, 462.82it/s][A
+Selecting Coreset Indices.: 100%|█████████▉| 22459/22527 [00:48<00:00, 462.14it/s][A
+Selecting Coreset Indices.: 100%|█████████▉| 22506/22527 [00:48<00:00, 462.30it/s][ASelecting Coreset Indices.: 100%|██████████| 22527/22527 [00:48<00:00, 459.87it/s]
+`Trainer.fit` stopped: `max_epochs=1` reached.
+patchcore train: 100%|##########| 14/14 [01:13<00:00,  5.24s/it]ckpt_path is not provided. Model weights will not be loaded.
+The following callbacks returned in `LightningModule.configure_callbacks` will override existing callbacks passed to Trainer: PreProcessor
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:429: Consider setting `persistent_workers=True` in 'predict_dataloader' to speed up the dataloader worker initialization.
+W1103 15:31:19.001000 40792 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:31:24.286000 41360 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:31:29.599000 40176 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+W1103 15:31:34.889000 39248 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+
+patchcore predict:   0%|          | 0/15 [00:00<?, ?it/s]patchcore predict: 100%|##########| 15/15 [00:01<00:00,  9.58it/s]
+115 test images (93 defective) -> results\scores_ad1\patchcore__metal_nut__seed0.csv  [train 97s]
+figure: results\figures\patchcore__metal_nut__seed0__test.png
+figure: (no training curve: single-pass model)

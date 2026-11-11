@@ -1,0 +1,13 @@
+13:33:24 smoke patchcore_256_c01
+13:33:35 smoke patchcore_392_c01
+13:33:46 smoke patchcore_512_c01
+13:33:56 start patchcore_256_c01 can
+13:35:25 patchcore_256_c01 exit 0
+13:35:53 maps patchcore_256_c01 exit 0
+13:35:53 start patchcore_392_c01 can
+13:39:29 patchcore_392_c01 exit 0
+13:40:06 maps patchcore_392_c01 exit 0
+13:40:06 start patchcore_512_c01 can
+14:43:44 patchcore_512_c01 exit 0
+14:44:26 maps patchcore_512_c01 exit 0
+14:44:26 q1 done

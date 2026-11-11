@@ -1,0 +1,8 @@
+         variant  overkill_shift  overkill_shift_lo  overkill_shift_hi  miss_shift  auroc_shift  drift  d_overkill_vs_base  d_overkill_lo  d_overkill_hi  fa_shift  fa_shift_lo  fa_shift_hi  miss_shift_n  d_fa_vs_base  d_fa_lo  d_fa_hi
+       patchcore           1.000              0.298              1.000       0.048        0.886  1.005                 NaN            NaN            NaN     0.400        0.133        0.800         0.095           NaN      NaN      NaN
+      dinomaly_l           0.933              0.667              1.000       0.000        0.581  2.548                 NaN            NaN            NaN     0.733        0.733        0.933         0.143           NaN      NaN      NaN
+  patchcore_gray           1.000              0.095              1.000       0.000        0.902  1.001               0.000         -0.467          0.000     0.133        0.067        0.533         0.095        -0.267   -0.533    0.000
+ dinomaly_l_gray           0.933              0.667              1.000       0.000        0.543  2.522               0.000          0.000          0.000     0.800        0.733        1.000         0.095         0.067    0.000    0.200
+dinomaly_l_light           0.933              0.667              1.000       0.000        0.606  2.139               0.000          0.000          0.000     0.733        0.667        0.867         0.143         0.000   -0.168    0.000
+table: results\q2\compare__walnuts__dev.csv
+figure: results\figures\q2_compare__walnuts__dev.png

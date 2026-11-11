@@ -1,0 +1,25 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+can/test_private: 321 images, 380s so far
+can/test_private_mixed: 321 images, 727s so far
+can: done, 727s
+fabric/test_private: 314 images, 243s so far
+fabric/test_private_mixed: 314 images, 421s so far
+fabric: done, 421s
+fruit_jelly/test_private: 255 images, 159s so far
+fruit_jelly/test_private_mixed: 255 images, 296s so far
+fruit_jelly: done, 296s
+rice/test_private: 277 images, 210s so far
+rice/test_private_mixed: 277 images, 370s so far
+rice: done, 370s
+sheet_metal/test_private: 142 images, 428s so far
+sheet_metal/test_private_mixed: 142 images, 832s so far
+sheet_metal: done, 832s
+vial/test_private: 276 images, 167s so far
+vial/test_private_mixed: 276 images, 306s so far
+vial: done, 306s
+wallplugs/test_private: 232 images, 142s so far
+wallplugs/test_private_mixed: 232 images, 258s so far
+wallplugs: done, 258s
+walnuts/test_private: 228 images, 197s so far
+walnuts/test_private_mixed: 228 images, 327s so far
+walnuts: done, 327s

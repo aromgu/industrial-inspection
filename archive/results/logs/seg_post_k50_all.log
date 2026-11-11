@@ -1,0 +1,38 @@
+can: done
+fabric: done
+fruit_jelly: done
+rice: done
+sheet_metal: done
+vial: done
+wallplugs: done
+walnuts: done
+
+== mean F1 over categories, defect-only
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   30.0  33.9  ...                 34.1           35.2
+p95x1.0    14.7  15.8  ...                 15.6           17.1
+p95x1.2    36.0  38.4  ...                 42.2           39.2
+p95x1.4    29.3  29.5  ...                 29.3           28.5
+p95x1.6    14.4  14.5  ...                 14.5           13.7
+p99        24.9  27.7  ...                 28.0           30.7
+
+[6 rows x 8 columns]
+
+== mean F1 over categories, all
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   27.2  30.5  ...                 30.8           32.1
+p95x1.0    11.7  12.5  ...                 12.3           13.7
+p95x1.2    33.8  36.1  ...                 39.9           37.2
+p95x1.4    28.2  28.4  ...                 28.2           27.6
+p95x1.6    14.4  14.5  ...                 14.5           13.7
+p99        21.5  23.8  ...                 24.1           26.9
+
+[6 rows x 8 columns]
+
+best for all categories together: threshold p95x1.2, post close6+fill+small64
+category  can  fabric  fruit_jelly  rice  sheet_metal  vial  wallplugs  walnuts
+baseline  0.0    27.7         27.3  25.7         50.3  37.9       11.4     59.5
+best      0.0    78.7         36.4  54.8         50.6  38.9       14.9     63.6
+figure: results\figures\seg_post__hires_k50.png

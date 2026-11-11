@@ -1,0 +1,27 @@
+refs 0/150: 6000 tokens (63% plug), 2s
+refs 25/150: 3403 tokens (16% plug), 57s
+refs 50/150: 6000 tokens (63% plug), 112s
+refs 75/150: 6000 tokens (67% plug), 167s
+refs 100/150: 6000 tokens (54% plug), 222s
+refs 125/150: 6000 tokens (52% plug), 277s
+reference tokens per photo: median 6000, GPU 3.4 GB, 330s
+test 0/150 342s
+test 10/150 455s
+test 20/150 560s
+test 30/150 665s
+test 40/150 769s
+test 50/150 874s
+test 60/150 978s
+test 70/150 1083s
+test 80/150 1187s
+test 90/150 1291s
+test 100/150 1396s
+test 110/150 1500s
+test 120/150 1605s
+test 130/150 1709s
+test 140/150 1814s
+val 0/33 1918s
+val 10/33 2022s
+val 20/33 2127s
+val 30/33 2231s
+saved 12 map sets to results\maps, 2306s total

@@ -1,0 +1,7 @@
+typical plug length 257px at work res, 390 plugs in 16 refs
+bank: 1560 crops, token grid 8x28; GPU allocated 4.9 GiB, reserved 8.6 GiB
+val 0: 2.2s, GPU allocated 4.9 GiB, peak 7.4 GiB
+val 1: 2.2s, GPU allocated 4.9 GiB, peak 7.5 GiB
+val 2: 21.9s, GPU allocated 4.9 GiB, peak 7.7 GiB
+validation done (3369s)
+test 0/150 (3478s)

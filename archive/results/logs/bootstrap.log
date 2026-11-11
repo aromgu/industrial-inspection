@@ -1,0 +1,71 @@
+dinomaly_l can: done
+dinomaly_l fabric: done
+dinomaly_l fruit_jelly: done
+dinomaly_l rice: done
+dinomaly_l sheet_metal: done
+dinomaly_l vial: done
+dinomaly_l wallplugs: done
+dinomaly_l walnuts: done
+efficientad can: done
+efficientad fabric: done
+efficientad fruit_jelly: done
+efficientad rice: done
+efficientad sheet_metal: done
+efficientad vial: done
+efficientad wallplugs: done
+efficientad walnuts: done
+mhpatchcore can: done
+mhpatchcore fabric: done
+mhpatchcore fruit_jelly: done
+mhpatchcore rice: done
+mhpatchcore sheet_metal: done
+mhpatchcore vial: done
+mhpatchcore wallplugs: done
+mhpatchcore walnuts: done
+patchcore can: done
+patchcore fabric: done
+patchcore fruit_jelly: done
+patchcore rice: done
+patchcore sheet_metal: done
+patchcore vial: done
+patchcore wallplugs: done
+patchcore walnuts: done
+      model  auroc  overkill  auroc_lo  auroc_hi  overkill_lo  overkill_hi
+ dinomaly_l  0.708     0.795     0.670     0.741        0.668        0.844
+efficientad  0.636     0.891     0.608     0.664        0.820        0.924
+mhpatchcore  0.666     0.777     0.617     0.716        0.699        0.837
+  patchcore  0.679     0.851     0.624     0.729        0.721        0.907
+      model    category  auroc  auroc_lo  auroc_hi  overkill  overkill_lo  overkill_hi
+ dinomaly_l         can  0.503     0.477     0.530     0.972        0.883        1.000
+ dinomaly_l      fabric  0.698     0.584     0.782     0.743        0.455        0.950
+ dinomaly_l fruit_jelly  0.870     0.684     0.997     0.800        0.112        1.000
+ dinomaly_l        rice  0.769     0.656     0.881     0.872        0.636        0.967
+ dinomaly_l sheet_metal  0.840     0.695     0.958     0.800        0.433        1.000
+ dinomaly_l        vial  0.810     0.728     0.895     0.633        0.581        0.714
+ dinomaly_l   wallplugs  0.457     0.385     0.530     0.910        0.773        1.000
+ dinomaly_l     walnuts  0.715     0.669     0.767     0.630        0.347        0.803
+efficientad         can  0.494     0.430     0.554     0.975        0.928        1.000
+efficientad      fabric  0.547     0.509     0.583     0.890        0.813        0.968
+efficientad fruit_jelly  0.873     0.734     0.967     0.792        0.308        0.883
+efficientad        rice  0.504     0.482     0.527     1.000        0.978        1.000
+efficientad sheet_metal  0.573     0.493     0.677     0.992        0.937        1.000
+efficientad        vial  0.804     0.718     0.891     0.652        0.445        0.884
+efficientad   wallplugs  0.534     0.470     0.605     0.980        0.913        1.000
+efficientad     walnuts  0.760     0.653     0.855     0.850        0.655        0.965
+mhpatchcore         can  0.502     0.414     0.585     0.972        0.814        1.000
+mhpatchcore      fabric  0.440     0.260     0.623     1.000        0.943        1.000
+mhpatchcore fruit_jelly  0.912     0.783     1.000     0.350        0.000        0.925
+mhpatchcore        rice  0.560     0.478     0.657     0.917        0.806        1.000
+mhpatchcore sheet_metal  0.629     0.474     0.789     0.950        0.721        1.000
+mhpatchcore        vial  0.897     0.682     1.000     0.233        0.000        0.651
+mhpatchcore   wallplugs  0.537     0.447     0.630     0.977        0.802        1.000
+mhpatchcore     walnuts  0.852     0.736     0.948     0.820        0.367        0.943
+  patchcore         can  0.460     0.364     0.542     0.975        0.880        1.000
+  patchcore      fabric  0.716     0.523     0.885     0.890        0.423        1.000
+  patchcore fruit_jelly  0.759     0.539     0.947     0.758        0.291        1.000
+  patchcore        rice  0.526     0.393     0.680     0.972        0.855        1.000
+  patchcore sheet_metal  0.739     0.604     0.861     0.808        0.571        0.983
+  patchcore        vial  0.859     0.709     0.957     0.552        0.181        0.850
+  patchcore   wallplugs  0.532     0.367     0.706     0.940        0.701        1.000
+  patchcore     walnuts  0.840     0.716     0.954     0.913        0.428        1.000
+figure: results\figures\bootstrap_ci.png

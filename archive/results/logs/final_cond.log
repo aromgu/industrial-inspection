@@ -1,0 +1,14 @@
+               miss  overkill
+rule                         
+global        0.056     0.821
+normalized    0.042     0.862
+per_condition 0.124     0.688
+regular_only  0.065     0.799
+              miss                                       overkill                                      
+rule        global normalized per_condition regular_only   global normalized per_condition regular_only
+model                                                                                                  
+dinomaly_l   0.066      0.051         0.127        0.068    0.780      0.853         0.630        0.752
+efficientad  0.031      0.026         0.120        0.038    0.886      0.893         0.680        0.862
+mhpatchcore  0.057      0.041         0.127        0.076    0.784      0.825         0.718        0.772
+patchcore    0.069      0.052         0.122        0.079    0.833      0.878         0.722        0.808
+figure: results\figures\condition_thresholds.png

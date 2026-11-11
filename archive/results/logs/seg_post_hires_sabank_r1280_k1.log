@@ -1,0 +1,33 @@
+vial: done
+fruit_jelly: done
+rice: done
+
+== mean F1 over categories, defect-only
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   30.6  30.6  ...                 31.9           35.4
+p95x1.0    22.1  22.8  ...                 22.6           24.9
+p95x1.2    48.1  47.8  ...                 48.3           48.5
+p95x1.4    36.2  36.2  ...                 36.2           34.2
+p95x1.6    25.0  25.0  ...                 25.1           23.4
+p99        34.8  34.8  ...                 35.7           40.8
+
+[6 rows x 8 columns]
+
+== mean F1 over categories, all
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   28.2  28.2  ...                 29.6           33.9
+p95x1.0    18.3  19.0  ...                 18.8           20.8
+p95x1.2    46.9  46.5  ...                 47.2           47.8
+p95x1.4    36.2  36.2  ...                 36.2           34.2
+p95x1.6    25.0  25.0  ...                 25.1           23.4
+p99        31.1  31.1  ...                 32.1           37.6
+
+[6 rows x 8 columns]
+
+best for all categories together: threshold p95x1.2, post fill+small256
+category  vial  fruit_jelly  rice
+baseline  44.3         14.0  33.6
+best      44.7         32.6  68.2
+figure: results\figures\seg_post__hires_sabank_r1280_k1.png

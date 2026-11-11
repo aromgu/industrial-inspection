@@ -1,0 +1,16 @@
+W1105 19:29:13.432000 2052 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+can: 162 test, 46 val, bank 80640 patches/layer, 300s
+fabric: 156 test, 43 val, bank 43776 patches/layer, 206s
+fruit_jelly: 80 test, 37 val, bank 50688 patches/layer, 103s
+rice: 132 test, 35 val, bank 43776 patches/layer, 176s
+sheet_metal: 114 test, 19 val, bank 147456 patches/layer, 439s
+vial: 140 test, 41 val, bank 49920 patches/layer, 141s
+wallplugs: 150 test, 33 val, bank 43776 patches/layer, 148s
+walnuts: 150 test, 48 val, bank 43776 patches/layer, 219s
+hires exit 0
+seg exit 0

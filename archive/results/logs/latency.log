@@ -1,0 +1,144 @@
+W1102 15:29:19.663000 33644 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+W1102 15:29:25.197000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_compat.py:133] Setting ONNX exporter to use operator set version 18 because the requested opset_version 14 is a lower version than we have implementations for. Automatic version conversion will be performed, which may not be successful at converting to the requested version. If version conversion is unsuccessful, the opset version of the exported model will be kept at 18. Please consider setting opset_version >=18 to leverage latest ONNX features
+C:\Users\살붕이\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+W1102 15:29:28.020000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:28.021000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:28.021000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+W1102 15:29:28.021000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+The model version conversion is not supported by the onnxscript version converter and fallback is enabled. The model will be converted using the onnx C API (target version: 14).
+Failed to convert the model to the target version 14 using the ONNX C API. The model was not modified
+Traceback (most recent call last):
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 137, in call
+    converted_proto = _c_api_utils.call_onnx_api(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\_c_api_utils.py", line 65, in call_onnx_api
+    result = func(proto)
+             ^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 132, in _partial_convert_version
+    return onnx.version_converter.convert_version(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnx\version_converter.py", line 39, in convert_version
+    converted_model_str = C.convert_version(model_str, target_version)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: D:\a\onnx\onnx\onnx/version_converter/adapters/axes_input_to_attribute.h:55: adapt: Assertion `node->hasAttribute(kaxes)` failed: No initializer or constant input to node found
+[torch.onnx] Obtain model graph for `Patchcore([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `Patchcore([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+patchcore: pytorch 14.1 ms, onnxruntime 13.7 ms (CUDAExecutionProvider), score diff 8.58e-03
+W1102 15:29:34.527000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_compat.py:133] Setting ONNX exporter to use operator set version 18 because the requested opset_version 14 is a lower version than we have implementations for. Automatic version conversion will be performed, which may not be successful at converting to the requested version. If version conversion is unsuccessful, the opset version of the exported model will be kept at 18. Please consider setting opset_version >=18 to leverage latest ONNX features
+C:\Users\살붕이\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+W1102 15:29:36.903000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:36.903000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:36.904000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+W1102 15:29:36.904000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+The model version conversion is not supported by the onnxscript version converter and fallback is enabled. The model will be converted using the onnx C API (target version: 14).
+Failed to convert the model to the target version 14 using the ONNX C API. The model was not modified
+Traceback (most recent call last):
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 137, in call
+    converted_proto = _c_api_utils.call_onnx_api(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\_c_api_utils.py", line 65, in call_onnx_api
+    result = func(proto)
+             ^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 132, in _partial_convert_version
+    return onnx.version_converter.convert_version(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnx\version_converter.py", line 39, in convert_version
+    converted_model_str = C.convert_version(model_str, target_version)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: D:\a\onnx\onnx\onnx/version_converter/BaseConverter.h:63: adapter_lookup: Assertion `false` failed: No Adapter To Version $17 for Pad
+[torch.onnx] Obtain model graph for `MHPatchcore([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `MHPatchcore([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+mhpatchcore: pytorch 14.7 ms, onnxruntime 9.8 ms (CUDAExecutionProvider), score diff 1.88e+00
+W1102 15:29:40.202000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_compat.py:133] Setting ONNX exporter to use operator set version 18 because the requested opset_version 14 is a lower version than we have implementations for. Automatic version conversion will be performed, which may not be successful at converting to the requested version. If version conversion is unsuccessful, the opset version of the exported model will be kept at 18. Please consider setting opset_version >=18 to leverage latest ONNX features
+C:\Users\살붕이\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+W1102 15:29:41.388000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:41.388000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:29:41.388000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+W1102 15:29:41.388000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+The model version conversion is not supported by the onnxscript version converter and fallback is enabled. The model will be converted using the onnx C API (target version: 14).
+Failed to convert the model to the target version 14 using the ONNX C API. The model was not modified
+Traceback (most recent call last):
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 137, in call
+    converted_proto = _c_api_utils.call_onnx_api(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\_c_api_utils.py", line 65, in call_onnx_api
+    result = func(proto)
+             ^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 132, in _partial_convert_version
+    return onnx.version_converter.convert_version(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnx\version_converter.py", line 39, in convert_version
+    converted_model_str = C.convert_version(model_str, target_version)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: D:\a\onnx\onnx\onnx/version_converter/adapters/axes_input_to_attribute.h:55: adapt: Assertion `node->hasAttribute(kaxes)` failed: No initializer or constant input to node found
+[torch.onnx] Obtain model graph for `EfficientAd([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `EfficientAd([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+efficientad: pytorch 7.4 ms, onnxruntime 6.0 ms (CUDAExecutionProvider), score diff 1.91e-06
+W1102 15:29:59.097000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_compat.py:133] Setting ONNX exporter to use operator set version 18 because the requested opset_version 14 is a lower version than we have implementations for. Automatic version conversion will be performed, which may not be successful at converting to the requested version. If version conversion is unsuccessful, the opset version of the exported model will be kept at 18. Please consider setting opset_version >=18 to leverage latest ONNX features
+C:\Users\살붕이\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+W1102 15:30:03.275000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:30:03.275000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:751] Output node output has None output. The output is ignored in the exported graph. Please ensure the graph output order is expected
+W1102 15:30:03.276000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+W1102 15:30:03.276000 33644 Lib\site-packages\torch\onnx\_internal\exporter\_core.py:1198] Skipping constant argument ConstantArgument(name='', value=None)
+The model version conversion is not supported by the onnxscript version converter and fallback is enabled. The model will be converted using the onnx C API (target version: 14).
+Failed to convert the model to the target version 14 using the ONNX C API. The model was not modified
+Traceback (most recent call last):
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 137, in call
+    converted_proto = _c_api_utils.call_onnx_api(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\_c_api_utils.py", line 65, in call_onnx_api
+    result = func(proto)
+             ^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnxscript\version_converter\__init__.py", line 132, in _partial_convert_version
+    return onnx.version_converter.convert_version(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\onnx\version_converter.py", line 39, in convert_version
+    converted_model_str = C.convert_version(model_str, target_version)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: D:\a\onnx\onnx\onnx/version_converter/adapters/axes_input_to_attribute.h:55: adapt: Assertion `node->hasAttribute(kaxes)` failed: No initializer or constant input to node found
+[torch.onnx] Obtain model graph for `Dinomaly([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `Dinomaly([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+[torch.onnx] Run decompositions... ✅
+[torch.onnx] Translate the graph into ONNX...
+[torch.onnx] Translate the graph into ONNX... ✅
+[torch.onnx] Optimize the ONNX graph...
+[torch.onnx] Optimize the ONNX graph... ✅
+dinomaly_l: pytorch 90.5 ms, onnxruntime 52.4 ms (CUDAExecutionProvider), score diff 2.90e-05
+      model    category          runtime   input  median_ms    p95_ms              provider  score_abs_diff
+  patchcore sheet_metal          pytorch 256x256   14.05845 14.989665                  cuda        0.008575
+  patchcore sheet_metal onnxruntime-cuda 256x256   13.72835 13.961470 CUDAExecutionProvider        0.008575
+mhpatchcore sheet_metal          pytorch 256x256   14.66275 15.540080                  cuda        1.878906
+mhpatchcore sheet_metal onnxruntime-cuda 256x256    9.83610 10.414310 CUDAExecutionProvider        1.878906
+efficientad sheet_metal          pytorch 256x256    7.39385  8.358285                  cuda        0.000002
+efficientad sheet_metal onnxruntime-cuda 256x256    6.02400  7.189220 CUDAExecutionProvider        0.000002
+ dinomaly_l sheet_metal          pytorch 448x448   90.52990 91.823315                  cuda        0.000029
+ dinomaly_l sheet_metal onnxruntime-cuda 448x448   52.44575 53.416045 CUDAExecutionProvider        0.000029
+figure: results\figures\latency.png

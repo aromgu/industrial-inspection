@@ -1,0 +1,7 @@
+model,category,tag,n_good,n_defective,auroc,miss,overkill,good_score_vs_regular
+patchcore,sheet_metal,regular,4,15,0.8333333333333334,0.0,0.5,1.0
+patchcore,sheet_metal,overexposed,4,15,0.8333333333333334,0.0,0.75,1.0156611652925198
+patchcore,sheet_metal,underexposed,4,15,0.8,0.13333333333333333,0.5,1.0068086175100444
+patchcore,sheet_metal,shift_1,4,15,0.8333333333333334,0.0,1.0,1.1144065000500858
+patchcore,sheet_metal,shift_2,4,15,0.85,0.0,1.0,1.1281298095273364
+patchcore,sheet_metal,shift_3,4,15,0.8166666666666667,0.0,1.0,1.0996525180510857

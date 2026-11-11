@@ -1,0 +1,45 @@
+17:17:54 1 mh on mvtecad start
+17:20:13 1 mh ad1 bottle exit 0
+17:22:57 1 mh ad1 cable exit 0
+17:25:19 1 mh ad1 capsule exit 0
+17:27:49 1 mh ad1 carpet exit 0
+17:30:12 1 mh ad1 grid exit 0
+17:32:58 1 mh ad1 hazelnut exit 0
+17:35:24 1 mh ad1 leather exit 0
+17:37:45 1 mh ad1 metal_nut exit 0
+17:40:12 1 mh ad1 pill exit 0
+17:42:43 1 mh ad1 screw exit 0
+17:45:05 1 mh ad1 tile exit 0
+17:46:24 1 mh ad1 toothbrush exit 0
+17:48:46 1 mh ad1 transistor exit 0
+17:51:12 1 mh ad1 wood exit 0
+17:53:34 1 mh ad1 zipper exit 0
+17:53:34 2 patchcore_392 start
+18:05:12 queue4 shortened: patchcore_392 only can (running) + rice sheet_metal fabric
+18:12:16 2 p392 can finished: results/scores/patchcore_392__can__seed0.csv
+18:13:05 2 p392 maps can exit 0
+18:24:16 2 p392 rice exit 0
+18:24:55 2 p392 maps rice exit 0
+18:27:47 2 p392 sheet_metal exit 0
+18:28:19 2 p392 maps sheet_metal exit 0
+18:42:58 queue changed: research models are patchcore + dinomaly_l; mh tile rerun dropped
+18:44:59 2 p392 fabric finished: results/scores/patchcore_392__fabric__seed0.csv
+18:45:49 2 p392 maps fabric exit 0
+18:45:49 3 validation scores start
+18:46:05 3 val patchcore can exit 0
+18:46:23 3 val patchcore fabric exit 0
+18:46:39 3 val patchcore fruit_jelly exit 0
+18:46:57 3 val patchcore rice exit 0
+18:47:12 3 val patchcore sheet_metal exit 0
+18:47:28 3 val patchcore vial exit 0
+18:47:44 3 val patchcore wallplugs exit 0
+18:48:02 3 val patchcore walnuts exit 0
+18:48:25 3 val dinomaly_l can exit 0
+18:48:48 3 val dinomaly_l fabric exit 0
+18:49:09 3 val dinomaly_l fruit_jelly exit 0
+18:49:31 3 val dinomaly_l rice exit 0
+18:49:51 3 val dinomaly_l sheet_metal exit 0
+18:50:12 3 val dinomaly_l vial exit 0
+18:50:33 3 val dinomaly_l wallplugs exit 0
+18:50:57 3 val dinomaly_l walnuts exit 0
+18:50:57 queue4 done

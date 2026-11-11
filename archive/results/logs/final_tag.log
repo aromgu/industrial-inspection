@@ -1,0 +1,197 @@
+      model    category          tag  n_good  n_defective  auroc  miss  overkill  good_score_vs_regular
+  patchcore         can      regular      12           15  0.483 0.000     0.917                  1.000
+  patchcore         can  overexposed      12           15  0.472 0.000     1.000                  1.003
+  patchcore         can underexposed      12           15  0.578 0.000     1.000                  1.062
+  patchcore         can      shift_1      12           15  0.383 0.000     1.000                  1.091
+  patchcore         can      shift_2      12           15  0.456 0.000     1.000                  1.262
+  patchcore         can      shift_3      12           15  0.506 0.000     1.000                  1.204
+  patchcore      fabric      regular      11           15  0.715 0.000     1.000                  1.000
+  patchcore      fabric  overexposed      11           15  0.721 0.067     1.000                  1.004
+  patchcore      fabric underexposed      11           15  0.709 0.000     1.000                  0.998
+  patchcore      fabric      shift_1      11           15  0.739 0.000     1.000                  1.010
+  patchcore      fabric      shift_2      11           15  0.733 0.000     1.000                  1.010
+  patchcore      fabric      shift_3      11           15  0.745 0.000     1.000                  1.018
+  patchcore fruit_jelly      regular       5           15  0.747 0.000     0.800                  1.000
+  patchcore fruit_jelly  overexposed       5           15  0.800 0.067     0.800                  1.005
+  patchcore fruit_jelly underexposed       5           15  0.747 0.067     0.800                  1.000
+  patchcore fruit_jelly      shift_1       5           15  0.733 0.067     0.800                  0.980
+  patchcore        rice      regular       7           15  0.514 0.000     1.000                  1.000
+  patchcore        rice  overexposed       7           15  0.505 0.000     1.000                  1.018
+  patchcore        rice underexposed       7           15  0.562 0.000     1.000                  0.977
+  patchcore        rice      shift_1       7           15  0.514 0.000     1.000                  1.015
+  patchcore        rice      shift_2       7           15  0.619 0.000     1.000                  1.055
+  patchcore        rice      shift_3       7           15  0.524 0.000     1.000                  1.090
+  patchcore sheet_metal      regular       4           15  0.833 0.000     0.500                  1.000
+  patchcore sheet_metal  overexposed       4           15  0.833 0.000     0.750                  1.016
+  patchcore sheet_metal underexposed       4           15  0.800 0.133     0.500                  1.007
+  patchcore sheet_metal      shift_1       4           15  0.833 0.000     1.000                  1.114
+  patchcore sheet_metal      shift_2       4           15  0.850 0.000     1.000                  1.128
+  patchcore sheet_metal      shift_3       4           15  0.817 0.000     1.000                  1.100
+  patchcore        vial      regular       5           15  0.907 0.000     0.400                  1.000
+  patchcore        vial  overexposed       5           15  0.867 0.000     0.400                  1.000
+  patchcore        vial underexposed       5           15  0.840 0.000     1.000                  1.198
+  patchcore        vial      shift_1       5           15  0.920 0.000     0.600                  1.080
+  patchcore        vial      shift_2       5           15  0.907 0.133     0.400                  1.007
+  patchcore        vial      shift_3       5           15  0.880 0.067     0.400                  0.999
+  patchcore        vial      shift_4       5           15  0.907 0.000     0.600                  1.082
+  patchcore   wallplugs      regular      10           15  0.613 0.000     1.000                  1.000
+  patchcore   wallplugs  overexposed      10           15  0.607 0.000     1.000                  1.009
+  patchcore   wallplugs underexposed      10           15  0.600 0.067     1.000                  1.001
+  patchcore   wallplugs      shift_1      10           15  0.560 0.000     1.000                  1.065
+  patchcore   wallplugs      shift_2      10           15  0.360 0.000     1.000                  1.098
+  patchcore   wallplugs      shift_3      10           15  0.607 0.000     1.000                  1.051
+  patchcore     walnuts      regular      10           15  0.827 0.000     0.900                  1.000
+  patchcore     walnuts  overexposed      10           15  0.827 0.000     0.900                  1.001
+  patchcore     walnuts underexposed      10           15  0.780 0.000     0.900                  1.010
+  patchcore     walnuts      shift_1      10           15  0.933 0.000     1.000                  1.065
+  patchcore     walnuts      shift_2      10           15  0.853 0.067     0.900                  1.014
+  patchcore     walnuts      shift_3      10           15  0.893 0.000     1.000                  1.061
+mhpatchcore         can      regular      12           15  0.533 0.000     1.000                  1.000
+mhpatchcore         can  overexposed      12           15  0.567 0.000     1.000                  1.034
+mhpatchcore         can underexposed      12           15  0.528 0.000     1.000                  1.134
+mhpatchcore         can      shift_1      12           15  0.539 0.000     1.000                  1.138
+mhpatchcore         can      shift_2      12           15  0.472 0.000     1.000                  1.340
+mhpatchcore         can      shift_3      12           15  0.511 0.000     1.000                  1.290
+mhpatchcore      fabric      regular      11           15  0.461 0.000     1.000                  1.000
+mhpatchcore      fabric  overexposed      11           15  0.455 0.000     1.000                  1.016
+mhpatchcore      fabric underexposed      11           15  0.479 0.067     1.000                  0.991
+mhpatchcore      fabric      shift_1      11           15  0.442 0.067     1.000                  1.022
+mhpatchcore      fabric      shift_2      11           15  0.352 0.000     1.000                  1.128
+mhpatchcore      fabric      shift_3      11           15  0.364 0.000     1.000                  1.135
+mhpatchcore fruit_jelly      regular       5           15  0.893 0.000     0.600                  1.000
+mhpatchcore fruit_jelly  overexposed       5           15  0.920 0.000     0.600                  0.959
+mhpatchcore fruit_jelly underexposed       5           15  0.933 0.000     0.600                  0.978
+mhpatchcore fruit_jelly      shift_1       5           15  0.880 0.067     0.600                  0.950
+mhpatchcore        rice      regular       7           15  0.543 0.000     0.857                  1.000
+mhpatchcore        rice  overexposed       7           15  0.543 0.000     1.000                  1.042
+mhpatchcore        rice underexposed       7           15  0.610 0.000     1.000                  0.994
+mhpatchcore        rice      shift_1       7           15  0.543 0.000     1.000                  1.102
+mhpatchcore        rice      shift_2       7           15  0.781 0.000     1.000                  1.155
+mhpatchcore        rice      shift_3       7           15  0.657 0.000     1.000                  1.267
+mhpatchcore sheet_metal      regular       4           15  0.667 0.000     1.000                  1.000
+mhpatchcore sheet_metal  overexposed       4           15  0.567 0.000     1.000                  1.050
+mhpatchcore sheet_metal underexposed       4           15  0.733 0.000     1.000                  0.971
+mhpatchcore sheet_metal      shift_1       4           15  0.617 0.000     1.000                  1.122
+mhpatchcore sheet_metal      shift_2       4           15  0.700 0.000     1.000                  1.113
+mhpatchcore sheet_metal      shift_3       4           15  0.617 0.000     1.000                  1.139
+mhpatchcore        vial      regular       5           15  0.880 0.000     0.200                  1.000
+mhpatchcore        vial  overexposed       5           15  0.880 0.000     0.200                  1.046
+mhpatchcore        vial underexposed       5           15  0.893 0.067     0.200                  1.019
+mhpatchcore        vial      shift_1       5           15  0.920 0.000     0.200                  1.043
+mhpatchcore        vial      shift_2       5           15  0.893 0.067     0.200                  1.007
+mhpatchcore        vial      shift_3       5           15  0.893 0.133     0.200                  1.003
+mhpatchcore        vial      shift_4       5           15  0.907 0.067     0.200                  1.046
+mhpatchcore   wallplugs      regular      10           15  0.567 0.000     1.000                  1.000
+mhpatchcore   wallplugs  overexposed      10           15  0.593 0.000     1.000                  1.011
+mhpatchcore   wallplugs underexposed      10           15  0.573 0.067     1.000                  0.990
+mhpatchcore   wallplugs      shift_1      10           15  0.567 0.000     1.000                  1.262
+mhpatchcore   wallplugs      shift_2      10           15  0.573 0.000     1.000                  1.285
+mhpatchcore   wallplugs      shift_3      10           15  0.380 0.000     1.000                  1.486
+mhpatchcore     walnuts      regular      10           15  0.840 0.000     0.900                  1.000
+mhpatchcore     walnuts  overexposed      10           15  0.853 0.000     0.900                  1.001
+mhpatchcore     walnuts underexposed      10           15  0.853 0.000     0.800                  0.997
+mhpatchcore     walnuts      shift_1      10           15  0.873 0.000     1.000                  1.098
+mhpatchcore     walnuts      shift_2      10           15  0.860 0.000     0.800                  1.031
+mhpatchcore     walnuts      shift_3      10           15  0.867 0.000     0.900                  1.081
+ dinomaly_l         can      regular      12           15  0.489 0.000     1.000                  1.000
+ dinomaly_l         can  overexposed      12           15  0.517 0.000     1.000                  1.016
+ dinomaly_l         can underexposed      12           15  0.556 0.000     1.000                  1.259
+ dinomaly_l         can      shift_1      12           15  0.550 0.000     1.000                  1.265
+ dinomaly_l         can      shift_2      12           15  0.472 0.000     1.000                  1.798
+ dinomaly_l         can      shift_3      12           15  0.478 0.000     1.000                  1.765
+ dinomaly_l      fabric      regular      11           15  0.824 0.000     0.818                  1.000
+ dinomaly_l      fabric  overexposed      11           15  0.830 0.000     0.818                  1.008
+ dinomaly_l      fabric underexposed      11           15  0.824 0.067     0.818                  0.994
+ dinomaly_l      fabric      shift_1      11           15  0.788 0.000     0.909                  1.035
+ dinomaly_l      fabric      shift_2      11           15  0.715 0.000     1.000                  1.378
+ dinomaly_l      fabric      shift_3      11           15  0.691 0.000     1.000                  1.298
+ dinomaly_l fruit_jelly      regular       5           15  0.867 0.000     1.000                  1.000
+ dinomaly_l fruit_jelly  overexposed       5           15  0.840 0.000     1.000                  1.041
+ dinomaly_l fruit_jelly underexposed       5           15  0.893 0.000     0.800                  1.007
+ dinomaly_l fruit_jelly      shift_1       5           15  0.867 0.067     0.800                  1.013
+ dinomaly_l        rice      regular       7           15  0.771 0.000     0.571                  1.000
+ dinomaly_l        rice  overexposed       7           15  0.771 0.000     0.857                  1.016
+ dinomaly_l        rice underexposed       7           15  0.800 0.000     0.571                  0.995
+ dinomaly_l        rice      shift_1       7           15  0.810 0.000     1.000                  1.071
+ dinomaly_l        rice      shift_2       7           15  0.886 0.000     1.000                  1.175
+ dinomaly_l        rice      shift_3       7           15  0.990 0.000     1.000                  1.090
+ dinomaly_l sheet_metal      regular       4           15  0.883 0.000     0.750                  1.000
+ dinomaly_l sheet_metal  overexposed       4           15  0.883 0.000     0.750                  1.024
+ dinomaly_l sheet_metal underexposed       4           15  0.867 0.067     0.750                  0.986
+ dinomaly_l sheet_metal      shift_1       4           15  0.817 0.000     1.000                  1.221
+ dinomaly_l sheet_metal      shift_2       4           15  0.833 0.000     1.000                  1.225
+ dinomaly_l sheet_metal      shift_3       4           15  0.833 0.000     1.000                  1.228
+ dinomaly_l        vial      regular       5           15  1.000 0.000     0.000                  1.000
+ dinomaly_l        vial  overexposed       5           15  0.813 0.000     1.000                  1.585
+ dinomaly_l        vial underexposed       5           15  0.933 0.000     1.000                  1.508
+ dinomaly_l        vial      shift_1       5           15  0.907 0.000     1.000                  1.664
+ dinomaly_l        vial      shift_2       5           15  1.000 0.067     0.000                  1.020
+ dinomaly_l        vial      shift_3       5           15  0.960 0.000     0.600                  1.251
+ dinomaly_l        vial      shift_4       5           15  0.880 0.000     1.000                  1.696
+ dinomaly_l   wallplugs      regular      10           15  0.467 0.000     0.800                  1.000
+ dinomaly_l   wallplugs  overexposed      10           15  0.473 0.000     0.900                  1.002
+ dinomaly_l   wallplugs underexposed      10           15  0.467 0.067     0.800                  0.997
+ dinomaly_l   wallplugs      shift_1      10           15  0.273 0.000     1.000                  2.031
+ dinomaly_l   wallplugs      shift_2      10           15  0.380 0.000     1.000                  2.358
+ dinomaly_l   wallplugs      shift_3      10           15  0.293 0.000     1.000                  1.982
+ dinomaly_l     walnuts      regular      10           15  0.947 0.000     0.500                  1.000
+ dinomaly_l     walnuts  overexposed      10           15  0.953 0.000     0.600                  1.017
+ dinomaly_l     walnuts underexposed      10           15  0.947 0.067     0.500                  0.992
+ dinomaly_l     walnuts      shift_1      10           15  0.467 0.000     1.000                  2.794
+ dinomaly_l     walnuts      shift_2      10           15  0.900 0.000     0.800                  1.043
+ dinomaly_l     walnuts      shift_3      10           15  0.500 0.000     1.000                  2.617
+efficientad         can      regular      12           15  0.528 0.000     0.917                  1.000
+efficientad         can  overexposed      12           15  0.478 0.000     1.000                 11.264
+efficientad         can underexposed      12           15  0.483 0.000     1.000                 11.504
+efficientad         can      shift_1      12           15  0.589 0.000     1.000                 58.329
+efficientad         can      shift_2      12           15  0.306 0.000     1.000                 17.045
+efficientad         can      shift_3      12           15  0.511 0.000     1.000                 70.747
+efficientad      fabric      regular      11           15  0.739 0.000     0.455                  1.000
+efficientad      fabric  overexposed      11           15  0.733 0.000     1.000                  8.550
+efficientad      fabric underexposed      11           15  0.588 0.067     0.909                  2.101
+efficientad      fabric      shift_1      11           15  0.679 0.000     1.000                118.957
+efficientad      fabric      shift_2      11           15  0.564 0.000     1.000                193.409
+efficientad      fabric      shift_3      11           15  0.600 0.000     1.000                261.268
+efficientad fruit_jelly      regular       5           15  0.960 0.000     0.200                  1.000
+efficientad fruit_jelly  overexposed       5           15  0.760 0.000     1.000                  2.106
+efficientad fruit_jelly underexposed       5           15  0.920 0.000     1.000                  3.253
+efficientad fruit_jelly      shift_1       5           15  0.907 0.000     1.000                  1.928
+efficientad        rice      regular       7           15  0.495 0.000     1.000                  1.000
+efficientad        rice  overexposed       7           15  0.400 0.000     1.000                  3.392
+efficientad        rice underexposed       7           15  0.714 0.000     1.000                  5.090
+efficientad        rice      shift_1       7           15  0.286 0.000     1.000                 43.599
+efficientad        rice      shift_2       7           15  0.648 0.000     1.000                 11.487
+efficientad        rice      shift_3       7           15  0.400 0.000     1.000                 87.021
+efficientad sheet_metal      regular       4           15  0.350 0.000     1.000                  1.000
+efficientad sheet_metal  overexposed       4           15  0.467 0.000     1.000                  2.564
+efficientad sheet_metal underexposed       4           15  0.600 0.000     1.000                  0.561
+efficientad sheet_metal      shift_1       4           15  0.850 0.000     1.000                  1.949
+efficientad sheet_metal      shift_2       4           15  0.767 0.000     1.000                  4.518
+efficientad sheet_metal      shift_3       4           15  0.533 0.000     1.000                  2.305
+efficientad        vial      regular       5           15  0.947 0.000     0.200                  1.000
+efficientad        vial  overexposed       5           15  0.920 0.000     0.600                  1.380
+efficientad        vial underexposed       5           15  0.907 0.000     1.000                  3.515
+efficientad        vial      shift_1       5           15  0.827 0.000     1.000                  8.663
+efficientad        vial      shift_2       5           15  0.920 0.067     0.400                  1.293
+efficientad        vial      shift_3       5           15  0.920 0.000     0.400                  1.181
+efficientad        vial      shift_4       5           15  0.827 0.000     1.000                  8.671
+efficientad   wallplugs      regular      10           15  0.487 0.000     1.000                  1.000
+efficientad   wallplugs  overexposed      10           15  0.533 0.000     1.000                  3.510
+efficientad   wallplugs underexposed      10           15  0.527 0.000     0.900                  0.874
+efficientad   wallplugs      shift_1      10           15  0.787 0.000     1.000                 16.952
+efficientad   wallplugs      shift_2      10           15  0.320 0.000     1.000                 14.322
+efficientad   wallplugs      shift_3      10           15  0.687 0.000     1.000                 10.828
+efficientad     walnuts      regular      10           15  0.827 0.000     0.800                  1.000
+efficientad     walnuts  overexposed      10           15  0.900 0.000     1.000                  2.042
+efficientad     walnuts underexposed      10           15  0.907 0.000     0.700                  1.506
+efficientad     walnuts      shift_1      10           15  0.727 0.000     1.000                  4.700
+efficientad     walnuts      shift_2      10           15  0.833 0.000     1.000                  5.894
+efficientad     walnuts      shift_3      10           15  0.607 0.000     1.000                 74.359
+figure: results\figures\tags__can.png
+figure: results\figures\tags__fabric.png
+figure: results\figures\tags__fruit_jelly.png
+figure: results\figures\tags__rice.png
+figure: results\figures\tags__sheet_metal.png
+figure: results\figures\tags__vial.png
+figure: results\figures\tags__wallplugs.png
+figure: results\figures\tags__walnuts.png

@@ -1,0 +1,51 @@
+W1103 20:37:18.039000 44296 Lib\site-packages\torch\utils\flop_counter.py:29] triton not found; flop counting will not work for triton kernels
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\timm\models\layers\__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\anomalib\models\image\dinomaly\components\layers.py:22: FutureWarning: The anomalib.models.components.dinov2 package is deprecated and will be removed in a future release. Please use the timm-based feature extractor instead: anomalib.models.components.feature_extractors.TimmFeatureExtractor
+  from anomalib.models.components.dinov2.layers import Attention, DropPath, LayerScale, MemEffAttention
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+`Trainer(limit_val_batches=1)` was configured so 1 batch will be used.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\core\optimizer.py:183: `LightningModule.configure_optimizers` returned `None`, this fit will run with no optimizer
+┌───┬───────────────┬────────────────┬────────┬───────┬───────┐
+│   │ Name          │ Type           │ Params │ Mode  │ FLOPs │
+├───┼───────────────┼────────────────┼────────┼───────┼───────┤
+│ 0 │ pre_processor │ PreProcessor   │      0 │ train │     0 │
+│ 1 │ model         │ PatchcoreModel │ 24.9 M │ train │     0 │
+└───┴───────────────┴────────────────┴────────┴───────┴───────┘
+Trainable params: 24.9 M                                                       
+Non-trainable params: 0                                                        
+Total params: 24.9 M                                                           
+Total estimated model params size (MB): 99.450                                 
+Modules in train mode: 7                                                       
+Modules in eval mode: 174                                                      
+Total FLOPs: 0                                                                 
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\loops\fit_loop.py:538: Found 174 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+patchcore_light_clahe train:   0%|          | 0/2 [00:00<?, ?it/s]
+Selecting Coreset Indices.:   0%|          | 0/3275 [00:00<?, ?it/s][A
+Selecting Coreset Indices.:   6%|▌         | 198/3275 [00:00<00:01, 1959.62it/s][A
+Selecting Coreset Indices.:  17%|█▋        | 547/3275 [00:00<00:00, 2839.84it/s][A
+Selecting Coreset Indices.:  27%|██▋       | 889/3275 [00:00<00:00, 3102.28it/s][A
+Selecting Coreset Indices.:  38%|███▊      | 1247/3275 [00:00<00:00, 3279.28it/s][A
+Selecting Coreset Indices.:  49%|████▉     | 1606/3275 [00:00<00:00, 3390.40it/s][A
+Selecting Coreset Indices.:  60%|██████    | 1968/3275 [00:00<00:00, 3459.86it/s][A
+Selecting Coreset Indices.:  71%|███████   | 2330/3275 [00:00<00:00, 3500.59it/s][A
+Selecting Coreset Indices.:  82%|████████▏ | 2681/3275 [00:00<00:00, 3493.53it/s][A
+Selecting Coreset Indices.:  93%|█████████▎| 3031/3275 [00:00<00:00, 3474.22it/s][ASelecting Coreset Indices.: 100%|██████████| 3275/3275 [00:00<00:00, 3356.05it/s]
+Cannot persist Compose in a checkpoint under weights_only=True; it will not be restored on reload. Consider moving it to dataset augmentations (train_augmentations, etc.) instead of the model's pre-processor.
+`Trainer.fit` stopped: `max_epochs=1` reached.
+patchcore_light_clahe train: 100%|##########| 2/2 [00:07<00:00,  3.94s/it]ckpt_path is not provided. Model weights will not be loaded.
+The following callbacks returned in `LightningModule.configure_callbacks` will override existing callbacks passed to Trainer: PreProcessor
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+C:\Users\살붕이\Documents\GitHub\industrial-inspection\.venv\Lib\site-packages\lightning\pytorch\trainer\connectors\data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+
+patchcore_light_clahe predict:   0%|          | 0/1 [00:00<?, ?it/s]patchcore_light_clahe predict: 100%|##########| 1/1 [00:00<00:00,  1.67it/s]
+4 test images (2 defective) -> results\smoke\scores\patchcore_light_clahe__walnuts__seed0.csv  [train 8s]
+figure: results\smoke\figures\patchcore_light_clahe__walnuts__seed0__test.png
+figure: (no training curve: single-pass model)

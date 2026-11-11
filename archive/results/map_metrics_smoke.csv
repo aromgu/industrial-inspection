@@ -1,0 +1,2 @@
+model,category,n_images,ckpt,auroc_model_score,auroc_max,auroc_top1,auroc_top5,auroc_mean,aupro_005
+patchcore_s512,wallplugs,8,results\runs\patchcore\wallplugs\Patchcore\MVTecAD2\wallplugs\v0\weights\lightning\model.ckpt,,,,,,0.00814238004386425

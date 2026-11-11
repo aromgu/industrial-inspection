@@ -1,0 +1,118 @@
+figure: results\figures\dinomaly_l__can__seed0__test.png
+figure: results\figures\dinomaly_l__can__seed0__training.png
+figure: results\figures\dinomaly_l__fabric__seed0__test.png
+figure: results\figures\dinomaly_l__fabric__seed0__training.png
+figure: results\figures\dinomaly_l__fruit_jelly__seed0__test.png
+figure: results\figures\dinomaly_l__fruit_jelly__seed0__training.png
+figure: results\figures\dinomaly_l__rice__seed0__test.png
+figure: results\figures\dinomaly_l__rice__seed0__training.png
+figure: results\figures\dinomaly_l__sheet_metal__seed0__test.png
+figure: results\figures\dinomaly_l__sheet_metal__seed0__training.png
+figure: results\figures\dinomaly_l__vial__seed0__test.png
+figure: results\figures\dinomaly_l__vial__seed0__training.png
+figure: results\figures\dinomaly_l__wallplugs__seed0__test.png
+figure: results\figures\dinomaly_l__wallplugs__seed0__training.png
+figure: results\figures\dinomaly_l__walnuts__seed0__test.png
+figure: results\figures\dinomaly_l__walnuts__seed0__training.png
+figure: results\figures\efficientad__sheet_metal__seed0__test.png
+figure: results\figures\efficientad__sheet_metal__seed0__training.png
+figure: results\figures\mhpatchcore__can__seed0__test.png
+figure: results\figures\mhpatchcore__fabric__seed0__test.png
+figure: results\figures\mhpatchcore__fruit_jelly__seed0__test.png
+figure: results\figures\mhpatchcore__rice__seed0__test.png
+figure: results\figures\mhpatchcore__sheet_metal__seed0__test.png
+figure: results\figures\mhpatchcore__vial__seed0__test.png
+figure: results\figures\mhpatchcore__wallplugs__seed0__test.png
+figure: results\figures\mhpatchcore__walnuts__seed0__test.png
+figure: results\figures\patchcore__can__seed0__test.png
+figure: results\figures\patchcore__fabric__seed0__test.png
+figure: results\figures\patchcore__fruit_jelly__seed0__test.png
+figure: results\figures\patchcore__rice__seed0__test.png
+figure: results\figures\patchcore__sheet_metal__seed0__test.png
+figure: results\figures\patchcore__vial__seed0__test.png
+figure: results\figures\patchcore__wallplugs__seed0__test.png
+figure: results\figures\patchcore__walnuts__seed0__test.png
+figure: results\figures\compare__can.png
+figure: results\figures\compare__fabric.png
+figure: results\figures\compare__fruit_jelly.png
+figure: results\figures\compare__rice.png
+figure: results\figures\compare__sheet_metal.png
+figure: results\figures\compare__vial.png
+figure: results\figures\compare__wallplugs.png
+figure: results\figures\compare__walnuts.png
+      model    category  auroc  miss_budget  calib_miss  calib_overkill  heldout_miss  heldout_miss_p95  heldout_overkill  heldout_overkill_p95
+ dinomaly_l         can  0.503        0.000       0.000           0.994         0.014             0.047             0.993                 1.000
+ dinomaly_l         can  0.503        0.010       0.000           0.994         0.014             0.047             0.993                 1.000
+ dinomaly_l         can  0.503        0.050       0.044           0.942         0.039             0.112             0.929                 0.974
+ dinomaly_l      fabric  0.698        0.000       0.000           0.848         0.020             0.068             0.856                 0.939
+ dinomaly_l      fabric  0.698        0.010       0.000           0.848         0.020             0.068             0.856                 0.939
+ dinomaly_l      fabric  0.698        0.050       0.044           0.683         0.069             0.158             0.692                 0.788
+ dinomaly_l fruit_jelly  0.870        0.000       0.000           0.935         0.042             0.102             0.910                 1.000
+ dinomaly_l fruit_jelly  0.870        0.010       0.000           0.935         0.042             0.102             0.910                 1.000
+ dinomaly_l fruit_jelly  0.870        0.050       0.033           0.800         0.072             0.143             0.770                 1.000
+ dinomaly_l        rice  0.769        0.000       0.000           0.833         0.018             0.048             0.831                 0.907
+ dinomaly_l        rice  0.769        0.010       0.000           0.833         0.018             0.048             0.831                 0.907
+ dinomaly_l        rice  0.769        0.050       0.044           0.817         0.080             0.203             0.802                 0.907
+ dinomaly_l sheet_metal  0.840        0.000       0.000           0.867         0.011             0.044             0.883                 1.000
+ dinomaly_l sheet_metal  0.840        0.010       0.000           0.867         0.011             0.044             0.883                 1.000
+ dinomaly_l sheet_metal  0.840        0.050       0.044           0.742         0.066             0.139             0.771                 0.917
+ dinomaly_l        vial  0.810        0.000       0.000           0.669         0.018             0.075             0.644                 0.824
+ dinomaly_l        vial  0.810        0.010       0.000           0.669         0.018             0.075             0.644                 0.824
+ dinomaly_l        vial  0.810        0.050       0.038           0.661         0.051             0.116             0.638                 0.824
+ dinomaly_l   wallplugs  0.457        0.000       0.000           0.912         0.018             0.049             0.918                 0.937
+ dinomaly_l   wallplugs  0.457        0.010       0.000           0.912         0.018             0.049             0.918                 0.937
+ dinomaly_l   wallplugs  0.457        0.050       0.044           0.888         0.061             0.179             0.912                 0.935
+ dinomaly_l     walnuts  0.715        0.000       0.000           0.708         0.022             0.067             0.708                 0.800
+ dinomaly_l     walnuts  0.715        0.010       0.000           0.708         0.022             0.067             0.708                 0.800
+ dinomaly_l     walnuts  0.715        0.050       0.044           0.510         0.063             0.159             0.497                 0.670
+efficientad sheet_metal  0.573        0.000       0.000           1.000         0.018             0.069             0.996                 1.000
+efficientad sheet_metal  0.573        0.010       0.000           1.000         0.018             0.069             0.996                 1.000
+efficientad sheet_metal  0.573        0.050       0.044           0.975         0.064             0.159             0.971                 1.000
+mhpatchcore         can  0.502        0.000       0.000           0.996         0.012             0.046             0.996                 1.000
+mhpatchcore         can  0.502        0.010       0.000           0.996         0.012             0.046             0.996                 1.000
+mhpatchcore         can  0.502        0.050       0.044           0.910         0.043             0.113             0.907                 1.000
+mhpatchcore      fabric  0.440        0.000       0.000           1.000         0.016             0.044             1.000                 1.000
+mhpatchcore      fabric  0.440        0.010       0.000           1.000         0.016             0.044             1.000                 1.000
+mhpatchcore      fabric  0.440        0.050       0.044           0.997         0.056             0.112             0.998                 1.000
+mhpatchcore fruit_jelly  0.912        0.000       0.000           0.650         0.032             0.168             0.600                 0.805
+mhpatchcore fruit_jelly  0.912        0.010       0.000           0.650         0.032             0.168             0.600                 0.805
+mhpatchcore fruit_jelly  0.912        0.050       0.033           0.585         0.062             0.202             0.520                 0.705
+mhpatchcore        rice  0.560        0.000       0.000           0.943         0.026             0.093             0.952                 1.000
+mhpatchcore        rice  0.560        0.010       0.000           0.943         0.026             0.093             0.952                 1.000
+mhpatchcore        rice  0.560        0.050       0.044           0.924         0.066             0.158             0.933                 1.000
+mhpatchcore sheet_metal  0.629        0.000       0.000           0.946         0.028             0.089             0.963                 1.000
+mhpatchcore sheet_metal  0.629        0.010       0.000           0.946         0.028             0.089             0.963                 1.000
+mhpatchcore sheet_metal  0.629        0.050       0.044           0.854         0.067             0.134             0.879                 1.000
+mhpatchcore        vial  0.897        0.000       0.000           0.231         0.019             0.039             0.168                 0.238
+mhpatchcore        vial  0.897        0.010       0.000           0.231         0.019             0.039             0.168                 0.238
+mhpatchcore        vial  0.897        0.050       0.038           0.231         0.055             0.135             0.168                 0.238
+mhpatchcore   wallplugs  0.537        0.000       0.000           0.992         0.014             0.046             0.998                 1.000
+mhpatchcore   wallplugs  0.537        0.010       0.000           0.992         0.014             0.046             0.998                 1.000
+mhpatchcore   wallplugs  0.537        0.050       0.044           0.887         0.061             0.119             0.920                 0.967
+mhpatchcore     walnuts  0.852        0.000       0.000           0.847         0.023             0.113             0.835                 0.937
+mhpatchcore     walnuts  0.852        0.010       0.000           0.847         0.023             0.113             0.835                 0.937
+mhpatchcore     walnuts  0.852        0.050       0.044           0.690         0.063             0.159             0.708                 0.805
+  patchcore         can  0.460        0.000       0.000           0.985         0.016             0.048             0.983                 1.000
+  patchcore         can  0.460        0.010       0.000           0.985         0.016             0.048             0.983                 1.000
+  patchcore         can  0.460        0.050       0.044           0.961         0.046             0.113             0.965                 1.000
+  patchcore      fabric  0.716        0.000       0.000           0.995         0.021             0.047             0.991                 1.000
+  patchcore      fabric  0.716        0.010       0.000           0.995         0.021             0.047             0.991                 1.000
+  patchcore      fabric  0.716        0.050       0.044           0.935         0.066             0.112             0.914                 0.971
+  patchcore fruit_jelly  0.759        0.000       0.000           0.810         0.030             0.102             0.790                 0.900
+  patchcore fruit_jelly  0.759        0.010       0.000           0.810         0.030             0.102             0.790                 0.900
+  patchcore fruit_jelly  0.759        0.050       0.033           0.810         0.073             0.202             0.785                 0.900
+  patchcore        rice  0.526        0.000       0.000           0.990         0.029             0.094             0.988                 1.000
+  patchcore        rice  0.526        0.010       0.000           0.990         0.029             0.094             0.988                 1.000
+  patchcore        rice  0.526        0.050       0.044           0.957         0.066             0.160             0.950                 1.000
+  patchcore sheet_metal  0.739        0.000       0.000           0.821         0.019             0.090             0.862                 1.000
+  patchcore sheet_metal  0.739        0.010       0.000           0.821         0.019             0.090             0.862                 1.000
+  patchcore sheet_metal  0.739        0.050       0.044           0.679         0.067             0.178             0.754                 0.917
+  patchcore        vial  0.859        0.000       0.000           0.564         0.020             0.039             0.521                 0.650
+  patchcore        vial  0.859        0.010       0.000           0.564         0.020             0.039             0.521                 0.650
+  patchcore        vial  0.859        0.050       0.038           0.556         0.064             0.120             0.515                 0.650
+  patchcore   wallplugs  0.532        0.000       0.000           0.990         0.019             0.050             0.992                 1.000
+  patchcore   wallplugs  0.532        0.010       0.000           0.990         0.019             0.050             0.992                 1.000
+  patchcore   wallplugs  0.532        0.050       0.044           0.910         0.061             0.140             0.928                 1.000
+  patchcore     walnuts  0.840        0.000       0.000           0.945         0.022             0.067             0.935                 0.968
+  patchcore     walnuts  0.840        0.010       0.000           0.945         0.022             0.067             0.935                 0.968
+  patchcore     walnuts  0.840        0.050       0.044           0.895         0.069             0.166             0.883                 0.968

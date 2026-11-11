@@ -1,0 +1,4 @@
+can: 162 test, 46 val, bank 100000 patches/layer, 413s
+sheet_metal: 114 test, 19 val, bank 100000 patches/layer, 522s
+walnuts: 150 test, 48 val, bank 100000 patches/layer, 1058s
+fabric: 156 test, 43 val, bank 100000 patches/layer, 1009s

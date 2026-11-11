@@ -1,0 +1,14 @@
+hires_sabank_r1280_k1 vial: F1 defect-only official 0.443 oracle 0.449 | all official 0.424
+hires_sabank_r1280_k1 fruit_jelly: F1 defect-only official 0.140 oracle 0.361 | all official 0.140
+hires_sabank_r1280_k1 rice: F1 defect-only official 0.336 oracle 0.744 | all official 0.282
+hires_sabank_r1280_k50 vial: F1 defect-only official 0.430 oracle 0.438 | all official 0.411
+hires_sabank_r1280_k50 fruit_jelly: F1 defect-only official 0.219 oracle 0.336 | all official 0.217
+hires_sabank_r1280_k50 rice: F1 defect-only official 0.328 oracle 0.737 | all official 0.270
+                        f1_defect-only_official  ...  au_roc_005
+model                                            ...            
+hires_sabank_r1280_k1                     0.306  ...       0.805
+hires_sabank_r1280_k50                    0.325  ...       0.796
+
+[2 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\seg\sabank_r1280\figures\seg_eval.png

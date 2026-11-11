@@ -1,0 +1,3 @@
+mhpatchcore exit 0
+dinomaly_l_rerun exit 0
+efficientad_rerun exit 0

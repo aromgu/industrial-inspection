@@ -1,0 +1,33 @@
+hires_sabank_k1 can: F1 defect-only official 0.011 oracle 0.010 | all official 0.005
+hires_sabank_k1 fabric: F1 defect-only official 0.271 oracle 0.333 | all official 0.225
+hires_sabank_k1 fruit_jelly: F1 defect-only official 0.412 oracle 0.437 | all official 0.409
+hires_sabank_k1 rice: F1 defect-only official 0.211 oracle 0.686 | all official 0.175
+hires_sabank_k1 sheet_metal: F1 defect-only official 0.432 oracle 0.512 | all official 0.432
+hires_sabank_k1 vial: F1 defect-only official 0.483 oracle 0.484 | all official 0.465
+hires_sabank_k1 wallplugs: F1 defect-only official 0.039 oracle 0.204 | all official 0.023
+hires_sabank_k1 walnuts: F1 defect-only official 0.482 oracle 0.631 | all official 0.411
+hires_sabank_k50 can: F1 defect-only official 0.005 oracle 0.005 | all official 0.002
+hires_sabank_k50 fabric: F1 defect-only official 0.283 oracle 0.324 | all official 0.232
+hires_sabank_k50 fruit_jelly: F1 defect-only official 0.397 oracle 0.416 | all official 0.388
+hires_sabank_k50 rice: F1 defect-only official 0.194 oracle 0.692 | all official 0.158
+hires_sabank_k50 sheet_metal: F1 defect-only official 0.506 oracle 0.510 | all official 0.506
+hires_sabank_k50 vial: F1 defect-only official 0.464 oracle 0.469 | all official 0.446
+hires_sabank_k50 wallplugs: F1 defect-only official 0.053 oracle 0.242 | all official 0.031
+hires_sabank_k50 walnuts: F1 defect-only official 0.495 oracle 0.654 | all official 0.426
+hires_k50 can: F1 defect-only official 0.000 oracle 0.003 | all official 0.000
+hires_k50 fabric: F1 defect-only official 0.277 oracle 0.301 | all official 0.220
+hires_k50 fruit_jelly: F1 defect-only official 0.273 oracle 0.389 | all official 0.269
+hires_k50 rice: F1 defect-only official 0.257 oracle 0.695 | all official 0.211
+hires_k50 sheet_metal: F1 defect-only official 0.503 oracle 0.511 | all official 0.502
+hires_k50 vial: F1 defect-only official 0.379 oracle 0.403 | all official 0.373
+hires_k50 wallplugs: F1 defect-only official 0.114 oracle 0.310 | all official 0.069
+hires_k50 walnuts: F1 defect-only official 0.595 oracle 0.685 | all official 0.534
+                  f1_defect-only_official  ...  au_roc_005
+model                                      ...            
+hires_k50                           0.300  ...       0.771
+hires_sabank_k1                     0.293  ...       0.784
+hires_sabank_k50                    0.300  ...       0.780
+
+[3 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\seg\sabank\figures\seg_eval.png

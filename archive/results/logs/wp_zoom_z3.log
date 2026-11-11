@@ -1,0 +1,13 @@
+bank 230400 tokens/layer from 40 photos, window 128px x3.0 -> 384px, 18s
+test 0/150 (19s)
+test 25/150 (31s)
+test 50/150 (44s)
+test 75/150 (56s)
+test 100/150 (69s)
+test 125/150 (82s)
+val 0/33 (94s)
+val 25/33 (107s)
+candidate AUROC (defect vs not, test): stage1 0.955  stage2 0.852
+  defective photos whose top-s1 candidate is the defect: 62%  ;  any candidate on defect: 80%
+  defective photos whose top-s2 candidate is the defect: 61%  ;  any candidate on defect: 80%
+saved results\seg\wp_zoom_z3.csv

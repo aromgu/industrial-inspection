@@ -1,0 +1,28 @@
+       rule  k  miss  miss_p95  overkill  overkill_p95
+     margin  1 0.206     0.640     0.659         0.981
+     margin  2 0.094     0.346     0.789         0.990
+     margin  3 0.054     0.235     0.853         0.990
+     margin  5 0.024     0.102     0.913         0.993
+     margin  7 0.015     0.082     0.938         0.993
+ min_defect  1 0.320     0.773     0.512         0.901
+ min_defect  2 0.187     0.525     0.640         0.917
+ min_defect  3 0.129     0.399     0.707         0.930
+ min_defect  5 0.078     0.264     0.782         0.939
+ min_defect  7 0.056     0.212     0.821         0.943
+normal_only  0 0.666     0.743     0.120         0.336
+                         miss                               overkill                              
+k                           0     1     2     3     5     7        0     1     2     3     5     7
+model       rule                                                                                  
+dinomaly_l  margin        NaN 0.214 0.098 0.051 0.025 0.014      NaN 0.623 0.777 0.861 0.922 0.951
+            min_defect    NaN 0.348 0.208 0.143 0.096 0.068      NaN 0.444 0.577 0.651 0.726 0.774
+            normal_only 0.647   NaN   NaN   NaN   NaN   NaN    0.116   NaN   NaN   NaN   NaN   NaN
+efficientad margin        NaN 0.119 0.046 0.024 0.009 0.005      NaN 0.792 0.889 0.930 0.968 0.982
+            min_defect    NaN 0.216 0.116 0.080 0.046 0.032      NaN 0.651 0.756 0.805 0.859 0.885
+            normal_only 0.769   NaN   NaN   NaN   NaN   NaN    0.097   NaN   NaN   NaN   NaN   NaN
+mhpatchcore margin        NaN 0.228 0.101 0.055 0.023 0.013      NaN 0.621 0.739 0.790 0.851 0.878
+            min_defect    NaN 0.344 0.201 0.136 0.078 0.054      NaN 0.494 0.615 0.675 0.745 0.784
+            normal_only 0.619   NaN   NaN   NaN   NaN   NaN    0.132   NaN   NaN   NaN   NaN   NaN
+patchcore   margin        NaN 0.263 0.133 0.085 0.039 0.026      NaN 0.599 0.753 0.832 0.911 0.940
+            min_defect    NaN 0.372 0.221 0.156 0.093 0.070      NaN 0.459 0.611 0.697 0.799 0.840
+            normal_only 0.628   NaN   NaN   NaN   NaN   NaN    0.136   NaN   NaN   NaN   NaN   NaN
+figure: results\figures\fewshot_calibration.png

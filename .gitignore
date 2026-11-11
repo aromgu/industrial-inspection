@@ -1,4 +1,3 @@
-HANDOFF.md
 .venv/
 __pycache__/
 *.pyc
@@ -6,8 +5,8 @@ __pycache__/
 .ruff_cache/
 
 # data and outputs (MVTec AD 2 is CC BY-NC-SA; do not redistribute)
-datasets/
-results/
+/datasets/
+/results/
 *.ckpt
 *.onnx
 *.engine

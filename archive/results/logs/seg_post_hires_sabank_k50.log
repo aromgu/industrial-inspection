@@ -1,0 +1,38 @@
+can: done
+fabric: done
+fruit_jelly: done
+rice: done
+sheet_metal: done
+vial: done
+wallplugs: done
+walnuts: done
+
+== mean F1 over categories, defect-only
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   30.0  33.3  ...                 33.5           34.5
+p95x1.0    14.5  15.2  ...                 14.9           16.4
+p95x1.2    35.9  40.7  ...                 41.6           41.2
+p95x1.4    30.3  30.3  ...                 30.1           29.7
+p95x1.6    19.8  19.9  ...                 19.8           19.0
+p99        24.9  27.2  ...                 27.5           29.5
+
+[6 rows x 8 columns]
+
+== mean F1 over categories, all
+post       none  fill  ...  close6+fill+small64  fill+small256
+threshold              ...                                    
+official   27.4  30.3  ...                 30.5           31.6
+p95x1.0    11.7  12.1  ...                 11.9           13.2
+p95x1.2    33.9  38.6  ...                 39.5           39.4
+p95x1.4    28.6  28.6  ...                 28.4           28.0
+p95x1.6    19.5  19.5  ...                 19.5           18.7
+p99        21.7  23.5  ...                 23.8           26.1
+
+[6 rows x 8 columns]
+
+best for all categories together: threshold p95x1.2, post close6+fill+small64
+category  can  fabric  fruit_jelly  rice  sheet_metal  vial  wallplugs  walnuts
+baseline  0.5    28.3         39.7  19.4         50.6  46.4        5.3     49.5
+best      0.0    76.4         40.9  56.1         50.2  44.6        8.8     55.5
+figure: results\figures\seg_post__hires_sabank_k50.png

@@ -1,0 +1,24 @@
+hires_dinov2l can: F1 defect-only official 0.001 oracle 0.008 | all official 0.000
+hires_dinov2l fabric: F1 defect-only official 0.280 oracle 0.315 | all official 0.224
+hires_dinov2l fruit_jelly: F1 defect-only official 0.315 oracle 0.400 | all official 0.312
+hires_dinov2l rice: F1 defect-only official 0.247 oracle 0.692 | all official 0.206
+hires_dinov2l sheet_metal: F1 defect-only official 0.414 oracle 0.509 | all official 0.414
+hires_dinov2l vial: F1 defect-only official 0.388 oracle 0.398 | all official 0.369
+hires_dinov2l wallplugs: F1 defect-only official 0.060 oracle 0.240 | all official 0.036
+hires_dinov2l walnuts: F1 defect-only official 0.543 oracle 0.665 | all official 0.475
+hires_k50 can: F1 defect-only official 0.000 oracle 0.003 | all official 0.000
+hires_k50 fabric: F1 defect-only official 0.277 oracle 0.301 | all official 0.220
+hires_k50 fruit_jelly: F1 defect-only official 0.273 oracle 0.389 | all official 0.269
+hires_k50 rice: F1 defect-only official 0.257 oracle 0.695 | all official 0.211
+hires_k50 sheet_metal: F1 defect-only official 0.503 oracle 0.511 | all official 0.502
+hires_k50 vial: F1 defect-only official 0.379 oracle 0.403 | all official 0.373
+hires_k50 wallplugs: F1 defect-only official 0.114 oracle 0.310 | all official 0.069
+hires_k50 walnuts: F1 defect-only official 0.595 oracle 0.685 | all official 0.534
+               f1_defect-only_official  ...  au_roc_005
+model                                   ...            
+hires_dinov2l                    0.281  ...       0.777
+hires_k50                        0.300  ...       0.771
+
+[2 rows x 7 columns]
+SuperADD test_public (defect-only, its own threshold): mean F1 62.61 %
+figure: results\seg\figures\seg_eval.png
